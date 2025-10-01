@@ -1,0 +1,10 @@
+streamlit>=1.32
+jsonschema>=4.21
+pandas>=2.0
+python-dotenv>=1.0
+neo4j>=5.14
+langchain>=0.2
+langchain-community>=0.2
+langchain-openai>=0.1
+openai>=1.40
+tiktoken>=0.7

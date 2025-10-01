@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/sdoh_screener_response.schema.json",
+  "title": "SDoH Screener Response Schema",
+  "description": "Validates responses for the SDoH screener generated from 'SDoH proposed tool.docx'.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "q1_race": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "white",
+          "black_afam",
+          "ai_an",
+          "chinese",
+          "vietnamese",
+          "native_hawaiian",
+          "filipino",
+          "korean",
+          "samoan",
+          "asian_indian",
+          "japanese",
+          "chamorro",
+          "mena",
+          "other_asian",
+          "some_other_race"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "q2_ancestry": {
+      "type": "string"
+    },
+    "q3_income": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q3_income_amount": {
+          "type": "number"
+        },
+        "q3_income_loss": {
+          "type": "boolean"
+        }
+      }
+    },
+    "q4_education": {
+      "type": "string",
+      "enum": [
+        "no_schooling",
+        "nursery_school",
+        "kindergarten",
+        "grade_1_11",
+        "grade12_no_diploma",
+        "hs_diploma",
+        "ged",
+        "some_college_lt1",
+        "some_college_1plus",
+        "associate",
+        "bachelor",
+        "master",
+        "professional",
+        "doctorate"
+      ]
+    },
+    "q5_employment": {
+      "type": "string",
+      "enum": [
+        "yes",
+        "no"
+      ]
+    },
+    "q5a_employment_type": {
+      "type": "string",
+      "enum": [
+        "full_time",
+        "part_time",
+        "variable"
+      ]
+    },
+    "q5b_last_worked": {
+      "type": "string",
+      "enum": [
+        "within_12_months",
+        "one_to_five_years",
+        "over_5_or_never"
+      ]
+    },
+    "q6a_housing_situation": {
+      "type": "string",
+      "enum": [
+        "have_housing",
+        "worried_losing",
+        "no_housing",
+        "prefer_not_answer"
+      ]
+    },
+    "q6b_tenure": {
+      "type": "string",
+      "enum": [
+        "owned_with_mortgage",
+        "owned_free_clear",
+        "rented",
+        "no_rent"
+      ]
+    },
+    "q6c_monthly_housing_cost": {
+      "type": "number",
+      "minimum": 0
+    },
+    "q6d_difficult_to_pay_housing": {
+      "type": "boolean"
+    },
+    "q6e_worry_housing_costs": {
+      "type": "string",
+      "enum": [
+        "very_worried",
+        "moderately_worried",
+        "not_too_worried",
+        "not_worried"
+      ]
+    },
+    "q7_building_type": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "multi_unit",
+          "mobile_home",
+          "detached_house",
+          "attached_house"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "q8a_household_size": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "q8b_bedrooms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "q9a_residence_length": {
+      "type": "string",
+      "enum": [
+        "lt6mo",
+        "6to12mo",
+        "1to3y",
+        "gt3y"
+      ]
+    },
+    "q9b_longest_zip": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9 \\-]{3,10}$"
+    },
+    "q10_insurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q10a_employer": {
+          "type": "boolean"
+        },
+        "q10b_direct_purchase": {
+          "type": "boolean"
+        },
+        "q10c_medicare": {
+          "type": "boolean"
+        },
+        "q10d_medicaid": {
+          "type": "boolean"
+        },
+        "q10e_tricare": {
+          "type": "boolean"
+        },
+        "q10f_va": {
+          "type": "boolean"
+        },
+        "q10g_ihs": {
+          "type": "boolean"
+        },
+        "q10h_other": {
+          "type": "string"
+        }
+      }
+    },
+    "q11_internet": {
+      "type": "boolean"
+    },
+    "q12_disability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q12a_hearing": {
+          "type": "boolean"
+        },
+        "q12b_vision": {
+          "type": "boolean"
+        },
+        "q12c_cognitive": {
+          "type": "boolean"
+        },
+        "q12d_mobility": {
+          "type": "boolean"
+        },
+        "q12e_adl": {
+          "type": "boolean"
+        },
+        "q12f_iadl": {
+          "type": "boolean"
+        }
+      }
+    },
+    "q13_english_proficiency": {
+      "type": "string",
+      "enum": [
+        "very_well",
+        "well",
+        "not_well",
+        "not_at_all"
+      ]
+    },
+    "q14a_marital_status": {
+      "type": "string",
+      "enum": [
+        "now_married",
+        "widowed",
+        "divorced",
+        "separated",
+        "never_married",
+        "living_with_partner"
+      ]
+    },
+    "q14b_single_parent": {
+      "type": "boolean"
+    },
+    "q15a_commute_mode": {
+      "type": "string",
+      "enum": [
+        "car_truck_van",
+        "bus",
+        "subway_elevated",
+        "commuter_rail",
+        "light_rail",
+        "ferryboat",
+        "taxicab",
+        "motorcycle",
+        "bicycle",
+        "walked",
+        "worked_from_home",
+        "other"
+      ]
+    },
+    "q15b_transport_barrier": {
+      "type": "boolean"
+    },
+    "q16_unmet_needs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q16_food": {
+          "type": "boolean"
+        },
+        "q16_healthy_food": {
+          "type": "boolean"
+        },
+        "q16_healthcare": {
+          "type": "boolean"
+        },
+        "q16_phone": {
+          "type": "boolean"
+        },
+        "q16_decline": {
+          "type": "boolean"
+        }
+      }
+    },
+    "q16a_medical_bills": {
+      "type": "boolean"
+    },
+    "q16b_delayed_care_cost": {
+      "type": "boolean"
+    },
+    "q16c_worry_housing_repeat": {
+      "type": "string",
+      "enum": [
+        "very_worried",
+        "moderately_worried",
+        "not_too_worried",
+        "not_worried"
+      ]
+    },
+    "q16d_worry_bills": {
+      "type": "string",
+      "enum": [
+        "very_worried",
+        "moderately_worried",
+        "not_too_worried",
+        "not_worried"
+      ]
+    },
+    "q17_social_connections": {
+      "type": "string",
+      "enum": [
+        "lt_once_week",
+        "1_2_week",
+        "3_5_week",
+        "6plus_week",
+        "decline"
+      ]
+    },
+    "q18_neighborhood_support": {
+      "type": "string",
+      "enum": [
+        "definitely_agree",
+        "somewhat_agree",
+        "somewhat_disagree",
+        "definitely_disagree"
+      ]
+    },
+    "q19a_phq2": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phq2_item1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "phq2_item2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      }
+    },
+    "q19b_ipv_hits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hits_hurt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "hits_insult": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "hits_threaten": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "hits_scream": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      }
+    },
+    "q20a_pa_days": {
+      "type": "string",
+      "enum": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    "q20b_pa_minutes": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "enum": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        90,
+        120,
+        150
+      ]
+    }
+  },
+  "required": [],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "q5_employment": {
+            "const": "yes"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "q5a_employment_type"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "q5_employment": {
+            "const": "no"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "q5b_last_worked"
+        ]
+      }
+    },
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "q16_unmet_needs": {
+                "properties": {
+                  "q16_food": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "q16_unmet_needs": {
+                "properties": {
+                  "q16_healthy_food": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "q16_unmet_needs": {
+                "properties": {
+                  "q16_healthcare": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "q16_unmet_needs": {
+                "properties": {
+                  "q16_phone": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "required": [
+          "q16a_medical_bills",
+          "q16b_delayed_care_cost",
+          "q16c_worry_housing_repeat",
+          "q16d_worry_bills"
+        ]
+      }
+    }
+  ],
+  "examples": [
+    {
+      "q5_employment": "yes",
+      "q5a_employment_type": "full_time",
+      "q6a_housing_situation": "worried_losing",
+      "q10_insurance": {
+        "q10a_employer": true,
+        "q10c_medicare": false
+      },
+      "q19a_phq2": {
+        "phq2_item1": 2,
+        "phq2_item2": 1
+      },
+      "q19b_ipv_hits": {
+        "hits_hurt": 1,
+        "hits_insult": 2,
+        "hits_threaten": 1,
+        "hits_scream": 2
+      },
+      "q20a_pa_days": "3",
+      "q20b_pa_minutes": 30
+    }
+  ]
+}

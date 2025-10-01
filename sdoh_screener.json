@@ -1,0 +1,1274 @@
+{
+  "screener": {
+    "title": "Social Determinants of Health (SDoH) Screener",
+    "version": "1.0.0",
+    "created": "2025-09-22",
+    "language": "en",
+    "notes": [
+      "Derived from the user's provided 'SDoH proposed tool.docx'.",
+      "Includes branching (skip logic) and scoring rules for depression (PHQ-2), intimate partner violence (HITS), and physical activity.",
+      "For physical activity assessment, age is required; supply 'age_years' in patient context."
+    ],
+    "context_fields": [
+      {
+        "key": "age_years",
+        "type": "integer",
+        "required": false,
+        "description": "Patient age in years, used for physical activity thresholds."
+      },
+      {
+        "key": "spanish_version",
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "If true, IPV (HITS) positive cutoff is 5.5 instead of 10.5."
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1_race",
+        "section": 1,
+        "text": "What is your race? (Select all that apply)",
+        "type": "multi-select",
+        "options": [
+          {
+            "value": "white",
+            "label": "White",
+            "free_text_hint": "e.g., German, Irish, English, Italian, Lebanese, Egyptian"
+          },
+          {
+            "value": "black_afam",
+            "label": "Black or African American",
+            "free_text_hint": "e.g., African American, Jamaican, Haitian, Nigerian, Ethiopian, Somali"
+          },
+          {
+            "value": "ai_an",
+            "label": "American Indian or Alaska Native",
+            "free_text_hint": "Print name of enrolled or principal tribe(s)"
+          },
+          {
+            "value": "chinese",
+            "label": "Chinese"
+          },
+          {
+            "value": "vietnamese",
+            "label": "Vietnamese"
+          },
+          {
+            "value": "native_hawaiian",
+            "label": "Native Hawaiian"
+          },
+          {
+            "value": "filipino",
+            "label": "Filipino"
+          },
+          {
+            "value": "korean",
+            "label": "Korean"
+          },
+          {
+            "value": "samoan",
+            "label": "Samoan"
+          },
+          {
+            "value": "asian_indian",
+            "label": "Asian Indian"
+          },
+          {
+            "value": "japanese",
+            "label": "Japanese"
+          },
+          {
+            "value": "chamorro",
+            "label": "Chamorro"
+          },
+          {
+            "value": "mena",
+            "label": "MENA"
+          },
+          {
+            "value": "other_asian",
+            "label": "Other Asian",
+            "free_text_hint": "e.g., Pakistani, Cambodian, Hmong"
+          },
+          {
+            "value": "some_other_race",
+            "label": "Some other race",
+            "free_text_hint": "Print race or origin"
+          }
+        ],
+        "allow_free_text_for_marked_options": true,
+        "required": false
+      },
+      {
+        "id": "q2_ancestry",
+        "section": 2,
+        "text": "What is your ancestry or ethnic origin?",
+        "type": "text",
+        "placeholder": "e.g., Italian, Jamaican, African American, Cambodian, Cape Verdean, Norwegian, Dominican, French Canadian, Haitian, Korean, Lebanese, Polish, Nigerian, Mexican, Taiwanese, Ukrainian",
+        "required": false
+      },
+      {
+        "id": "q3_income",
+        "section": 3,
+        "text": "What was your total household income during the PAST 12 MONTHS?",
+        "type": "group",
+        "items": [
+          {
+            "id": "q3_income_amount",
+            "text": "Income amount (in dollars)",
+            "type": "currency",
+            "currency": "USD",
+            "allow_none": true
+          },
+          {
+            "id": "q3_income_loss",
+            "text": "Was net income a loss?",
+            "type": "boolean"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q4_education",
+        "section": 4,
+        "text": "What is your highest degree or level of school you have COMPLETED? If currently enrolled, mark the previous grade or highest degree received.",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "no_schooling",
+            "label": "No schooling completed"
+          },
+          {
+            "value": "nursery_school",
+            "label": "Nursery school"
+          },
+          {
+            "value": "kindergarten",
+            "label": "Kindergarten"
+          },
+          {
+            "value": "grade_1_11",
+            "label": "Grade 1 through 11 (specify)",
+            "requires_free_text": true
+          },
+          {
+            "value": "grade12_no_diploma",
+            "label": "12th grade—NO DIPLOMA"
+          },
+          {
+            "value": "hs_diploma",
+            "label": "Regular high school diploma"
+          },
+          {
+            "value": "ged",
+            "label": "GED or alternative credential"
+          },
+          {
+            "value": "some_college_lt1",
+            "label": "Some college credit, less than 1 year"
+          },
+          {
+            "value": "some_college_1plus",
+            "label": "1 or more years of college credit, no degree"
+          },
+          {
+            "value": "associate",
+            "label": "Associate’s degree (AA, AS)"
+          },
+          {
+            "value": "bachelor",
+            "label": "Bachelor’s degree (BA, BS)"
+          },
+          {
+            "value": "master",
+            "label": "Master’s degree (MA, MS, MEng, MEd, MSW, MBA)"
+          },
+          {
+            "value": "professional",
+            "label": "Professional degree beyond a bachelor’s degree (MD, DDS, DVM, LLB, JD)"
+          },
+          {
+            "value": "doctorate",
+            "label": "Doctorate degree (PhD, EdD)"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q5_employment",
+        "section": 5,
+        "text": "Are you currently employed?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "yes",
+            "label": "Yes"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q5a_employment_type",
+        "section": 5,
+        "text": "If employed: What is your employment type?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "full_time",
+            "label": "Full-time"
+          },
+          {
+            "value": "part_time",
+            "label": "Part-time"
+          },
+          {
+            "value": "variable",
+            "label": "Variable"
+          }
+        ],
+        "visible_if": {
+          "any": [
+            {
+              "question": "q5_employment",
+              "operator": "=",
+              "value": "yes"
+            }
+          ]
+        },
+        "required": false
+      },
+      {
+        "id": "q5b_last_worked",
+        "section": 5,
+        "text": "When did you last work, even for a few days?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "within_12_months",
+            "label": "Within the past 12 months"
+          },
+          {
+            "value": "one_to_five_years",
+            "label": "1 to 5 years ago"
+          },
+          {
+            "value": "over_5_or_never",
+            "label": "Over 5 years ago or never worked"
+          }
+        ],
+        "visible_if": {
+          "any": [
+            {
+              "question": "q5_employment",
+              "operator": "=",
+              "value": "no"
+            }
+          ]
+        },
+        "required": false
+      },
+      {
+        "id": "q6a_housing_situation",
+        "section": 6,
+        "text": "What is your housing situation today?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "have_housing",
+            "label": "I have housing"
+          },
+          {
+            "value": "worried_losing",
+            "label": "I have a place to live today, but I am worried about losing it in the future"
+          },
+          {
+            "value": "no_housing",
+            "label": "I do not have housing (staying with others, hotel, shelter, living outside, car, park, etc.)"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "I choose not to answer this question"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q6b_tenure",
+        "section": 6,
+        "text": "Is this house, apartment, or mobile home—",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "owned_with_mortgage",
+            "label": "Owned by you or someone in this household with a mortgage or loan (include home equity loans)"
+          },
+          {
+            "value": "owned_free_clear",
+            "label": "Owned by you or someone in this household without a mortgage or loan"
+          },
+          {
+            "value": "rented",
+            "label": "Rented"
+          },
+          {
+            "value": "no_rent",
+            "label": "Occupied without payment of rent"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q6c_monthly_housing_cost",
+        "section": 6,
+        "text": "What is the monthly mortgage, loan or rent for this house, apartment, or mobile home?",
+        "type": "currency",
+        "currency": "USD",
+        "required": false
+      },
+      {
+        "id": "q6d_difficult_to_pay_housing",
+        "section": 6,
+        "text": "In the past 12 months, did you find it difficult to pay your monthly rent/mortgage? (e.g., being behind or unable to pay)",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "id": "q6e_worry_housing_costs",
+        "section": 6,
+        "text": "How worried are you right now about not being able to pay your rent, mortgage, or other housing costs?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "very_worried",
+            "label": "Very worried"
+          },
+          {
+            "value": "moderately_worried",
+            "label": "Moderately worried"
+          },
+          {
+            "value": "not_too_worried",
+            "label": "Not too worried"
+          },
+          {
+            "value": "not_worried",
+            "label": "Not worried at all"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q7_building_type",
+        "section": 7,
+        "text": "Which best describes your building? (Select all that apply)",
+        "type": "multi-select",
+        "options": [
+          {
+            "value": "multi_unit",
+            "label": "A building with multiple apartments"
+          },
+          {
+            "value": "mobile_home",
+            "label": "A mobile home"
+          },
+          {
+            "value": "detached_house",
+            "label": "A one-family house detached from any other house"
+          },
+          {
+            "value": "attached_house",
+            "label": "A one-family house attached to one or more houses"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q8a_household_size",
+        "section": 8,
+        "text": "How many people are living or staying at your home address? Include everyone staying more than 2 months.",
+        "type": "integer",
+        "min": 0,
+        "required": false
+      },
+      {
+        "id": "q8b_bedrooms",
+        "section": 8,
+        "text": "How many separate bedrooms are in this house, apartment or mobile home? If efficiency/studio, enter 0.",
+        "type": "integer",
+        "min": 0,
+        "required": false
+      },
+      {
+        "id": "q9a_residence_length",
+        "section": 9,
+        "text": "How long have you been at your current residence?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "lt6mo",
+            "label": "Less than 6 months"
+          },
+          {
+            "value": "6to12mo",
+            "label": "6–12 months"
+          },
+          {
+            "value": "1to3y",
+            "label": "1–3 years"
+          },
+          {
+            "value": "gt3y",
+            "label": "More than 3 years"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q9b_longest_zip",
+        "section": 9,
+        "text": "What is the ZIP code of your longest-lived residence?",
+        "type": "text",
+        "pattern": "^[A-Za-z0-9 \\-]{3,10}$",
+        "required": false
+      },
+      {
+        "id": "q10_insurance",
+        "section": 10,
+        "text": "Are you CURRENTLY covered by any of the following types of health insurance or health coverage plans?",
+        "type": "checklist",
+        "items": [
+          {
+            "id": "q10a_employer",
+            "label": "Insurance through a current or former employer or union (self or family member)",
+            "type": "boolean"
+          },
+          {
+            "id": "q10b_direct_purchase",
+            "label": "Insurance purchased directly from an insurance company (self or family member)",
+            "type": "boolean"
+          },
+          {
+            "id": "q10c_medicare",
+            "label": "Medicare",
+            "type": "boolean"
+          },
+          {
+            "id": "q10d_medicaid",
+            "label": "Medicaid/Medical Assistance or government plan for low income/disability",
+            "type": "boolean"
+          },
+          {
+            "id": "q10e_tricare",
+            "label": "TRICARE or other military health care",
+            "type": "boolean"
+          },
+          {
+            "id": "q10f_va",
+            "label": "VA (enrolled for VA health care)",
+            "type": "boolean"
+          },
+          {
+            "id": "q10g_ihs",
+            "label": "Indian Health Service",
+            "type": "boolean"
+          },
+          {
+            "id": "q10h_other",
+            "label": "Any other type (specify)",
+            "type": "text",
+            "optional": true
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q11_internet",
+        "section": 11,
+        "text": "At this house, apartment, or mobile home—do you or any member of this household have access to the Internet?",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "id": "q12_disability",
+        "section": 12,
+        "text": "Disability (mark Yes or No for each)",
+        "type": "checklist",
+        "items": [
+          {
+            "id": "q12a_hearing",
+            "label": "Are you deaf or do you have serious difficulty hearing?",
+            "type": "boolean"
+          },
+          {
+            "id": "q12b_vision",
+            "label": "Are you blind or do you have serious difficulty seeing, even when wearing glasses?",
+            "type": "boolean"
+          },
+          {
+            "id": "q12c_cognitive",
+            "label": "Because of a physical, mental, or emotional condition, do you have serious difficulty concentrating, remembering, or making decisions?",
+            "type": "boolean"
+          },
+          {
+            "id": "q12d_mobility",
+            "label": "Do you have serious difficulty walking or climbing stairs?",
+            "type": "boolean"
+          },
+          {
+            "id": "q12e_adl",
+            "label": "Do you have difficulty dressing or bathing?",
+            "type": "boolean"
+          },
+          {
+            "id": "q12f_iadl",
+            "label": "Because of a physical, mental, or emotional condition, do you have difficulty doing errands alone such as visiting a doctor’s office or shopping?",
+            "type": "boolean"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q13_english_proficiency",
+        "section": 13,
+        "text": "How well do you speak English?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "very_well",
+            "label": "Very well"
+          },
+          {
+            "value": "well",
+            "label": "Well"
+          },
+          {
+            "value": "not_well",
+            "label": "Not well"
+          },
+          {
+            "value": "not_at_all",
+            "label": "Not at all"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q14a_marital_status",
+        "section": 14,
+        "text": "What is your marital status?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "now_married",
+            "label": "Now married"
+          },
+          {
+            "value": "widowed",
+            "label": "Widowed"
+          },
+          {
+            "value": "divorced",
+            "label": "Divorced"
+          },
+          {
+            "value": "separated",
+            "label": "Separated"
+          },
+          {
+            "value": "never_married",
+            "label": "Never married"
+          },
+          {
+            "value": "living_with_partner",
+            "label": "Living with partner"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q14b_single_parent",
+        "section": 14,
+        "text": "Are you a single parent? (Male/female householder, no spouse or partner present, with own children under 18 years)",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "id": "q15a_commute_mode",
+        "section": 15,
+        "text": "How did you usually get to work LAST WEEK? (Method used for most of the distance)",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "car_truck_van",
+            "label": "Car, truck, or van"
+          },
+          {
+            "value": "bus",
+            "label": "Bus"
+          },
+          {
+            "value": "subway_elevated",
+            "label": "Subway or elevated rail"
+          },
+          {
+            "value": "commuter_rail",
+            "label": "Long-distance train or commuter rail"
+          },
+          {
+            "value": "light_rail",
+            "label": "Light rail, streetcar, or trolley"
+          },
+          {
+            "value": "ferryboat",
+            "label": "Ferryboat"
+          },
+          {
+            "value": "taxicab",
+            "label": "Taxicab"
+          },
+          {
+            "value": "motorcycle",
+            "label": "Motorcycle"
+          },
+          {
+            "value": "bicycle",
+            "label": "Bicycle"
+          },
+          {
+            "value": "walked",
+            "label": "Walked"
+          },
+          {
+            "value": "worked_from_home",
+            "label": "Worked from home"
+          },
+          {
+            "value": "other",
+            "label": "Other method"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q15b_transport_barrier",
+        "section": 15,
+        "text": "In the past 12 months, has lack of reliable transportation kept you from medical appointments, meetings, work, or getting things needed for daily living?",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "id": "q16_unmet_needs",
+        "section": 16,
+        "text": "In the past year, have you or any family members you live with been unable to get any of the following when it was really needed?",
+        "type": "checklist",
+        "items": [
+          {
+            "id": "q16_food",
+            "label": "Food",
+            "type": "boolean"
+          },
+          {
+            "id": "q16_healthy_food",
+            "label": "Healthy food (fresh fruits and vegetables)",
+            "type": "boolean"
+          },
+          {
+            "id": "q16_healthcare",
+            "label": "Medicines or Healthcare (Medical, Dental, Mental Health, Vision)",
+            "type": "boolean"
+          },
+          {
+            "id": "q16_phone",
+            "label": "Phone",
+            "type": "boolean"
+          },
+          {
+            "id": "q16_decline",
+            "label": "I choose not to answer this question",
+            "type": "boolean"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q16a_medical_bills",
+        "section": 16,
+        "text": "DURING THE PAST 12 MONTHS, did you or anyone in the family have problems paying or were unable to pay any medical bills?",
+        "type": "boolean",
+        "visible_if": {
+          "any": [
+            {
+              "question": "q16_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthy_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthcare",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_phone",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        },
+        "required": false
+      },
+      {
+        "id": "q16b_delayed_care_cost",
+        "section": 16,
+        "text": "DURING THE PAST 12 MONTHS, has medical care been delayed because of worry about the cost?",
+        "type": "boolean",
+        "visible_if": {
+          "any": [
+            {
+              "question": "q16_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthy_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthcare",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_phone",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        },
+        "required": false
+      },
+      {
+        "id": "q16c_worry_housing_repeat",
+        "section": 16,
+        "text": "How worried are you right now about not being able to pay your rent, mortgage, or other housing costs?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "very_worried",
+            "label": "Very worried"
+          },
+          {
+            "value": "moderately_worried",
+            "label": "Moderately worried"
+          },
+          {
+            "value": "not_too_worried",
+            "label": "Not too worried"
+          },
+          {
+            "value": "not_worried",
+            "label": "Not worried at all"
+          }
+        ],
+        "visible_if": {
+          "any": [
+            {
+              "question": "q16_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthy_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthcare",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_phone",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        },
+        "required": false
+      },
+      {
+        "id": "q16d_worry_bills",
+        "section": 16,
+        "text": "How worried are you right now about not being able to pay your normal monthly bills?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "very_worried",
+            "label": "Very worried"
+          },
+          {
+            "value": "moderately_worried",
+            "label": "Moderately worried"
+          },
+          {
+            "value": "not_too_worried",
+            "label": "Not too worried"
+          },
+          {
+            "value": "not_worried",
+            "label": "Not worried at all"
+          }
+        ],
+        "visible_if": {
+          "any": [
+            {
+              "question": "q16_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthy_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthcare",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_phone",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        },
+        "required": false
+      },
+      {
+        "id": "q17_social_connections",
+        "section": 17,
+        "text": "How often do you see or talk to people that you care about and feel close to? (e.g., talking to friends on the phone, visiting friends or family, going to church or club meetings)",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "lt_once_week",
+            "label": "Less than once a week"
+          },
+          {
+            "value": "1_2_week",
+            "label": "1 or 2 times a week"
+          },
+          {
+            "value": "3_5_week",
+            "label": "3 to 5 times a week"
+          },
+          {
+            "value": "6plus_week",
+            "label": "6 or more times a week"
+          },
+          {
+            "value": "decline",
+            "label": "I choose not to answer this question"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q18_neighborhood_support",
+        "section": 18,
+        "text": "How much do you agree or disagree with the following statement about your neighborhood: There are people I can count on in this neighborhood.",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "definitely_agree",
+            "label": "Definitely agree"
+          },
+          {
+            "value": "somewhat_agree",
+            "label": "Somewhat agree"
+          },
+          {
+            "value": "somewhat_disagree",
+            "label": "Somewhat disagree"
+          },
+          {
+            "value": "definitely_disagree",
+            "label": "Definitely disagree"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q19a_phq2",
+        "section": 19,
+        "text": "Over the last 2 weeks, how often have you been bothered by the following problems? (PHQ-2)",
+        "type": "matrix",
+        "scale": [
+          {
+            "value": 0,
+            "label": "Not at all"
+          },
+          {
+            "value": 1,
+            "label": "Several days"
+          },
+          {
+            "value": 2,
+            "label": "More than half the days"
+          },
+          {
+            "value": 3,
+            "label": "Nearly every day"
+          }
+        ],
+        "rows": [
+          {
+            "id": "phq2_item1",
+            "label": "Little interest or pleasure in doing things."
+          },
+          {
+            "id": "phq2_item2",
+            "label": "Feeling down, depressed, or hopeless."
+          }
+        ],
+        "scoring": {
+          "method": "sum",
+          "positive_if": {
+            "operator": ">=",
+            "value": 3
+          },
+          "score_key": "phq2_score",
+          "flag_key": "depression_screen_positive"
+        },
+        "required": false
+      },
+      {
+        "id": "q19b_ipv_hits",
+        "section": 19,
+        "text": "How often does your partner do the following? (HITS)",
+        "type": "matrix",
+        "scale": [
+          {
+            "value": 1,
+            "label": "Never"
+          },
+          {
+            "value": 2,
+            "label": "Rarely"
+          },
+          {
+            "value": 3,
+            "label": "Sometimes"
+          },
+          {
+            "value": 4,
+            "label": "Fairly often"
+          },
+          {
+            "value": 5,
+            "label": "Frequently"
+          }
+        ],
+        "rows": [
+          {
+            "id": "hits_hurt",
+            "label": "Physically hurt you?"
+          },
+          {
+            "id": "hits_insult",
+            "label": "Insult you or talk down to you?"
+          },
+          {
+            "id": "hits_threaten",
+            "label": "Threaten you with harm?"
+          },
+          {
+            "id": "hits_scream",
+            "label": "Scream or curse at you?"
+          }
+        ],
+        "scoring": {
+          "method": "sum",
+          "positive_if": {
+            "operator": ">=",
+            "value_from": {
+              "if": {
+                "context": "spanish_version",
+                "is": true,
+                "then": 5.5,
+                "else": 10.5
+              }
+            }
+          },
+          "score_key": "hits_score",
+          "flag_key": "ipv_screen_positive"
+        },
+        "required": false
+      },
+      {
+        "id": "q20a_pa_days",
+        "section": 20,
+        "text": "In the last 30 days (outside of work), on average, how many days per week did you engage in moderate exercise (walking fast, running, jogging, dancing, swimming, biking, similar activities)?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": "0",
+            "label": "0"
+          },
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          }
+        ],
+        "required": false
+      },
+      {
+        "id": "q20b_pa_minutes",
+        "section": 20,
+        "text": "On average, how many minutes did you usually spend exercising at this level on one of those days?",
+        "type": "single-select",
+        "options": [
+          {
+            "value": 0,
+            "label": "0"
+          },
+          {
+            "value": 10,
+            "label": "10"
+          },
+          {
+            "value": 20,
+            "label": "20"
+          },
+          {
+            "value": 30,
+            "label": "30"
+          },
+          {
+            "value": 40,
+            "label": "40"
+          },
+          {
+            "value": 50,
+            "label": "50"
+          },
+          {
+            "value": 60,
+            "label": "60"
+          },
+          {
+            "value": 90,
+            "label": "90"
+          },
+          {
+            "value": 120,
+            "label": "120"
+          },
+          {
+            "value": 150,
+            "label": "150"
+          }
+        ],
+        "required": false
+      }
+    ],
+    "computed": [
+      {
+        "id": "c20_weekly_minutes",
+        "description": "Weekly minutes of moderate activity",
+        "expression": {
+          "multiply": [
+            {
+              "to_int": {
+                "question": "q20a_pa_days",
+                "default": 0
+              }
+            },
+            {
+              "to_int": {
+                "question": "q20b_pa_minutes",
+                "default": 0
+              }
+            }
+          ]
+        },
+        "output_key": "weekly_minutes_activity"
+      },
+      {
+        "id": "c20_physical_activity_need",
+        "description": "Physical activity need flag using age thresholds",
+        "logic": {
+          "any": [
+            {
+              "all": [
+                {
+                  "gte": [
+                    {
+                      "context": "age_years"
+                    },
+                    6
+                  ]
+                },
+                {
+                  "lte": [
+                    {
+                      "context": "age_years"
+                    },
+                    17
+                  ]
+                },
+                {
+                  "lt": [
+                    {
+                      "computed": "weekly_minutes_activity"
+                    },
+                    420
+                  ]
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                  "gte": [
+                    {
+                      "context": "age_years"
+                    },
+                    18
+                  ]
+                },
+                {
+                  "lt": [
+                    {
+                      "computed": "weekly_minutes_activity"
+                    },
+                    150
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "output_key": "physical_activity_need"
+      }
+    ],
+    "flags": [
+      {
+        "key": "housing_instability",
+        "logic": {
+          "any": [
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "worried_losing"
+            },
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "no_housing"
+            },
+            {
+              "question": "q6d_difficult_to_pay_housing",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        }
+      },
+      {
+        "key": "transportation_need",
+        "logic": {
+          "question": "q15b_transport_barrier",
+          "operator": "=",
+          "value": true
+        }
+      },
+      {
+        "key": "food_insecurity",
+        "logic": {
+          "any": [
+            {
+              "question": "q16_food",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16_healthy_food",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        }
+      },
+      {
+        "key": "medical_cost_barrier",
+        "logic": {
+          "any": [
+            {
+              "question": "q16a_medical_bills",
+              "operator": "=",
+              "value": true
+            },
+            {
+              "question": "q16b_delayed_care_cost",
+              "operator": "=",
+              "value": true
+            }
+          ]
+        }
+      },
+      {
+        "key": "depression_screen_positive",
+        "source": "q19a_phq2.scoring.flag_key"
+      },
+      {
+        "key": "ipv_screen_positive",
+        "source": "q19b_ipv_hits.scoring.flag_key"
+      },
+      {
+        "key": "physical_activity_need",
+        "source": "c20_physical_activity_need.output_key"
+      }
+    ],
+    "ui": {
+      "pagination": "sectioned",
+      "show_progress": true,
+      "allow_skip": true
+    }
+  }
+}
