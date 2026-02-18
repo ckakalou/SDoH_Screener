@@ -1,0 +1,419 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://healie.ai/schemas/sdoh_screener_response_schema_eu_gr_v2.json",
+  "title": "SDoH Screener Response Schema – EU/GR v2",
+  "description": "Validates responses for the HEALIE SDoH screener EU/GR adaptation.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "q1_ethnic_group": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "white",
+          "black_afam",
+          "ai_an",
+          "chinese",
+          "vietnamese",
+          "native_hawaiian",
+          "filipino",
+          "korean",
+          "samoan",
+          "asian_indian",
+          "japanese",
+          "chamorro",
+          "mena",
+          "other_asian",
+          "some_other_race",
+          "prefer_not_to_say"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "q2_europe_region": {
+      "type": "string",
+      "enum": [
+        "northern_europe",
+        "western_europe",
+        "southern_europe",
+        "eastern_europe",
+        "central_europe",
+        "not_in_europe",
+        "prefer_not_to_say"
+      ]
+    },
+    "q2_ancestry": {
+      "type": "string"
+    },
+    "q3_household_income": {
+      "type": "string",
+      "enum": [
+        "lt_10000",
+        "10000_19999",
+        "20000_29999",
+        "30000_39999",
+        "40000_59999",
+        "60000_79999",
+        "80000_99999",
+        "ge_100000",
+        "prefer_not_to_say"
+      ]
+    },
+    "q4_education": {
+      "type": "string",
+      "enum": [
+        "no_formal",
+        "primary",
+        "lower_secondary",
+        "upper_secondary",
+        "vocational",
+        "undergraduate",
+        "masters",
+        "doctorate",
+        "prefer_not_to_say"
+      ]
+    },
+    "q5_work_status": {
+      "type": "string",
+      "enum": [
+        "full_time",
+        "part_time",
+        "self_employed",
+        "unemployed",
+        "homemaker",
+        "student",
+        "retired",
+        "unable_disability",
+        "other",
+        "prefer_not_to_say"
+      ]
+    },
+    "q6a_housing_situation": {
+      "type": "string",
+      "enum": [
+        "have_housing",
+        "worried_losing",
+        "no_housing",
+        "prefer_not_answer"
+      ]
+    },
+    "q6b_tenure": {
+      "type": "string",
+      "enum": [
+        "owned_with_mortgage",
+        "owned_free_clear",
+        "rented",
+        "no_rent"
+      ]
+    },
+    "q6c_monthly_housing_cost": {
+      "type": "number",
+      "minimum": 0
+    },
+    "q6d_difficult_to_pay_housing": {
+      "type": "boolean"
+    },
+    "q6e_worry_housing_costs": {
+      "type": "string",
+      "enum": [
+        "very_worried",
+        "moderately_worried",
+        "not_too_worried",
+        "not_worried"
+      ]
+    },
+    "q7_building_type": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "multi_unit",
+          "detached_house",
+          "attached_house"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "q8a_household_size": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "q8b_bedrooms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "q9a_residence_length": {
+      "type": "string",
+      "enum": [
+        "lt6mo",
+        "6to12mo",
+        "1to3y",
+        "gt3y"
+      ]
+    },
+    "q9b_longest_zip": {
+      "type": "string"
+    },
+    "q9c_multiple_residences": {
+      "type": "boolean"
+    },
+    "q10_health_coverage": {
+      "type": "string",
+      "enum": [
+        "public_only",
+        "private_only",
+        "both_public_private",
+        "no_coverage",
+        "other",
+        "prefer_not_to_say"
+      ]
+    },
+    "q11_internet": {
+      "type": "boolean"
+    },
+    "q12_disability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q12a_hearing": {
+          "type": "boolean"
+        },
+        "q12b_vision": {
+          "type": "boolean"
+        },
+        "q12c_cognitive": {
+          "type": "boolean"
+        },
+        "q12d_mobility": {
+          "type": "boolean"
+        },
+        "q12e_adl": {
+          "type": "boolean"
+        },
+        "q12f_iadl": {
+          "type": "boolean"
+        }
+      }
+    },
+    "q13_local_language_proficiency": {
+      "type": "string",
+      "enum": [
+        "very_well",
+        "well",
+        "not_well",
+        "not_at_all"
+      ]
+    },
+    "q14a_marital_status": {
+      "type": "string",
+      "enum": [
+        "now_married",
+        "widowed",
+        "divorced",
+        "separated",
+        "never_married",
+        "living_with_partner"
+      ]
+    },
+    "q14b_single_parent": {
+      "type": "boolean"
+    },
+    "q15a_commute_mode": {
+      "type": "string",
+      "enum": [
+        "car_motorcycle_scooter",
+        "bus_coach_minibus",
+        "metro_tram_light_rail",
+        "train",
+        "bicycle",
+        "walked",
+        "worked_from_home",
+        "other"
+      ]
+    },
+    "q15b_transport_barrier": {
+      "type": "boolean"
+    },
+    "q16_unmet_needs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "q16_food": {
+          "type": "boolean"
+        },
+        "q16_healthy_food": {
+          "type": "boolean"
+        },
+        "q16_healthcare": {
+          "type": "boolean"
+        },
+        "q16_phone": {
+          "type": "boolean"
+        },
+        "q16_decline": {
+          "type": "boolean"
+        }
+      }
+    },
+    "q16a_medical_bills": {
+      "type": "boolean"
+    },
+    "q16b_delayed_care_cost": {
+      "type": "boolean"
+    },
+    "q16c_worry_housing_repeat": {
+      "type": "string",
+      "enum": [
+        "very_worried",
+        "moderately_worried",
+        "not_too_worried",
+        "not_worried"
+      ]
+    },
+    "q16d_worry_bills": {
+      "type": "string",
+      "enum": [
+        "very_worried",
+        "moderately_worried",
+        "not_too_worried",
+        "not_worried"
+      ]
+    },
+    "q17_social_connections": {
+      "type": "string",
+      "enum": [
+        "lt_once_week",
+        "1_2_week",
+        "3_5_week",
+        "6plus_week",
+        "decline"
+      ]
+    },
+    "q18_neighborhood_support": {
+      "type": "string",
+      "enum": [
+        "definitely_agree",
+        "somewhat_agree",
+        "somewhat_disagree",
+        "definitely_disagree"
+      ]
+    },
+    "q19a_phq2": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phq2_item1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "phq2_item2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "required": [
+        "phq2_item1",
+        "phq2_item2"
+      ]
+    },
+    "q19b_ipv_hits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hits_hurt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "hits_insult": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "hits_threaten": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "hits_scream": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "required": [
+        "hits_hurt",
+        "hits_insult",
+        "hits_threaten",
+        "hits_scream"
+      ]
+    },
+    "q19c_gad2": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gad2_item1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "gad2_item2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "required": [
+        "gad2_item1",
+        "gad2_item2"
+      ]
+    },
+    "q19d_cognition_selfreport": {
+      "type": "string",
+      "enum": [
+        "no",
+        "yes_some",
+        "yes_often",
+        "prefer_not_to_say"
+      ]
+    },
+    "q19e_mmse_total": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 30
+    },
+    "q20a_pa_days": {
+      "type": "string",
+      "enum": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    "q20b_pa_minutes": {
+      "type": "string",
+      "enum": [
+        "0",
+        "10",
+        "20",
+        "30",
+        "40",
+        "50",
+        "60",
+        "90",
+        "120",
+        "150"
+      ]
+    }
+  },
+  "required": [],
+  "examples": []
+}
