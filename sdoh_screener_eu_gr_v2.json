@@ -1174,7 +1174,15 @@
   "section": 21,
   "text": "If Other, please specify:",
   "type": "text",
-  "visible_if": { "all": [{ "id": "q21_religion_spiritual_belief", "equals": "other" }] }
+  "visible_if": {
+  "all": [
+    {
+      "question": "q21_religion_spiritual_belief",
+      "operator": "=",
+      "value": "other"
+    }
+  ]
+}
 },
 {
   "id": "q22_legal_support_access",

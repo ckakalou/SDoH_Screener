@@ -398,21 +398,56 @@
         "7"
       ]
     },
-    "q20b_pa_minutes": {
-      "type": "string",
-      "enum": [
-        "0",
-        "10",
-        "20",
-        "30",
-        "40",
-        "50",
-        "60",
-        "90",
-        "120",
-        "150"
-      ]
-    }
+"q20b_pa_minutes": {
+  "type": "integer",
+  "enum": [
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    90,
+    120,
+    150
+  ]
+},
+    "q21_religion_spiritual_belief": {
+  "type": "string",
+  "enum": [
+    "greek_orthodox",
+    "catholic",
+    "christian_evangelist",
+    "muslim",
+    "atheist",
+    "agnostic",
+    "other",
+    "prefer_not_say"
+  ]
+},
+"q21a_religion_other_text": {
+  "type": "string"
+},
+"q22_legal_support_access": {
+  "type": "string",
+  "enum": [
+    "yes",
+    "yes_but_limited",
+    "only_social_legal_support",
+    "no",
+    "prefer_not_say"
+  ]
+},
+"q23_digital_device_access": {
+  "type": "string",
+  "enum": [
+    "yes",
+    "no",
+    "sometimes",
+    "prefer_not_say"
+  ]
+}
   },
   "required": [],
   "examples": []
