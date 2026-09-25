@@ -1,5 +1,3 @@
-# Created by Christine Kakalou on 10/9/26
-# Project: SDoH_Screener
 import json
 from pathlib import Path
 from typing import Any
