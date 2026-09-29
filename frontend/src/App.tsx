@@ -7,6 +7,7 @@ import type {
   ScreenerDefinition,
 } from './types/screener'
 import './App.css'
+import { isQuestionVisible } from './utils/visibility'
 
 
 function App() {
@@ -59,14 +60,35 @@ function App() {
       </main>
     )
   }
+const questions = screener.questions
 
-const firstQuestions = screener.questions.slice(0, 3)
+const visibleQuestions = questions.filter((question) =>
+  isQuestionVisible(question.visible_if, answers),
+)
 
-function handleAnswerChange(questionId: string, value: AnswerValue) {
-  setAnswers((currentAnswers) => ({
-    ...currentAnswers,
-    [questionId]: value,
-  }))
+function handleAnswerChange(
+  questionId: string,
+  value: AnswerValue,
+) {
+  setAnswers((currentAnswers) => {
+    const updatedAnswers: ScreenerAnswers = {
+      ...currentAnswers,
+      [questionId]: value,
+    }
+
+    for (const question of questions) {
+      if (
+        !isQuestionVisible(
+          question.visible_if,
+          updatedAnswers,
+        )
+      ) {
+        delete updatedAnswers[question.id]
+      }
+    }
+
+    return updatedAnswers
+  })
 }
 
 return (
@@ -78,8 +100,8 @@ return (
     </header>
 
 <section aria-label="Screener questions">
-  {firstQuestions.length > 0 ? (
-    firstQuestions.map((question) => (
+  {visibleQuestions.length > 0 ? (
+    visibleQuestions.map((question) => (
       <QuestionCard
         key={question.id}
         question={question}
