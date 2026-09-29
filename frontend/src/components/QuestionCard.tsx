@@ -253,7 +253,6 @@ case 'checklist':
 
   return (
     <article className="question-card">
-      <p>Section {question.section}</p>
 
       <fieldset>
         <legend>{question.text}</legend>
