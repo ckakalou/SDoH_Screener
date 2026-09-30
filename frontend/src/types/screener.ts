@@ -110,3 +110,7 @@ export interface ScreenerDefinition {
 export interface ScreenerApiResponse {
   screener: ScreenerDefinition
 }
+export interface ScreenerValidationResult {
+  valid: boolean
+  message: string
+}

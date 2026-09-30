@@ -1,6 +1,11 @@
-import type { ScreenerApiResponse } from '../types/screener'
+import type {
+  ScreenerAnswers,
+  ScreenerApiResponse,
+  ScreenerValidationResult,
+} from '../types/screener'
 
 const SCREENER_ENDPOINT = '/api/v1/screener'
+const VALIDATION_ENDPOINT = '/api/v1/screener/validate'
 
 export async function fetchScreener(): Promise<ScreenerApiResponse> {
   const response = await fetch(SCREENER_ENDPOINT)
@@ -12,4 +17,29 @@ export async function fetchScreener(): Promise<ScreenerApiResponse> {
   }
 
   return response.json() as Promise<ScreenerApiResponse>
+}
+
+export async function validateScreener(
+  answers: ScreenerAnswers,
+): Promise<ScreenerValidationResult> {
+  const response = await fetch(VALIDATION_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ responses: answers }),
+  })
+
+  if (!response.ok) {
+    const errorBody = (await response.json()) as {
+      detail?: string
+    }
+
+    throw new Error(
+      errorBody.detail ??
+        `Could not validate the screener: ${response.status} ${response.statusText}`,
+    )
+  }
+
+  return response.json() as Promise<ScreenerValidationResult>
 }
