@@ -150,6 +150,45 @@ function App() {
     })
   }
 
+  function handleStartAgain() {
+  setAnswers({})
+  setCurrentSectionIndex(0)
+  setSubmissionMessage(null)
+  setSubmissionSucceeded(false)
+
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
+}
+
+  if (submissionSucceeded) {
+  return (
+    <main>
+      <section aria-labelledby="completion-heading">
+        <p aria-hidden="true">✓</p>
+        <h1 id="completion-heading">Thank you</h1>
+
+        <p>
+          Your responses were checked successfully.
+        </p>
+
+        <p>
+          This research prototype does not save your
+          responses yet.
+        </p>
+
+        <button
+          type="button"
+          onClick={handleStartAgain}
+        >
+          Start again
+        </button>
+      </section>
+    </main>
+  )
+}
+
   return (
     <main>
       <header>
@@ -232,12 +271,14 @@ function App() {
         </p>
       )}
 
-      <details>
-        <summary>
-          Development: current answer state
-        </summary>
-        <pre>{JSON.stringify(answers, null, 2)}</pre>
-      </details>
+{import.meta.env.DEV && (
+  <details>
+    <summary>
+      Development: current answer state
+    </summary>
+    <pre>{JSON.stringify(answers, null, 2)}</pre>
+  </details>
+)}
     </main>
   )
 }
