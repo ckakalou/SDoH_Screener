@@ -21,13 +21,17 @@ export async function fetchScreener(): Promise<ScreenerApiResponse> {
 
 export async function validateScreener(
   answers: ScreenerAnswers,
+  section?: number,
 ): Promise<ScreenerValidationResult> {
   const response = await fetch(VALIDATION_ENDPOINT, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ responses: answers }),
+    body: JSON.stringify({
+      responses: answers,
+      ...(section === undefined ? {} : { section }),
+    }),
   })
 
   if (!response.ok) {

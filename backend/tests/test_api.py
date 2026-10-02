@@ -51,10 +51,8 @@ def test_validate_valid_responses() -> None:
         json={
             "responses": {
                 "q3_household_income": "20000_29999",
-                "q11_internet": True,
-                "q20b_pa_minutes": 30,
-                "q23_digital_device_access": "yes",
-            }
+            },
+            "section": 3,
         },
     )
 
@@ -70,10 +68,87 @@ def test_validate_invalid_responses() -> None:
         "/api/v1/screener/validate",
         json={
             "responses": {
+                "q20a_pa_days": "1",
                 "q20b_pa_minutes": 25,
-            }
+            },
+            "section": 20,
         },
     )
 
     assert response.status_code == 422
     assert "q20b_pa_minutes" in response.json()["detail"]
+
+
+def test_validate_missing_visible_question() -> None:
+    response = client.post(
+        "/api/v1/screener/validate",
+        json={
+            "responses": {
+                "q9a_residence_length": "lt6mo",
+                "q9b_longest_zip": "5555",
+            },
+            "section": 9,
+        },
+    )
+
+    assert response.status_code == 422
+    assert "q9c_multiple_residences" in response.json()["detail"]
+
+
+def test_validate_incomplete_checklist() -> None:
+    response = client.post(
+        "/api/v1/screener/validate",
+        json={
+            "responses": {
+                "q12_disability": {
+                    "q12a_hearing": False,
+                    "q12b_vision": True,
+                    "q12c_cognitive": False,
+                    "q12e_adl": False,
+                    "q12f_iadl": False,
+                }
+            },
+            "section": 12,
+        },
+    )
+
+    assert response.status_code == 422
+    assert "q12d_mobility" in response.json()["detail"]
+
+
+def test_validate_optional_question_can_be_empty() -> None:
+    response = client.post(
+        "/api/v1/screener/validate",
+        json={"responses": {}, "section": 1},
+    )
+
+    assert response.status_code == 200
+
+
+def test_validate_hidden_conditional_question_is_not_required() -> None:
+    response = client.post(
+        "/api/v1/screener/validate",
+        json={
+            "responses": {
+                "q21_religion_spiritual_belief": "greek_orthodox",
+            },
+            "section": 21,
+        },
+    )
+
+    assert response.status_code == 200
+
+
+def test_validate_visible_conditional_question_is_required() -> None:
+    response = client.post(
+        "/api/v1/screener/validate",
+        json={
+            "responses": {
+                "q21_religion_spiritual_belief": "other",
+            },
+            "section": 21,
+        },
+    )
+
+    assert response.status_code == 422
+    assert "q21a_religion_other_text" in response.json()["detail"]
