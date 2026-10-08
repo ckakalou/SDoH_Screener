@@ -457,6 +457,7 @@
 .answer-option:has(.answer-input:focus-visible),
 .binary-option:has(.answer-input:focus-visible),
 .compact-choice:has(.answer-input:focus-visible),
+.exclusive-choice:has(.answer-input:focus-visible),
 .matrix-choice:has(.answer-input:focus-visible) {
   outline: 3px solid color-mix(in srgb, var(--violet) 45%, transparent);
   outline-offset: 2px;
@@ -500,6 +501,12 @@
 }
 
 .answer-option:has(.answer-input:checked) .selection-mark {
+  border-color: var(--violet);
+  color: var(--button-text);
+  background: var(--violet);
+}
+
+.exclusive-choice:has(.answer-input:checked) .selection-mark {
   border-color: var(--violet);
   color: var(--button-text);
   background: var(--violet);
@@ -618,6 +625,19 @@
   display: grid;
   grid-template-columns: repeat(2, 4.2rem);
   gap: 0.4rem;
+}
+
+.exclusive-choice {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  cursor: pointer;
+}
+
+.exclusive-mark {
+  border-radius: 0.35rem;
 }
 
 .compact-choice {

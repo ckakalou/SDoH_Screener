@@ -1,13 +1,13 @@
-# SDoH Screener
+# HEALIE SD-DOH Assessment
 
-A schema-driven Social Determinants of Health (SDoH) screening application developed as part of the HEALIE research project.
+A schema-driven **Social and Digital Determinants of Health (SD-DOH)** assessment developed as part of the HEALIE research project. The participant-facing title is **Social and Digital Factors Affecting Health**.
 
 The current redesign uses:
 
 - React and TypeScript for the frontend
 - FastAPI for the backend API
 - JSON Schema for response validation
-- An EU/Greek-adapted questionnaire definition
+- An EU/Greek-adapted questionnaire definition with separately documented legal-needs and digital-access modules
 
 > Research software under active development. It is not currently intended for clinical use.
 
@@ -20,9 +20,13 @@ The React/FastAPI implementation currently supports:
 - Section-by-section navigation with progress feedback
 - Shared answer state across all sections
 - Conditional visibility using `any` and `all` rules
+- Equality and multi-select containment conditions
 - Automatic removal of answers when conditional questions become hidden
+- Required-question checks before moving to the next section
+- Explicit optional-question metadata and exclusive decline choices
 - Submission of answers to FastAPI
 - Server-side validation using JSON Schema
+- Derived PHQ-2, HITS, GAD-2, physical-activity, and legal-access indicators
 - Participant-facing success and validation-error messages
 
 Supported question types:
@@ -49,7 +53,7 @@ flowchart LR
 
 The backend serves the questionnaire definition and validates submitted responses. The frontend controls rendering, navigation, conditional visibility, and temporary in-memory answer state.
 
-## EU/Greek adaptation
+## EU/Greek SD-DOH adaptation
 
 The active questionnaire is:
 
@@ -65,15 +69,22 @@ sdoh_screener_response_schema_eu_gr_v2.json
 
 Important adaptations include:
 
-- Ethnic-group and European-region questions
+- Required age group for age-specific activity interpretation
+- Optional gender, ethnic-group, ancestry, and postal-code responses
+- European-region questions
 - Euro-based household income brackets
 - Education and employment options adapted for European contexts
 - Public and private healthcare-coverage categories
 - EU-relevant transportation options
 - PHQ-2 and GAD-2 screening matrices
-- Optional self-reported cognition and MMSE total fields
-- Digital-device access
-- Religion or spiritual-belief options with conditional free text
+- HITS intimate-partner-violence screening when a current partner is reported
+- Optional MMSE total field
+- An I-HELP-informed legal-needs module
+- A six-item Digital Access and Inclusion module
+
+Religion/spiritual-belief items from the earlier adaptation were removed because they were not part of the intended source questionnaire and lacked a documented inclusion rationale. eHEALS is deliberately deferred to a separate HEALIE digital-literacy component.
+
+The complete item-level decisions, rationale, sources, and paper-ready methods language are in [`SD_DOH_QUESTION_AUDIT.md`](SD_DOH_QUESTION_AUDIT.md).
 
 The ontology mapping is stored in:
 
@@ -202,21 +213,23 @@ Example response:
 
 ### `GET /api/v1/screener`
 
-Returns the EU/GR v2 questionnaire definition used by the React frontend.
+Returns the EU/GR SD-DOH questionnaire definition used by the React frontend.
 
 ### `POST /api/v1/screener/validate`
 
-Validates submitted answers against the EU/GR v2 response schema.
+Validates submitted answers against the EU/GR response schema, visible-question requirements, and exclusive-answer rules.
 
 Example request:
 
 ```json
 {
   "responses": {
+    "dem_age_group": "22_30",
     "q3_household_income": "20000_29999",
     "q11_internet": true,
-    "q20b_pa_minutes": 30,
-    "q23_digital_device_access": "yes"
+    "q20a_pa_days": "3",
+    "q20b_pa_minutes": 60,
+    "ddoh_device_access": "always"
   }
 }
 ```
@@ -226,7 +239,11 @@ Successful response:
 ```json
 {
   "valid": true,
-  "message": "The screener responses are valid."
+  "message": "The screener responses are valid.",
+  "derived": {
+    "weekly_minutes_activity": 180,
+    "physical_activity_need": false
+  }
 }
 ```
 
@@ -275,11 +292,14 @@ SDoH_Screener/
 │   ├── requirements.txt
 │   └── requirements-dev.txt
 ├── frontend/
+│   ├── public/
+│   │   └── healie_final_official_logo_trans_crop.png
 │   ├── src/
 │   │   ├── api/
 │   │   │   └── screenerApi.ts
 │   │   ├── components/
-│   │   │   └── QuestionCard.tsx
+│   │   │   ├── QuestionCard.tsx
+│   │   │   └── UiIcon.tsx
 │   │   ├── types/
 │   │   │   └── screener.ts
 │   │   ├── utils/
@@ -291,6 +311,7 @@ SDoH_Screener/
 ├── sdoh_screener_eu_gr_v2.json
 ├── sdoh_screener_response_schema_eu_gr_v2.json
 ├── sdoh_ontology_mapping_eu_gr_v2.json
+├── SD_DOH_QUESTION_AUDIT.md
 ├── emit_rdf_eu_gr_v2.py
 ├── app.py
 └── app_eu_gr_v2.py
@@ -314,10 +335,11 @@ The current redesign:
 - Resets answers after a full browser refresh
 - Does not persist responses in a database
 - Does not include authentication or participant consent
-- Validates supplied answers but does not require questionnaire completion
-- Does not yet calculate the derived scores and SDoH flags available in the Streamlit prototype
+- Requires every visible question except those explicitly marked optional
+- Returns selected derived screening indicators but does not provide diagnosis or clinical decision support
 - Still includes a development-only answer-state inspector
-- Requires a separate content-validation review for the Section 16 follow-up logic
+- Requires cognitive interviewing, translation/back-translation, accessibility review, and psychometric validation
+- Uses project-authored legal and digital modules that must not be described as validated scales
 
 ## Safety and privacy
 
@@ -330,4 +352,3 @@ Production deployment will require:
 - A defined retention and deletion policy
 - A locally approved safety protocol for sensitive screening areas, including intimate-partner violence
 - Clear clinical-governance boundaries explaining that screening results are not a diagnosis
-

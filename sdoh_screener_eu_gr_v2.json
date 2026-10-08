@@ -1,113 +1,164 @@
 {
   "screener": {
-    "title": "Social Determinants of Health (SDoH) Screener – EU/GR Adaptation",
-    "version": "2.0.0-eu-gr",
-    "created": "2026-02-04",
+    "title": "Social and Digital Determinants of Health (SD-DOH) Assessment – EU/GR Adaptation",
+    "version": "3.0.0-eu-gr",
+    "created": "2026-10-08",
     "language": "en",
     "notes": [
-      "Derived from the user's provided 'SDoH proposed tool.docx'.",
-      "Includes branching (skip logic) and scoring rules for depression (PHQ-2), intimate partner violence (HITS), and physical activity.",
-      "For physical activity assessment, age is required; supply 'age_years' in patient context."
+      "The original 20-section SDoH questionnaire is preserved as an adapted core.",
+      "Legal-needs and Digital Access and Inclusion modules are explicitly documented additions.",
+      "Digital health literacy is outside the scope of this assessment and is reserved for a separate HEALIE component."
     ],
-    "context_fields": [
+    "context_fields": [],
+    "questions": [
       {
-        "key": "age_years",
-        "type": "integer",
-        "required": false,
-        "description": "Patient age in years, used for physical activity thresholds."
+        "id": "dem_age_group",
+        "section": 1,
+        "text": "What is your age group?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "16_17",
+            "label": "16–17"
+          },
+          {
+            "value": "18_21",
+            "label": "18–21"
+          },
+          {
+            "value": "22_30",
+            "label": "22–30"
+          },
+          {
+            "value": "31_40",
+            "label": "31–40"
+          },
+          {
+            "value": "41_50",
+            "label": "41–50"
+          },
+          {
+            "value": "51_60",
+            "label": "51–60"
+          },
+          {
+            "value": "61_70",
+            "label": "61–70"
+          },
+          {
+            "value": "71_80",
+            "label": "71–80"
+          },
+          {
+            "value": "81_plus",
+            "label": "81 or older"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
       },
       {
-        "key": "spanish_version",
-        "type": "boolean",
+        "id": "dem_gender",
+        "section": 1,
+        "text": "What is your gender?",
+        "type": "single-select",
         "required": false,
-        "default": false,
-        "description": "If true, IPV (HITS) positive cutoff is 5.5 instead of 10.5."
-      }
-    ],
-    "questions": [
+        "options": [
+          {
+            "value": "woman",
+            "label": "Woman"
+          },
+          {
+            "value": "man",
+            "label": "Man"
+          },
+          {
+            "value": "non_binary",
+            "label": "Non-binary"
+          },
+          {
+            "value": "another_gender",
+            "label": "Another gender"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "dem_gender_other_text",
+        "section": 1,
+        "text": "Please describe your gender:",
+        "type": "text",
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "dem_gender",
+              "operator": "=",
+              "value": "another_gender"
+            }
+          ]
+        }
+      },
       {
         "id": "q1_ethnic_group",
         "section": 1,
-        "text": "What is your ethnic group? (Optional; select all that apply)",
+        "text": "What is your ethnic group? Select all that apply. (Optional)",
         "type": "multi-select",
         "options": [
           {
             "value": "white",
-            "label": "White",
-            "free_text_hint": "e.g., German, Irish, English, Italian, Lebanese, Egyptian"
+            "label": "White"
           },
           {
-            "value": "black_afam",
-            "label": "Black or African American",
-            "free_text_hint": "e.g., African American, Jamaican, Haitian, Nigerian, Ethiopian, Somali"
+            "value": "black_or_african",
+            "label": "Black or African"
           },
           {
-            "value": "ai_an",
-            "label": "American Indian or Alaska Native",
-            "free_text_hint": "Print name of enrolled or principal tribe(s)"
+            "value": "asian",
+            "label": "Asian"
           },
           {
-            "value": "chinese",
-            "label": "Chinese"
+            "value": "hispanic_latino",
+            "label": "Hispanic/Latino"
           },
           {
-            "value": "vietnamese",
-            "label": "Vietnamese"
+            "value": "arab",
+            "label": "Arab"
           },
           {
-            "value": "native_hawaiian",
-            "label": "Native Hawaiian"
-          },
-          {
-            "value": "filipino",
-            "label": "Filipino"
-          },
-          {
-            "value": "korean",
-            "label": "Korean"
-          },
-          {
-            "value": "samoan",
-            "label": "Samoan"
-          },
-          {
-            "value": "asian_indian",
-            "label": "Asian Indian"
-          },
-          {
-            "value": "japanese",
-            "label": "Japanese"
-          },
-          {
-            "value": "chamorro",
-            "label": "Chamorro"
-          },
-          {
-            "value": "mena",
-            "label": "MENA"
-          },
-          {
-            "value": "other_asian",
-            "label": "Other Asian",
-            "free_text_hint": "e.g., Pakistani, Cambodian, Hmong"
-          },
-          {
-            "value": "some_other_race",
-            "label": "Some other race",
-            "free_text_hint": "Print race or origin"
-          },
-          {
-            "value": "prefer_not_to_say",
-            "label": "Prefer not to say"
+            "value": "other",
+            "label": "Other"
           }
         ],
         "allow_free_text_for_marked_options": true,
         "required": false
       },
       {
+        "id": "q1_ethnic_group_other_text",
+        "section": 1,
+        "text": "Please specify your ethnic group:",
+        "type": "text",
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "q1_ethnic_group",
+              "operator": "contains",
+              "value": "other"
+            }
+          ]
+        }
+      },
+      {
         "id": "q2_europe_region",
         "section": 2,
-        "text": "If you live in Europe, which broad region best describes where you live?",
+        "text": "Which broad region best describes where you currently live?",
         "type": "single-select",
         "options": [
           {
@@ -138,14 +189,15 @@
             "value": "prefer_not_to_say",
             "label": "Prefer not to say"
           }
-        ]
+        ],
+        "required": true
       },
       {
         "id": "q2_ancestry",
         "section": 2,
-        "text": "What is your country of birth and/or ethnic origin? (Optional)",
+        "text": "What is your ancestry or ethnic origin? (Optional)",
         "type": "text",
-        "placeholder": "e.g., Italian, Jamaican, African American, Cambodian, Cape Verdean, Norwegian, Dominican, French Canadian, Haitian, Korean, Lebanese, Polish, Nigerian, Mexican, Taiwanese, Ukrainian",
+        "placeholder": "For example, Greek, Albanian, Kurdish, Roma or another origin",
         "required": false
       },
       {
@@ -190,7 +242,8 @@
             "value": "prefer_not_to_say",
             "label": "Prefer not to say"
           }
-        ]
+        ],
+        "required": true
       },
       {
         "id": "q4_education",
@@ -235,7 +288,7 @@
             "label": "Prefer not to say"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q5_work_status",
@@ -283,7 +336,58 @@
             "value": "prefer_not_to_say",
             "label": "Prefer not to say"
           }
-        ]
+        ],
+        "required": true
+      },
+      {
+        "id": "q5b_last_worked",
+        "section": 5,
+        "text": "When did you last work, even for a few days?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "past_12_months",
+            "label": "Within the past 12 months"
+          },
+          {
+            "value": "one_to_five_years",
+            "label": "1–5 years ago"
+          },
+          {
+            "value": "over_five_or_never",
+            "label": "Over 5 years ago or never worked"
+          }
+        ],
+        "visible_if": {
+          "any": [
+            {
+              "question": "q5_work_status",
+              "operator": "=",
+              "value": "unemployed"
+            },
+            {
+              "question": "q5_work_status",
+              "operator": "=",
+              "value": "homemaker"
+            },
+            {
+              "question": "q5_work_status",
+              "operator": "=",
+              "value": "student"
+            },
+            {
+              "question": "q5_work_status",
+              "operator": "=",
+              "value": "retired"
+            },
+            {
+              "question": "q5_work_status",
+              "operator": "=",
+              "value": "unable_disability"
+            }
+          ]
+        }
       },
       {
         "id": "q6a_housing_situation",
@@ -308,7 +412,7 @@
             "label": "I choose not to answer this question"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q6b_tenure",
@@ -333,22 +437,64 @@
             "label": "Occupied without payment of rent"
           }
         ],
-        "required": false
+        "required": true,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "have_housing"
+            },
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "worried_losing"
+            }
+          ]
+        }
       },
       {
         "id": "q6c_monthly_housing_cost",
         "section": 6,
         "text": "Monthly mortgage, loan, or rent (in euros)",
         "type": "currency",
-        "currency": "USD",
-        "required": false
+        "currency": "EUR",
+        "required": true,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6b_tenure",
+              "operator": "=",
+              "value": "owned_with_mortgage"
+            },
+            {
+              "question": "q6b_tenure",
+              "operator": "=",
+              "value": "rented"
+            }
+          ]
+        }
       },
       {
         "id": "q6d_difficult_to_pay_housing",
         "section": 6,
         "text": "In the past 12 months, did you find it difficult to pay your monthly rent/mortgage? (e.g., being behind or unable to pay)",
         "type": "boolean",
-        "required": false
+        "required": true,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6b_tenure",
+              "operator": "=",
+              "value": "owned_with_mortgage"
+            },
+            {
+              "question": "q6b_tenure",
+              "operator": "=",
+              "value": "rented"
+            }
+          ]
+        }
       },
       {
         "id": "q6e_worry_housing_costs",
@@ -373,12 +519,26 @@
             "label": "Not worried at all"
           }
         ],
-        "required": false
+        "required": true,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "have_housing"
+            },
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "worried_losing"
+            }
+          ]
+        }
       },
       {
         "id": "q7_building_type",
         "section": 7,
-        "text": "Which best describes your residence? (Select all that apply)",
+        "text": "Which best describes your building? Select all that apply.",
         "type": "multi-select",
         "options": [
           {
@@ -392,17 +552,50 @@
           {
             "value": "attached_house",
             "label": "A one-family house attached to one or more houses"
+          },
+          {
+            "value": "mobile_home",
+            "label": "Mobile home"
           }
         ],
-        "required": false
+        "required": true,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "have_housing"
+            },
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "worried_losing"
+            }
+          ]
+        }
       },
       {
         "id": "q8a_household_size",
         "section": 8,
         "text": "How many people are living or staying at your home address? Include everyone staying more than 2 months.",
         "type": "integer",
-        "min": 0,
-        "required": false
+        "min": 1,
+        "required": true,
+        "max": 30,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "have_housing"
+            },
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "worried_losing"
+            }
+          ]
+        }
       },
       {
         "id": "q8b_bedrooms",
@@ -410,7 +603,22 @@
         "text": "How many separate bedrooms are in this house, apartment or mobile home? If efficiency/studio, enter 0.",
         "type": "integer",
         "min": 0,
-        "required": false
+        "required": true,
+        "max": 20,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "have_housing"
+            },
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "worried_losing"
+            }
+          ]
+        }
       },
       {
         "id": "q9a_residence_length",
@@ -435,21 +643,15 @@
             "label": "More than 3 years"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q9b_longest_zip",
         "section": 9,
-        "text": "What is the ZIP code of your longest-lived residence?",
+        "text": "What is the postal code of the residence where you have lived the longest? (Optional)",
         "type": "text",
         "pattern": "^[A-Za-z0-9 \\-]{3,10}$",
         "required": false
-      },
-      {
-        "id": "q9c_multiple_residences",
-        "section": 9,
-        "text": "Do you live in more than one residence during the year (e.g., part of the year in a different home)?",
-        "type": "boolean"
       },
       {
         "id": "q10_health_coverage",
@@ -459,36 +661,71 @@
         "options": [
           {
             "value": "public_only",
-            "label": "Public/national health coverage only"
+            "label": "Public coverage only"
           },
           {
             "value": "private_only",
-            "label": "Private insurance only"
+            "label": "Private coverage only"
           },
           {
             "value": "both_public_private",
-            "label": "Both public/national and private insurance"
+            "label": "Both public and private coverage"
           },
           {
             "value": "no_coverage",
-            "label": "No health coverage / not insured"
+            "label": "No health coverage"
           },
           {
             "value": "other",
-            "label": "Other / not sure"
+            "label": "Other coverage"
+          },
+          {
+            "value": "not_sure",
+            "label": "Not sure"
           },
           {
             "value": "prefer_not_to_say",
             "label": "Prefer not to say"
           }
-        ]
+        ],
+        "required": true
+      },
+      {
+        "id": "q10_health_coverage_other_text",
+        "section": 10,
+        "text": "Please specify the other health coverage:",
+        "type": "text",
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "q10_health_coverage",
+              "operator": "=",
+              "value": "other"
+            }
+          ]
+        }
       },
       {
         "id": "q11_internet",
         "section": 11,
         "text": "At this house, apartment, or mobile home—do you or any member of this household have access to the Internet?",
         "type": "boolean",
-        "required": false
+        "required": true,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "have_housing"
+            },
+            {
+              "question": "q6a_housing_situation",
+              "operator": "=",
+              "value": "worried_losing"
+            }
+          ]
+        }
       },
       {
         "id": "q12_disability",
@@ -508,26 +745,26 @@
           },
           {
             "id": "q12c_cognitive",
-            "label": "Because of a physical, mental, or emotional condition, do you have serious difficulty concentrating, remembering, or making decisions?",
+            "label": "Because of a physical, mental, or emotional condition, does this person have serious difficulty concentrating, remembering, or making decisions? (For people 5 years or older)",
             "type": "boolean"
           },
           {
             "id": "q12d_mobility",
-            "label": "Do you have serious difficulty walking or climbing stairs?",
+            "label": "Does this person have serious difficulty walking or climbing stairs? (For people 5 years or older)",
             "type": "boolean"
           },
           {
             "id": "q12e_adl",
-            "label": "Do you have difficulty dressing or bathing?",
+            "label": "Does this person have difficulty dressing or bathing? (For people 5 years or older)",
             "type": "boolean"
           },
           {
             "id": "q12f_iadl",
-            "label": "Because of a physical, mental, or emotional condition, do you have difficulty doing errands alone such as visiting a doctor’s office or shopping?",
+            "label": "Because of a physical, mental, or emotional condition, does this person have difficulty doing errands alone, such as visiting a doctor’s office or shopping? (For people 15 years or older)",
             "type": "boolean"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q13_local_language_proficiency",
@@ -552,7 +789,7 @@
             "label": "Not at all"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q14a_marital_status",
@@ -562,7 +799,7 @@
         "options": [
           {
             "value": "now_married",
-            "label": "Now married"
+            "label": "Married or in a registered civil partnership"
           },
           {
             "value": "widowed",
@@ -583,38 +820,50 @@
           {
             "value": "living_with_partner",
             "label": "Living with partner"
+          },
+          {
+            "value": "prefer_not_to_say",
+            "label": "Prefer not to say"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q14b_single_parent",
         "section": 14,
-        "text": "Are you a single parent? (Male/female householder, no spouse or partner present, with own children under 18 years)",
+        "text": "Are you a single parent? No spouse or partner lives in your household, and one or more children under 18 live with you.",
         "type": "boolean",
-        "required": false
+        "required": true
       },
       {
         "id": "q15a_commute_mode",
         "section": 15,
-        "text": "How did you usually travel for work or daily activities LAST WEEK?",
+        "text": "How did you usually travel for work or daily activities LAST WEEK? Select the method used for most of the distance.",
         "type": "single-select",
         "options": [
           {
             "value": "car_motorcycle_scooter",
-            "label": "Car / motorcycle / scooter (personal vehicle)"
+            "label": "Car, motorcycle, or scooter (personal vehicle)"
           },
           {
             "value": "bus_coach_minibus",
-            "label": "Bus / coach / minibus"
+            "label": "Bus, coach, or minibus"
           },
           {
             "value": "metro_tram_light_rail",
-            "label": "Metro / subway / tram / light rail"
+            "label": "Metro, subway, tram, or light rail"
           },
           {
             "value": "train",
-            "label": "Train / commuter rail"
+            "label": "Train or commuter rail"
+          },
+          {
+            "value": "taxi_ride_hailing",
+            "label": "Taxi or ride-hailing service"
+          },
+          {
+            "value": "ferry_boat",
+            "label": "Ferry or boat"
           },
           {
             "value": "bicycle",
@@ -629,18 +878,38 @@
             "label": "Worked from home"
           },
           {
+            "value": "did_not_travel",
+            "label": "Did not travel outside home last week"
+          },
+          {
             "value": "other",
             "label": "Other"
           }
         ],
-        "required": false
+        "required": true
+      },
+      {
+        "id": "q15a_commute_mode_other_text",
+        "section": 15,
+        "text": "Please specify the other travel method:",
+        "type": "text",
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "q15a_commute_mode",
+              "operator": "=",
+              "value": "other"
+            }
+          ]
+        }
       },
       {
         "id": "q15b_transport_barrier",
         "section": 15,
         "text": "In the past 12 months, has lack of reliable transportation kept you from medical appointments, meetings, work, or getting things needed for daily living?",
         "type": "boolean",
-        "required": false
+        "required": true
       },
       {
         "id": "q16_unmet_needs",
@@ -674,7 +943,8 @@
             "type": "boolean"
           }
         ],
-        "required": false
+        "exclusive_item_id": "q16_decline",
+        "required": true
       },
       {
         "id": "q16a_medical_bills",
@@ -705,7 +975,7 @@
             }
           ]
         },
-        "required": false
+        "required": true
       },
       {
         "id": "q16b_delayed_care_cost",
@@ -736,7 +1006,7 @@
             }
           ]
         },
-        "required": false
+        "required": true
       },
       {
         "id": "q16c_worry_housing_repeat",
@@ -785,7 +1055,7 @@
             }
           ]
         },
-        "required": false
+        "required": true
       },
       {
         "id": "q16d_worry_bills",
@@ -834,12 +1104,12 @@
             }
           ]
         },
-        "required": false
+        "required": true
       },
       {
         "id": "q17_social_connections",
         "section": 17,
-        "text": "How often do you see or talk to people that you care about and feel close to? (e.g., talking to friends on the phone, visiting friends or family, going to church or club meetings)",
+        "text": "How often do you see or talk to people that you care about and feel close to? For example, talking to friends by phone or online, visiting friends or family, or attending religious, community, or club meetings.",
         "type": "single-select",
         "options": [
           {
@@ -863,12 +1133,12 @@
             "label": "I choose not to answer this question"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q18_neighborhood_support",
         "section": 18,
-        "text": "How much do you agree or disagree with the following statement about your neighborhood: There are people I can count on in this neighborhood.",
+        "text": "There are people I can count on in this neighbourhood.",
         "type": "single-select",
         "options": [
           {
@@ -888,7 +1158,24 @@
             "label": "Definitely disagree"
           }
         ],
-        "required": false
+        "required": true
+      },
+      {
+        "id": "q19a_phq2_participation",
+        "section": 19,
+        "text": "Would you like to answer the two depression screening questions?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "answer",
+            "label": "Answer these questions"
+          },
+          {
+            "value": "decline",
+            "label": "Prefer not to answer"
+          }
+        ]
       },
       {
         "id": "q19a_phq2",
@@ -932,7 +1219,37 @@
           "score_key": "phq2_score",
           "flag_key": "depression_screen_positive"
         },
-        "required": false
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "q19a_phq2_participation",
+              "operator": "=",
+              "value": "answer"
+            }
+          ]
+        }
+      },
+      {
+        "id": "q19b_partner_status",
+        "section": 19,
+        "text": "Do you currently have a partner?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "yes",
+            "label": "Yes"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
       },
       {
         "id": "q19b_ipv_hits",
@@ -981,21 +1298,44 @@
         ],
         "scoring": {
           "method": "sum",
+          "range": [
+            4,
+            20
+          ],
           "positive_if": {
-            "operator": ">=",
-            "value_from": {
-              "if": {
-                "context": "spanish_version",
-                "is": true,
-                "then": 5.5,
-                "else": 10.5
-              }
-            }
+            "gte": 11
           },
           "score_key": "hits_score",
-          "flag_key": "ipv_screen_positive"
+          "flag_key": "ipv_screen_positive",
+          "note": "English HITS threshold; translated versions require validation."
         },
-        "required": false
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "q19b_partner_status",
+              "operator": "=",
+              "value": "yes"
+            }
+          ]
+        }
+      },
+      {
+        "id": "q19c_gad2_participation",
+        "section": 19,
+        "text": "Would you like to answer the two anxiety screening questions?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "answer",
+            "label": "Answer these questions"
+          },
+          {
+            "value": "decline",
+            "label": "Prefer not to answer"
+          }
+        ]
       },
       {
         "id": "q19c_gad2",
@@ -1029,7 +1369,29 @@
             "id": "gad2_item2",
             "label": "Not being able to stop or control worrying."
           }
-        ]
+        ],
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "q19c_gad2_participation",
+              "operator": "=",
+              "value": "answer"
+            }
+          ]
+        },
+        "scoring": {
+          "method": "sum",
+          "range": [
+            0,
+            6
+          ],
+          "positive_if": {
+            "gte": 3
+          },
+          "score_key": "gad2_score",
+          "flag_key": "anxiety_screen_positive"
+        }
       },
       {
         "id": "q19d_cognition_selfreport",
@@ -1053,7 +1415,8 @@
             "value": "prefer_not_to_say",
             "label": "Prefer not to say"
           }
-        ]
+        ],
+        "required": true
       },
       {
         "id": "q19e_mmse_total",
@@ -1061,7 +1424,8 @@
         "text": "If available, enter a clinician-administered MMSE total score (0–30). (Optional)",
         "type": "integer",
         "min": 0,
-        "max": 30
+        "max": 30,
+        "required": false
       },
       {
         "id": "q20a_pa_days",
@@ -1102,7 +1466,7 @@
             "label": "7"
           }
         ],
-        "required": false
+        "required": true
       },
       {
         "id": "q20b_pa_minutes",
@@ -1148,147 +1512,402 @@
           },
           {
             "value": 150,
-            "label": "150"
+            "label": "150 or more"
           }
         ],
-        "required": false
+        "required": true,
+        "visible_if": {
+          "any": [
+            {
+              "question": "q20a_pa_days",
+              "operator": "=",
+              "value": "1"
+            },
+            {
+              "question": "q20a_pa_days",
+              "operator": "=",
+              "value": "2"
+            },
+            {
+              "question": "q20a_pa_days",
+              "operator": "=",
+              "value": "3"
+            },
+            {
+              "question": "q20a_pa_days",
+              "operator": "=",
+              "value": "4"
+            },
+            {
+              "question": "q20a_pa_days",
+              "operator": "=",
+              "value": "5"
+            },
+            {
+              "question": "q20a_pa_days",
+              "operator": "=",
+              "value": "6"
+            },
+            {
+              "question": "q20a_pa_days",
+              "operator": "=",
+              "value": "7"
+            }
+          ]
+        }
       },
       {
-  "id": "q21_religion_spiritual_belief",
-  "section": 21,
-  "text": "Do you have a religion or spiritual belief? If yes, which one best describes you?",
-  "type": "single-select",
-  "options": [
-    { "value": "greek_orthodox", "label": "Greek Orthodox" },
-    { "value": "catholic", "label": "Catholic" },
-    { "value": "christian_evangelist", "label": "Christian evangelist" },
-    { "value": "muslim", "label": "Muslim" },
-    { "value": "atheist", "label": "Atheist" },
-    { "value": "agnostic", "label": "Agnostic" },
-    { "value": "other", "label": "Other" },
-    { "value": "prefer_not_say", "label": "Prefer not to say" }
-  ]
-},
-{
-  "id": "q21a_religion_other_text",
-  "section": 21,
-  "text": "If Other, please specify:",
-  "type": "text",
-  "visible_if": {
-  "all": [
-    {
-      "question": "q21_religion_spiritual_belief",
-      "operator": "=",
-      "value": "other"
-    }
-  ]
-}
-},
-{
-  "id": "q22_legal_support_access",
-  "section": 22,
-  "text": "Do you have access to legal support if needed?",
-  "type": "single-select",
-  "options": [
-    { "value": "yes", "label": "Yes" },
-    { "value": "yes_but_limited", "label": "Yes, but limited" },
-    { "value": "only_social_legal_support", "label": "Only provided (social legal support)" },
-    { "value": "no", "label": "No" },
-    { "value": "prefer_not_say", "label": "Prefer not to say" }
-  ]
-},
-{
-  "id": "q23_digital_device_access",
-  "section": 23,
-  "text": "Do you have access to a suitable digital device when you need one (smartphone, computer, tablet)?",
-  "type": "single-select",
-  "options": [
-    { "value": "yes", "label": "Yes" },
-    { "value": "no", "label": "No" },
-    { "value": "sometimes", "label": "Sometimes" },
-    { "value": "prefer_not_say", "label": "Prefer not to say" }
-  ]
-}
-
+        "id": "legal_need",
+        "section": 21,
+        "text": "During the past 12 months, have you experienced a problem for which legal information, advice, or support might have been useful?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "yes",
+            "label": "Yes"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          },
+          {
+            "value": "not_sure",
+            "label": "Not sure"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "legal_need_domains",
+        "section": 21,
+        "text": "Which area or areas did the problem concern? Select all that apply.",
+        "type": "multi-select",
+        "required": true,
+        "exclusive_option_value": "prefer_not_answer",
+        "visible_if": {
+          "any": [
+            {
+              "question": "legal_need",
+              "operator": "=",
+              "value": "yes"
+            },
+            {
+              "question": "legal_need",
+              "operator": "=",
+              "value": "not_sure"
+            }
+          ]
+        },
+        "options": [
+          {
+            "value": "income_benefits_insurance",
+            "label": "Income, public benefits, or social insurance"
+          },
+          {
+            "value": "housing_utilities",
+            "label": "Housing or utilities"
+          },
+          {
+            "value": "education",
+            "label": "Education"
+          },
+          {
+            "value": "employment",
+            "label": "Employment or working conditions"
+          },
+          {
+            "value": "healthcare_coverage_access",
+            "label": "Healthcare coverage or access"
+          },
+          {
+            "value": "residence_immigration_documentation",
+            "label": "Residence, immigration, or legal documentation"
+          },
+          {
+            "value": "family_care_custody",
+            "label": "Family matters, caregiving, or child custody"
+          },
+          {
+            "value": "safety_violence_discrimination",
+            "label": "Personal safety, violence, or discrimination"
+          },
+          {
+            "value": "debt_consumer",
+            "label": "Debt or consumer matters"
+          },
+          {
+            "value": "other",
+            "label": "Other"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "legal_need_other_text",
+        "section": 21,
+        "text": "Please describe the other area:",
+        "type": "text",
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "legal_need_domains",
+              "operator": "contains",
+              "value": "other"
+            }
+          ]
+        }
+      },
+      {
+        "id": "legal_support_access",
+        "section": 21,
+        "text": "Were you able to obtain the legal information, advice, or support you needed?",
+        "type": "single-select",
+        "required": true,
+        "visible_if": {
+          "all": [
+            {
+              "question": "legal_need",
+              "operator": "=",
+              "value": "yes"
+            }
+          ]
+        },
+        "options": [
+          {
+            "value": "all_support",
+            "label": "Yes, I received all the support I needed"
+          },
+          {
+            "value": "some_not_enough",
+            "label": "I received some support, but not enough"
+          },
+          {
+            "value": "tried_none",
+            "label": "No, I tried but did not receive support"
+          },
+          {
+            "value": "did_not_know_where",
+            "label": "I did not seek support because I did not know where to go"
+          },
+          {
+            "value": "cost_or_access_barrier",
+            "label": "I did not seek support because of cost or another access barrier"
+          },
+          {
+            "value": "chose_not_to_seek",
+            "label": "I chose not to seek support"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "ddoh_device_access",
+        "section": 22,
+        "text": "When you need to use an online health service or look for health information, how often do you have access to a suitable device, such as a smartphone, tablet, or computer?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "always",
+            "label": "Always"
+          },
+          {
+            "value": "often",
+            "label": "Often"
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes"
+          },
+          {
+            "value": "never",
+            "label": "Never"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "ddoh_connectivity",
+        "section": 22,
+        "text": "How often do you have access to an internet connection that is reliable enough to use online health information or services?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "always",
+            "label": "Always"
+          },
+          {
+            "value": "often",
+            "label": "Often"
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes"
+          },
+          {
+            "value": "never",
+            "label": "Never"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "ddoh_affordability",
+        "section": 22,
+        "text": "During the past 12 months, have cost concerns made it difficult for you to maintain internet access, mobile data, a suitable device, or necessary software?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "yes",
+            "label": "Yes"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          },
+          {
+            "value": "not_sure",
+            "label": "Not sure"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "ddoh_accessibility",
+        "section": 22,
+        "text": "How often are online health information and services available in a form that you can use, considering your language, vision, hearing, or other accessibility needs?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "always",
+            "label": "Always"
+          },
+          {
+            "value": "often",
+            "label": "Often"
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes"
+          },
+          {
+            "value": "never",
+            "label": "Never"
+          },
+          {
+            "value": "not_used",
+            "label": "I have not used online health information or services"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "ddoh_support",
+        "section": 22,
+        "text": "When you have difficulty using an online health service, how often is someone available to help you?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "always",
+            "label": "Always"
+          },
+          {
+            "value": "often",
+            "label": "Often"
+          },
+          {
+            "value": "sometimes",
+            "label": "Sometimes"
+          },
+          {
+            "value": "never",
+            "label": "Never"
+          },
+          {
+            "value": "no_assistance_needed",
+            "label": "I do not need assistance"
+          },
+          {
+            "value": "not_used",
+            "label": "I have not used online health services"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      },
+      {
+        "id": "ddoh_privacy_trust",
+        "section": 22,
+        "text": "Have concerns about privacy, data use, or digital security ever discouraged you from using an online health service?",
+        "type": "single-select",
+        "required": true,
+        "options": [
+          {
+            "value": "yes",
+            "label": "Yes"
+          },
+          {
+            "value": "no",
+            "label": "No"
+          },
+          {
+            "value": "not_sure",
+            "label": "Not sure"
+          },
+          {
+            "value": "not_used",
+            "label": "I have not used online health services"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
+      }
     ],
     "computed": [
       {
         "id": "c20_weekly_minutes",
         "description": "Weekly minutes of moderate activity",
-        "expression": {
-          "multiply": [
-            {
-              "to_int": {
-                "question": "q20a_pa_days",
-                "default": 0
-              }
-            },
-            {
-              "to_int": {
-                "question": "q20b_pa_minutes",
-                "default": 0
-              }
-            }
-          ]
-        },
         "output_key": "weekly_minutes_activity"
       },
       {
         "id": "c20_physical_activity_need",
-        "description": "Physical activity need flag using age thresholds",
-        "logic": {
-          "any": [
-            {
-              "all": [
-                {
-                  "gte": [
-                    {
-                      "context": "age_years"
-                    },
-                    6
-                  ]
-                },
-                {
-                  "lte": [
-                    {
-                      "context": "age_years"
-                    },
-                    17
-                  ]
-                },
-                {
-                  "lt": [
-                    {
-                      "computed": "weekly_minutes_activity"
-                    },
-                    420
-                  ]
-                }
-              ]
-            },
-            {
-              "all": [
-                {
-                  "gte": [
-                    {
-                      "context": "age_years"
-                    },
-                    18
-                  ]
-                },
-                {
-                  "lt": [
-                    {
-                      "computed": "weekly_minutes_activity"
-                    },
-                    150
-                  ]
-                }
-              ]
-            }
-          ]
-        },
+        "description": "Age-group physical activity result; missing/declined age is not assessed",
         "output_key": "physical_activity_need"
+      },
+      {
+        "id": "legal_need_assessment",
+        "description": "Legal need and potential unmet support indicators"
       }
     ],
     "flags": [
@@ -1361,18 +1980,26 @@
         "source": "q19a_phq2.scoring.flag_key"
       },
       {
+        "key": "anxiety_screen_positive",
+        "source": "q19c_gad2.scoring.flag_key"
+      },
+      {
         "key": "ipv_screen_positive",
         "source": "q19b_ipv_hits.scoring.flag_key"
       },
       {
         "key": "physical_activity_need",
         "source": "c20_physical_activity_need.output_key"
+      },
+      {
+        "key": "potential_unmet_legal_need",
+        "source": "legal_need_assessment"
       }
     ],
     "ui": {
       "pagination": "sectioned",
       "show_progress": true,
-      "allow_skip": true
+      "allow_skip": false
     }
   }
 }

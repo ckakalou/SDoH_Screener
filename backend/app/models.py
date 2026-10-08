@@ -23,3 +23,4 @@ class ScreenerSubmission(BaseModel):
 class ValidationResult(BaseModel):
     valid: bool
     message: str
+    derived: dict[str, Any] = Field(default_factory=dict)

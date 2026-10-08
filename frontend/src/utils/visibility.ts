@@ -38,6 +38,11 @@ function conditionMatches(
   switch (condition.operator) {
     case '=':
       return answer === condition.value
+    case 'contains':
+      return (
+        Array.isArray(answer) &&
+        answer.includes(String(condition.value))
+      )
     default:
       return false
   }

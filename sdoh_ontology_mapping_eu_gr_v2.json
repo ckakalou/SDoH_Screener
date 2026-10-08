@@ -9,8 +9,9 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
   "info": {
-    "version": "2.0.0-eu-gr",
-    "created": "2026-02-04"
+    "version": "3.0.0-eu-gr",
+    "created": "2026-02-04",
+    "title": "HEALIE Social and Digital Determinants of Health mapping"
   },
   "classes": {
     "Person": "healie:Person",
@@ -28,8 +29,94 @@
   },
   "questions": [
     {
+      "id": "dem_age_group",
+      "label": "What is your age group?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/dem-age-group",
+      "concept_iri": "healie:dem-age-group",
+      "value_set": {
+        "16_17": {
+          "label": "16–17",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#16-17"
+        },
+        "18_21": {
+          "label": "18–21",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#18-21"
+        },
+        "22_30": {
+          "label": "22–30",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#22-30"
+        },
+        "31_40": {
+          "label": "31–40",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#31-40"
+        },
+        "41_50": {
+          "label": "41–50",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#41-50"
+        },
+        "51_60": {
+          "label": "51–60",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#51-60"
+        },
+        "61_70": {
+          "label": "61–70",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#61-70"
+        },
+        "71_80": {
+          "label": "71–80",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#71-80"
+        },
+        "81_plus": {
+          "label": "81 or older",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#81-plus"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-age-group#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "dem_gender",
+      "label": "What is your gender?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/dem-gender",
+      "concept_iri": "healie:dem-gender",
+      "value_set": {
+        "woman": {
+          "label": "Woman",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#woman"
+        },
+        "man": {
+          "label": "Man",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#man"
+        },
+        "non_binary": {
+          "label": "Non-binary",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#non-binary"
+        },
+        "another_gender": {
+          "label": "Another gender",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#another-gender"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "dem_gender_other_text",
+      "label": "Please describe your gender:",
+      "type": "text",
+      "question_iri": "https://w3id.org/healie/sdoh/q/dem-gender-other-text",
+      "concept_iri": "healie:dem-gender-other-text",
+      "value_set": null
+    },
+    {
       "id": "q1_ethnic_group",
-      "label": "What is your ethnic group? (Optional; select all that apply)",
+      "label": "What is your ethnic group? Select all that apply. (Optional)",
       "type": "multi-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/q1-ethnic-group",
       "concept_iri": "healie:q1-ethnic-group",
@@ -38,71 +125,39 @@
           "label": "White",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#white"
         },
-        "black_afam": {
-          "label": "Black or African American",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#black-afam"
+        "black_or_african": {
+          "label": "Black or African",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#black-or-african"
         },
-        "ai_an": {
-          "label": "American Indian or Alaska Native",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#ai-an"
+        "asian": {
+          "label": "Asian",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#asian"
         },
-        "chinese": {
-          "label": "Chinese",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#chinese"
+        "hispanic_latino": {
+          "label": "Hispanic/Latino",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#hispanic-latino"
         },
-        "vietnamese": {
-          "label": "Vietnamese",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#vietnamese"
+        "arab": {
+          "label": "Arab",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#arab"
         },
-        "native_hawaiian": {
-          "label": "Native Hawaiian",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#native-hawaiian"
-        },
-        "filipino": {
-          "label": "Filipino",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#filipino"
-        },
-        "korean": {
-          "label": "Korean",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#korean"
-        },
-        "samoan": {
-          "label": "Samoan",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#samoan"
-        },
-        "asian_indian": {
-          "label": "Asian Indian",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#asian-indian"
-        },
-        "japanese": {
-          "label": "Japanese",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#japanese"
-        },
-        "chamorro": {
-          "label": "Chamorro",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#chamorro"
-        },
-        "mena": {
-          "label": "MENA",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#mena"
-        },
-        "other_asian": {
-          "label": "Other Asian",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#other-asian"
-        },
-        "some_other_race": {
-          "label": "Some other race",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#some-other-race"
-        },
-        "prefer_not_to_say": {
-          "label": "Prefer not to say",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#prefer-not-to-say"
+        "other": {
+          "label": "Other",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q1-ethnic-group#other"
         }
       }
     },
     {
+      "id": "q1_ethnic_group_other_text",
+      "label": "Please specify your ethnic group:",
+      "type": "text",
+      "question_iri": "https://w3id.org/healie/sdoh/q/q1-ethnic-group-other-text",
+      "concept_iri": "healie:q1-ethnic-group-other-text",
+      "value_set": null
+    },
+    {
       "id": "q2_europe_region",
-      "label": "If you live in Europe, which broad region best describes where you live?",
+      "label": "Which broad region best describes where you currently live?",
       "type": "single-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/q2-europe-region",
       "concept_iri": "healie:q2-europe-region",
@@ -139,7 +194,7 @@
     },
     {
       "id": "q2_ancestry",
-      "label": "What is your country of birth and/or ethnic origin? (Optional)",
+      "label": "What is your ancestry or ethnic origin? (Optional)",
       "type": "text",
       "question_iri": "https://w3id.org/healie/sdoh/q/q2-ancestry",
       "concept_iri": "healie:q2-ancestry",
@@ -285,6 +340,27 @@
       }
     },
     {
+      "id": "q5b_last_worked",
+      "label": "When did you last work, even for a few days?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/q5b-last-worked",
+      "concept_iri": "healie:q5b-last-worked",
+      "value_set": {
+        "past_12_months": {
+          "label": "Within the past 12 months",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q5b-last-worked#past-12-months"
+        },
+        "one_to_five_years": {
+          "label": "1–5 years ago",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q5b-last-worked#one-to-five-years"
+        },
+        "over_five_or_never": {
+          "label": "Over 5 years ago or never worked",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q5b-last-worked#over-five-or-never"
+        }
+      }
+    },
+    {
       "id": "q6a_housing_situation",
       "label": "What is your housing situation today?",
       "type": "single-select",
@@ -377,7 +453,7 @@
     },
     {
       "id": "q7_building_type",
-      "label": "Which best describes your residence? (Select all that apply)",
+      "label": "Which best describes your building? Select all that apply.",
       "type": "multi-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/q7-building-type",
       "concept_iri": "healie:q7-building-type",
@@ -393,6 +469,10 @@
         "attached_house": {
           "label": "A one-family house attached to one or more houses",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q7-building-type#attached-house"
+        },
+        "mobile_home": {
+          "label": "Mobile home",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q7-building-type#mobile-home"
         }
       }
     },
@@ -439,18 +519,10 @@
     },
     {
       "id": "q9b_longest_zip",
-      "label": "What is the ZIP code of your longest-lived residence?",
+      "label": "What is the postal code of the residence where you have lived the longest? (Optional)",
       "type": "text",
       "question_iri": "https://w3id.org/healie/sdoh/q/q9b-longest-zip",
       "concept_iri": "healie:q9b-longest-zip",
-      "value_set": null
-    },
-    {
-      "id": "q9c_multiple_residences",
-      "label": "Do you live in more than one residence during the year (e.g., part of the year in a different home)?",
-      "type": "boolean",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q9c-multiple-residences",
-      "concept_iri": "healie:q9c-multiple-residences",
       "value_set": null
     },
     {
@@ -461,30 +533,42 @@
       "concept_iri": "healie:q10-health-coverage",
       "value_set": {
         "public_only": {
-          "label": "Public/national health coverage only",
+          "label": "Public coverage only",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q10-health-coverage#public-only"
         },
         "private_only": {
-          "label": "Private insurance only",
+          "label": "Private coverage only",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q10-health-coverage#private-only"
         },
         "both_public_private": {
-          "label": "Both public/national and private insurance",
+          "label": "Both public and private coverage",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q10-health-coverage#both-public-private"
         },
         "no_coverage": {
-          "label": "No health coverage / not insured",
+          "label": "No health coverage",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q10-health-coverage#no-coverage"
         },
         "other": {
-          "label": "Other / not sure",
+          "label": "Other coverage",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q10-health-coverage#other"
+        },
+        "not_sure": {
+          "label": "Not sure",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q10-health-coverage#not-sure"
         },
         "prefer_not_to_say": {
           "label": "Prefer not to say",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q10-health-coverage#prefer-not-to-say"
         }
       }
+    },
+    {
+      "id": "q10_health_coverage_other_text",
+      "label": "Please specify the other health coverage:",
+      "type": "text",
+      "question_iri": "https://w3id.org/healie/sdoh/q/q10-health-coverage-other-text",
+      "concept_iri": "healie:q10-health-coverage-other-text",
+      "value_set": null
     },
     {
       "id": "q11_internet",
@@ -510,19 +594,19 @@
           "code_iri": "https://w3id.org/healie/sdoh/opt/q12-disability#q12b-vision"
         },
         "q12c_cognitive": {
-          "label": "Because of a physical, mental, or emotional condition, do you have serious difficulty concentrating, remembering, or making decisions?",
+          "label": "Because of a physical, mental, or emotional condition, does this person have serious difficulty concentrating, remembering, or making decisions? (For people 5 years or older)",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q12-disability#q12c-cognitive"
         },
         "q12d_mobility": {
-          "label": "Do you have serious difficulty walking or climbing stairs?",
+          "label": "Does this person have serious difficulty walking or climbing stairs? (For people 5 years or older)",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q12-disability#q12d-mobility"
         },
         "q12e_adl": {
-          "label": "Do you have difficulty dressing or bathing?",
+          "label": "Does this person have difficulty dressing or bathing? (For people 5 years or older)",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q12-disability#q12e-adl"
         },
         "q12f_iadl": {
-          "label": "Because of a physical, mental, or emotional condition, do you have difficulty doing errands alone such as visiting a doctor’s office or shopping?",
+          "label": "Because of a physical, mental, or emotional condition, does this person have difficulty doing errands alone, such as visiting a doctor’s office or shopping? (For people 15 years or older)",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q12-disability#q12f-iadl"
         }
       }
@@ -560,7 +644,7 @@
       "concept_iri": "healie:q14a-marital-status",
       "value_set": {
         "now_married": {
-          "label": "Now married",
+          "label": "Married or in a registered civil partnership",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q14a-marital-status#now-married"
         },
         "widowed": {
@@ -582,12 +666,16 @@
         "living_with_partner": {
           "label": "Living with partner",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q14a-marital-status#living-with-partner"
+        },
+        "prefer_not_to_say": {
+          "label": "Prefer not to say",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q14a-marital-status#prefer-not-to-say"
         }
       }
     },
     {
       "id": "q14b_single_parent",
-      "label": "Are you a single parent? (Male/female householder, no spouse or partner present, with own children under 18 years)",
+      "label": "Are you a single parent? No spouse or partner lives in your household, and one or more children under 18 live with you.",
       "type": "boolean",
       "question_iri": "https://w3id.org/healie/sdoh/q/q14b-single-parent",
       "concept_iri": "healie:q14b-single-parent",
@@ -595,26 +683,34 @@
     },
     {
       "id": "q15a_commute_mode",
-      "label": "How did you usually travel for work or daily activities LAST WEEK?",
+      "label": "How did you usually travel for work or daily activities LAST WEEK? Select the method used for most of the distance.",
       "type": "single-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/q15a-commute-mode",
       "concept_iri": "healie:q15a-commute-mode",
       "value_set": {
         "car_motorcycle_scooter": {
-          "label": "Car / motorcycle / scooter (personal vehicle)",
+          "label": "Car, motorcycle, or scooter (personal vehicle)",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#car-motorcycle-scooter"
         },
         "bus_coach_minibus": {
-          "label": "Bus / coach / minibus",
+          "label": "Bus, coach, or minibus",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#bus-coach-minibus"
         },
         "metro_tram_light_rail": {
-          "label": "Metro / subway / tram / light rail",
+          "label": "Metro, subway, tram, or light rail",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#metro-tram-light-rail"
         },
         "train": {
-          "label": "Train / commuter rail",
+          "label": "Train or commuter rail",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#train"
+        },
+        "taxi_ride_hailing": {
+          "label": "Taxi or ride-hailing service",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#taxi-ride-hailing"
+        },
+        "ferry_boat": {
+          "label": "Ferry or boat",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#ferry-boat"
         },
         "bicycle": {
           "label": "Bicycle",
@@ -628,11 +724,23 @@
           "label": "Worked from home",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#worked-from-home"
         },
+        "did_not_travel": {
+          "label": "Did not travel outside home last week",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#did-not-travel"
+        },
         "other": {
           "label": "Other",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q15a-commute-mode#other"
         }
       }
+    },
+    {
+      "id": "q15a_commute_mode_other_text",
+      "label": "Please specify the other travel method:",
+      "type": "text",
+      "question_iri": "https://w3id.org/healie/sdoh/q/q15a-commute-mode-other-text",
+      "concept_iri": "healie:q15a-commute-mode-other-text",
+      "value_set": null
     },
     {
       "id": "q15b_transport_barrier",
@@ -739,7 +847,7 @@
     },
     {
       "id": "q17_social_connections",
-      "label": "How often do you see or talk to people that you care about and feel close to? (e.g., talking to friends on the phone, visiting friends or family, going to church or club meetings)",
+      "label": "How often do you see or talk to people that you care about and feel close to? For example, talking to friends by phone or online, visiting friends or family, or attending religious, community, or club meetings.",
       "type": "single-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/q17-social-connections",
       "concept_iri": "healie:q17-social-connections",
@@ -768,7 +876,7 @@
     },
     {
       "id": "q18_neighborhood_support",
-      "label": "How much do you agree or disagree with the following statement about your neighborhood: There are people I can count on in this neighborhood.",
+      "label": "There are people I can count on in this neighbourhood.",
       "type": "single-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/q18-neighborhood-support",
       "concept_iri": "healie:q18-neighborhood-support",
@@ -792,6 +900,23 @@
       }
     },
     {
+      "id": "q19a_phq2_participation",
+      "label": "Would you like to answer the two depression screening questions?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/q19a-phq2-participation",
+      "concept_iri": "healie:q19a-phq2-participation",
+      "value_set": {
+        "answer": {
+          "label": "Answer these questions",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q19a-phq2-participation#answer"
+        },
+        "decline": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q19a-phq2-participation#decline"
+        }
+      }
+    },
+    {
       "id": "q19a_phq2",
       "label": "Over the last 2 weeks, how often have you been bothered by the following problems? (PHQ-2)",
       "type": "matrix",
@@ -805,6 +930,27 @@
         "phq2_item2": {
           "label": "Feeling down, depressed, or hopeless.",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q19a-phq2#phq2-item2"
+        }
+      }
+    },
+    {
+      "id": "q19b_partner_status",
+      "label": "Do you currently have a partner?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/q19b-partner-status",
+      "concept_iri": "healie:q19b-partner-status",
+      "value_set": {
+        "yes": {
+          "label": "Yes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-partner-status#yes"
+        },
+        "no": {
+          "label": "No",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-partner-status#no"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-partner-status#prefer-not-answer"
         }
       }
     },
@@ -830,6 +976,23 @@
         "hits_scream": {
           "label": "Scream or curse at you?",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-ipv-hits#hits-scream"
+        }
+      }
+    },
+    {
+      "id": "q19c_gad2_participation",
+      "label": "Would you like to answer the two anxiety screening questions?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/q19c-gad2-participation",
+      "concept_iri": "healie:q19c-gad2-participation",
+      "value_set": {
+        "answer": {
+          "label": "Answer these questions",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q19c-gad2-participation#answer"
+        },
+        "decline": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q19c-gad2-participation#decline"
         }
       }
     },
@@ -968,8 +1131,313 @@
           "code_iri": "https://w3id.org/healie/sdoh/opt/q20b-pa-minutes#120"
         },
         "150": {
-          "label": "150",
+          "label": "150 or more",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q20b-pa-minutes#150"
+        }
+      }
+    },
+    {
+      "id": "legal_need",
+      "label": "During the past 12 months, have you experienced a problem for which legal information, advice, or support might have been useful?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/legal-need",
+      "concept_iri": "healie:legal-need",
+      "value_set": {
+        "yes": {
+          "label": "Yes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need#yes"
+        },
+        "no": {
+          "label": "No",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need#no"
+        },
+        "not_sure": {
+          "label": "Not sure",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need#not-sure"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "legal_need_domains",
+      "label": "Which area or areas did the problem concern? Select all that apply.",
+      "type": "multi-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/legal-need-domains",
+      "concept_iri": "healie:legal-need-domains",
+      "value_set": {
+        "income_benefits_insurance": {
+          "label": "Income, public benefits, or social insurance",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#income-benefits-insurance"
+        },
+        "housing_utilities": {
+          "label": "Housing or utilities",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#housing-utilities"
+        },
+        "education": {
+          "label": "Education",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#education"
+        },
+        "employment": {
+          "label": "Employment or working conditions",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#employment"
+        },
+        "healthcare_coverage_access": {
+          "label": "Healthcare coverage or access",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#healthcare-coverage-access"
+        },
+        "residence_immigration_documentation": {
+          "label": "Residence, immigration, or legal documentation",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#residence-immigration-documentation"
+        },
+        "family_care_custody": {
+          "label": "Family matters, caregiving, or child custody",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#family-care-custody"
+        },
+        "safety_violence_discrimination": {
+          "label": "Personal safety, violence, or discrimination",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#safety-violence-discrimination"
+        },
+        "debt_consumer": {
+          "label": "Debt or consumer matters",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#debt-consumer"
+        },
+        "other": {
+          "label": "Other",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#other"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-need-domains#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "legal_need_other_text",
+      "label": "Please describe the other area:",
+      "type": "text",
+      "question_iri": "https://w3id.org/healie/sdoh/q/legal-need-other-text",
+      "concept_iri": "healie:legal-need-other-text",
+      "value_set": null
+    },
+    {
+      "id": "legal_support_access",
+      "label": "Were you able to obtain the legal information, advice, or support you needed?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/legal-support-access",
+      "concept_iri": "healie:legal-support-access",
+      "value_set": {
+        "all_support": {
+          "label": "Yes, I received all the support I needed",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-support-access#all-support"
+        },
+        "some_not_enough": {
+          "label": "I received some support, but not enough",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-support-access#some-not-enough"
+        },
+        "tried_none": {
+          "label": "No, I tried but did not receive support",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-support-access#tried-none"
+        },
+        "did_not_know_where": {
+          "label": "I did not seek support because I did not know where to go",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-support-access#did-not-know-where"
+        },
+        "cost_or_access_barrier": {
+          "label": "I did not seek support because of cost or another access barrier",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-support-access#cost-or-access-barrier"
+        },
+        "chose_not_to_seek": {
+          "label": "I chose not to seek support",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-support-access#chose-not-to-seek"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/legal-support-access#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "ddoh_device_access",
+      "label": "When you need to use an online health service or look for health information, how often do you have access to a suitable device, such as a smartphone, tablet, or computer?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/ddoh-device-access",
+      "concept_iri": "healie:ddoh-device-access",
+      "value_set": {
+        "always": {
+          "label": "Always",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-device-access#always"
+        },
+        "often": {
+          "label": "Often",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-device-access#often"
+        },
+        "sometimes": {
+          "label": "Sometimes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-device-access#sometimes"
+        },
+        "never": {
+          "label": "Never",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-device-access#never"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-device-access#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "ddoh_connectivity",
+      "label": "How often do you have access to an internet connection that is reliable enough to use online health information or services?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/ddoh-connectivity",
+      "concept_iri": "healie:ddoh-connectivity",
+      "value_set": {
+        "always": {
+          "label": "Always",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-connectivity#always"
+        },
+        "often": {
+          "label": "Often",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-connectivity#often"
+        },
+        "sometimes": {
+          "label": "Sometimes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-connectivity#sometimes"
+        },
+        "never": {
+          "label": "Never",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-connectivity#never"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-connectivity#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "ddoh_affordability",
+      "label": "During the past 12 months, have cost concerns made it difficult for you to maintain internet access, mobile data, a suitable device, or necessary software?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/ddoh-affordability",
+      "concept_iri": "healie:ddoh-affordability",
+      "value_set": {
+        "yes": {
+          "label": "Yes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-affordability#yes"
+        },
+        "no": {
+          "label": "No",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-affordability#no"
+        },
+        "not_sure": {
+          "label": "Not sure",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-affordability#not-sure"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-affordability#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "ddoh_accessibility",
+      "label": "How often are online health information and services available in a form that you can use, considering your language, vision, hearing, or other accessibility needs?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/ddoh-accessibility",
+      "concept_iri": "healie:ddoh-accessibility",
+      "value_set": {
+        "always": {
+          "label": "Always",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-accessibility#always"
+        },
+        "often": {
+          "label": "Often",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-accessibility#often"
+        },
+        "sometimes": {
+          "label": "Sometimes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-accessibility#sometimes"
+        },
+        "never": {
+          "label": "Never",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-accessibility#never"
+        },
+        "not_used": {
+          "label": "I have not used online health information or services",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-accessibility#not-used"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-accessibility#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "ddoh_support",
+      "label": "When you have difficulty using an online health service, how often is someone available to help you?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/ddoh-support",
+      "concept_iri": "healie:ddoh-support",
+      "value_set": {
+        "always": {
+          "label": "Always",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-support#always"
+        },
+        "often": {
+          "label": "Often",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-support#often"
+        },
+        "sometimes": {
+          "label": "Sometimes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-support#sometimes"
+        },
+        "never": {
+          "label": "Never",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-support#never"
+        },
+        "no_assistance_needed": {
+          "label": "I do not need assistance",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-support#no-assistance-needed"
+        },
+        "not_used": {
+          "label": "I have not used online health services",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-support#not-used"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-support#prefer-not-answer"
+        }
+      }
+    },
+    {
+      "id": "ddoh_privacy_trust",
+      "label": "Have concerns about privacy, data use, or digital security ever discouraged you from using an online health service?",
+      "type": "single-select",
+      "question_iri": "https://w3id.org/healie/sdoh/q/ddoh-privacy-trust",
+      "concept_iri": "healie:ddoh-privacy-trust",
+      "value_set": {
+        "yes": {
+          "label": "Yes",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-privacy-trust#yes"
+        },
+        "no": {
+          "label": "No",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-privacy-trust#no"
+        },
+        "not_sure": {
+          "label": "Not sure",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-privacy-trust#not-sure"
+        },
+        "not_used": {
+          "label": "I have not used online health services",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-privacy-trust#not-used"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/ddoh-privacy-trust#prefer-not-answer"
         }
       }
     }

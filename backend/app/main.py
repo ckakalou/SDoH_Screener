@@ -29,9 +29,12 @@ SCREENER_QUESTIONS = SCREENER_DATA["screener"]["questions"]
 
 
 app = FastAPI(
-    title="SDoH Screener API",
-    description="Backend API for the EU/Greek Social Determinants of Health screener.",
-    version="0.1.0",
+    title="HEALIE SD-DOH Assessment API",
+    description=(
+        "Backend API for the EU/Greek Social and Digital Determinants "
+        "of Health assessment."
+    ),
+    version="0.3.0",
 )
 
 
@@ -60,12 +63,16 @@ def condition_matches(
     condition: dict[str, Any],
     responses: dict[str, Any],
 ) -> bool:
-    if condition.get("operator") != "=":
-        return False
+    answer = get_answer(condition["question"], responses)
+    operator = condition.get("operator")
 
-    return get_answer(condition["question"], responses) == condition.get(
-        "value"
-    )
+    if operator == "=":
+        return answer == condition.get("value")
+
+    if operator == "contains":
+        return isinstance(answer, list) and condition.get("value") in answer
+
+    return False
 
 
 def is_question_visible(
@@ -95,7 +102,108 @@ def is_question_visible(
 
 
 def is_optional_question(question: dict[str, Any]) -> bool:
-    return "optional" in question["text"].lower()
+    return question.get("required", True) is False
+
+
+def validate_exclusive_answer(
+    question: dict[str, Any],
+    responses: dict[str, Any],
+) -> None:
+    exclusive_item_id = question.get("exclusive_item_id")
+    answer = responses.get(question["id"])
+
+    if exclusive_item_id and isinstance(answer, dict):
+        if answer.get(exclusive_item_id) is True:
+            answered_regular_items = [
+                item["id"]
+                for item in question.get("items", [])
+                if item["id"] != exclusive_item_id and item["id"] in answer
+            ]
+
+            if answered_regular_items:
+                raise HTTPException(
+                    status_code=422,
+                    detail=(
+                        f"{exclusive_item_id}: A decline option cannot be "
+                        "combined with answers to the other checklist items."
+                    ),
+                )
+
+    exclusive_option = question.get("exclusive_option_value")
+
+    if (
+        exclusive_option
+        and isinstance(answer, list)
+        and exclusive_option in answer
+        and len(answer) > 1
+    ):
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                f"{question['id']}: {exclusive_option} cannot be combined "
+                "with another selected option."
+            ),
+        )
+
+
+def total_matrix_answer(
+    responses: dict[str, Any],
+    question_id: str,
+) -> int | None:
+    answer = responses.get(question_id)
+
+    if not isinstance(answer, dict) or not answer:
+        return None
+
+    return sum(answer.values())
+
+
+def calculate_derived_results(responses: dict[str, Any]) -> dict[str, Any]:
+    derived: dict[str, Any] = {}
+
+    for question_id, score_key, flag_key, threshold in (
+        ("q19a_phq2", "phq2_score", "depression_screen_positive", 3),
+        ("q19b_ipv_hits", "hits_score", "ipv_screen_positive", 11),
+        ("q19c_gad2", "gad2_score", "anxiety_screen_positive", 3),
+    ):
+        total = total_matrix_answer(responses, question_id)
+        if total is not None:
+            derived[score_key] = total
+            derived[flag_key] = total >= threshold
+
+    days_answer = responses.get("q20a_pa_days")
+    minutes_answer = responses.get("q20b_pa_minutes")
+
+    if days_answer is not None:
+        days = int(days_answer)
+        weekly_minutes = 0 if days == 0 else days * int(minutes_answer or 0)
+        derived["weekly_minutes_activity"] = weekly_minutes
+
+        age_group = responses.get("dem_age_group")
+        if age_group in (None, "prefer_not_answer"):
+            derived["physical_activity_need"] = "not_assessed"
+        else:
+            threshold = 420 if age_group == "16_17" else 150
+            derived["physical_activity_need"] = weekly_minutes < threshold
+
+    legal_need = responses.get("legal_need")
+    if legal_need is not None:
+        derived["legal_need_assessment"] = legal_need
+        domains = responses.get("legal_need_domains")
+        if isinstance(domains, list):
+            derived["legal_need_domains"] = domains
+
+        support = responses.get("legal_support_access")
+        if support is not None:
+            derived["legal_support_access"] = support
+            derived["potential_unmet_legal_need"] = support in {
+                "some_not_enough",
+                "tried_none",
+                "did_not_know_where",
+                "cost_or_access_barrier",
+            }
+
+    return derived
 
 
 def is_answer_complete(
@@ -114,6 +222,11 @@ def is_answer_complete(
     if question["type"] == "checklist":
         if not isinstance(answer, dict):
             return False, question_id
+
+        exclusive_item_id = question.get("exclusive_item_id")
+
+        if exclusive_item_id and answer.get(exclusive_item_id) is True:
+            return True, None
 
         for item in question.get("items", []):
             if item["id"] not in answer:
@@ -140,6 +253,8 @@ def validate_completion(
 
         if not is_question_visible(question, responses):
             continue
+
+        validate_exclusive_answer(question, responses)
 
         if is_optional_question(question):
             continue
@@ -183,4 +298,5 @@ def validate_screener(
     return ValidationResult(
         valid=True,
         message="The screener responses are valid.",
+        derived=calculate_derived_results(submission.responses),
     )

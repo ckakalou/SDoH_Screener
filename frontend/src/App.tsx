@@ -90,18 +90,17 @@ const journeySteps: JourneyStep[] = [
     accentIcons: ['messages-square', 'clipboard-heart', 'activity'],
   },
   {
-    label: 'Community & access',
+    label: 'Support & digital inclusion',
     startSection: 21,
-    endSection: 23,
+    endSection: 22,
     icon: 'users-round',
     description:
-      'The beliefs, support, and technology that connect you to help.',
+      'Legal support and the digital conditions that shape access to care.',
     topics: [
-      { section: 21, label: 'Belief' },
-      { section: 22, label: 'Legal support' },
-      { section: 23, label: 'Digital access' },
+      { section: 21, label: 'Legal needs' },
+      { section: 22, label: 'Digital access & inclusion' },
     ],
-    accentIcons: ['sparkles', 'scale', 'smartphone'],
+    accentIcons: ['scale', 'smartphone', 'wifi'],
   },
 ]
 
@@ -129,9 +128,8 @@ const sectionPresentation: Record<
   18: { label: 'Neighbourhood support', icon: 'community-circle' },
   19: { label: 'Wellbeing check-in', icon: 'clipboard-heart' },
   20: { label: 'Physical activity', icon: 'activity' },
-  21: { label: 'Belief', icon: 'sparkles' },
-  22: { label: 'Legal support', icon: 'scale' },
-  23: { label: 'Digital access', icon: 'smartphone' },
+  21: { label: 'Legal needs', icon: 'scale' },
+  22: { label: 'Digital Access and Inclusion', icon: 'smartphone' },
 }
 
 function getJourneyStepIndex(section: number) {
@@ -157,6 +155,13 @@ function hasAnswer(
 
   if (typeof value === 'object' && value !== null) {
     if (question.type === 'checklist') {
+      if (
+        question.exclusive_item_id &&
+        value[question.exclusive_item_id] === true
+      ) {
+        return true
+      }
+
       return (
         question.items?.every((item) => item.id in value) ??
         Object.keys(value).length > 0
@@ -177,7 +182,7 @@ function hasAnswer(
 }
 
 function isOptionalQuestion(question: ScreenerQuestion) {
-  return question.text.toLowerCase().includes('optional')
+  return question.required === false
 }
 
 function validateQuestion(
@@ -282,7 +287,7 @@ function App() {
         <section className="status-panel" role="alert">
           <span className="status-icon status-icon-error">!</span>
           <p className="eyebrow">Connection problem</p>
-          <h1>Unable to load the screener</h1>
+          <h1>Unable to load the assessment</h1>
           <p>{error}</p>
         </section>
       </main>
@@ -295,7 +300,7 @@ function App() {
         <section className="status-panel">
           <span className="loading-mark" aria-hidden="true" />
           <p className="eyebrow">HEALIE</p>
-          <h1>Loading your screener…</h1>
+          <h1>Loading your assessment…</h1>
         </section>
       </main>
     )
@@ -463,7 +468,7 @@ function App() {
           <span className="completion-check" aria-hidden="true">
             <UiIcon name="check" />
           </span>
-          <p className="eyebrow">Screener complete</p>
+          <p className="eyebrow">Assessment complete</p>
           <h1 id="completion-heading">Thank you</h1>
           <p>Your responses were checked successfully.</p>
           <p className="completion-note">
@@ -494,13 +499,13 @@ function App() {
 </span>
           <span className="healie-wordmark">
             Healie
-            <small>Social needs screener</small>
+            <small>Social and digital factors affecting health</small>
           </span>
         </div>
 
         <div
           className="journey-ribbon"
-          aria-label="Screener progress"
+          aria-label="Assessment progress"
         >
           <ol className="journey-labels">
             {journeySteps.map((step, index) => {
@@ -652,7 +657,7 @@ function App() {
 
           <nav
             className="navigation-actions"
-            aria-label="Screener section navigation"
+            aria-label="Assessment section navigation"
           >
             <button
               className="button button-secondary"

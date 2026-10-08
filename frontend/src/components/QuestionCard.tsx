@@ -37,13 +37,44 @@ export function QuestionCard({
     optionValue: string,
     checked: boolean,
   ) {
+    const exclusiveOption = question.exclusive_option_value
     const updatedValues = checked
-      ? [...selectedValues, optionValue]
+      ? optionValue === exclusiveOption
+        ? [optionValue]
+        : [
+            ...selectedValues.filter(
+              (selectedValue) => selectedValue !== exclusiveOption,
+            ),
+            optionValue,
+          ]
       : selectedValues.filter(
           (selectedValue) => selectedValue !== optionValue,
         )
 
     onChange(question.id, updatedValues)
+  }
+
+  function handleChecklistChange(
+    itemId: string,
+    itemValue: boolean,
+  ) {
+    const exclusiveItemId = question.exclusive_item_id
+
+    if (itemId === exclusiveItemId && itemValue) {
+      onChange(question.id, { [itemId]: true })
+      return
+    }
+
+    const updatedValue: StructuredAnswer = {
+      ...structuredValue,
+      [itemId]: itemValue,
+    }
+
+    if (exclusiveItemId && itemId !== exclusiveItemId) {
+      updatedValue[exclusiveItemId] = false
+    }
+
+    onChange(question.id, updatedValue)
   }
 
   function renderInput() {
@@ -205,43 +236,76 @@ export function QuestionCard({
       case 'checklist':
         return (
           <div className="structured-list">
-            {question.items?.map((item) => (
-              <fieldset className="structured-row" key={item.id}>
-                <legend>{item.label}</legend>
-                <div className="row-choices">
-                  <label className="compact-choice">
-                    <input
-                      className="answer-input"
-                      type="radio"
-                      name={item.id}
-                      checked={structuredValue[item.id] === true}
-                      onChange={() =>
-                        onChange(question.id, {
-                          ...structuredValue,
-                          [item.id]: true,
-                        })
-                      }
-                    />
-                    <span>Yes</span>
-                  </label>
-                  <label className="compact-choice">
-                    <input
-                      className="answer-input"
-                      type="radio"
-                      name={item.id}
-                      checked={structuredValue[item.id] === false}
-                      onChange={() =>
-                        onChange(question.id, {
-                          ...structuredValue,
-                          [item.id]: false,
-                        })
-                      }
-                    />
-                    <span>No</span>
-                  </label>
-                </div>
-              </fieldset>
-            ))}
+            {question.items?.map((item) => {
+              const isExclusiveItem =
+                item.id === question.exclusive_item_id
+
+              return (
+                <fieldset
+                  className={[
+                    'structured-row',
+                    isExclusiveItem ? 'is-exclusive' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                  key={item.id}
+                >
+                  <legend>{item.label}</legend>
+                  {isExclusiveItem ? (
+                    <label className="exclusive-choice">
+                      <input
+                        className="answer-input"
+                        type="checkbox"
+                        name={item.id}
+                        checked={structuredValue[item.id] === true}
+                        onChange={(event) =>
+                          handleChecklistChange(
+                            item.id,
+                            event.target.checked,
+                          )
+                        }
+                      />
+                      <span
+                        className="selection-mark exclusive-mark"
+                        aria-hidden="true"
+                      >
+                        <UiIcon name="check" />
+                      </span>
+                      <span className="visually-hidden">
+                        Choose not to answer
+                      </span>
+                    </label>
+                  ) : (
+                    <div className="row-choices">
+                      <label className="compact-choice">
+                        <input
+                          className="answer-input"
+                          type="radio"
+                          name={item.id}
+                          checked={structuredValue[item.id] === true}
+                          onChange={() =>
+                            handleChecklistChange(item.id, true)
+                          }
+                        />
+                        <span>Yes</span>
+                      </label>
+                      <label className="compact-choice">
+                        <input
+                          className="answer-input"
+                          type="radio"
+                          name={item.id}
+                          checked={structuredValue[item.id] === false}
+                          onChange={() =>
+                            handleChecklistChange(item.id, false)
+                          }
+                        />
+                        <span>No</span>
+                      </label>
+                    </div>
+                  )}
+                </fieldset>
+              )
+            })}
           </div>
         )
 

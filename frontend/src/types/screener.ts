@@ -45,7 +45,7 @@ export interface ScaleOption {
 
 export interface VisibilityCondition {
   question: string
-  operator: '='
+  operator: '=' | 'contains'
   value: PrimitiveValue
 }
 
@@ -70,6 +70,8 @@ export interface ScreenerQuestion {
 
   options?: QuestionOption[]
   items?: ChecklistItem[]
+  exclusive_item_id?: string
+  exclusive_option_value?: string
   rows?: MatrixRow[]
   scale?: ScaleOption[]
 
@@ -113,4 +115,5 @@ export interface ScreenerApiResponse {
 export interface ScreenerValidationResult {
   valid: boolean
   message: string
+  derived: Record<string, unknown>
 }
