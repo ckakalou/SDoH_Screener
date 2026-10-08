@@ -132,6 +132,35 @@ const sectionPresentation: Record<
   22: { label: 'Digital Access and Inclusion', icon: 'smartphone' },
 }
 
+const questionIconOverrides: Record<string, UiIconName> = {
+  dem_age_group: 'user-round',
+  dem_gender: 'users-round',
+  dem_gender_other_text: 'user-round',
+  q1_ethnic_group: 'users-round',
+  q1_ethnic_group_other_text: 'users-round',
+  q2_europe_region: 'map',
+  q2_ancestry: 'globe',
+  q5b_last_worked: 'briefcase-business',
+  legal_need: 'scale',
+  legal_need_domains: 'scale',
+  legal_need_other_text: 'scale',
+  legal_support_access: 'support',
+  ddoh_device_access: 'smartphone',
+  ddoh_connectivity: 'wifi',
+  ddoh_affordability: 'wallet-cards',
+  ddoh_accessibility: 'accessibility',
+  ddoh_support: 'support',
+  ddoh_privacy_trust: 'lock',
+}
+
+function getQuestionIcon(question: ScreenerQuestion): UiIconName {
+  return (
+    questionIconOverrides[question.id] ??
+    sectionPresentation[question.section]?.icon ??
+    'sparkles'
+  )
+}
+
 function getJourneyStepIndex(section: number) {
   const stepIndex = journeySteps.findIndex(
     (step) =>
@@ -489,25 +518,39 @@ function App() {
 
   return (
     <main className="screener-shell">
-      <header className="journey-header">
-        <div className="brand-lockup" aria-label="HEALIE">
-<span className="official-logo-mark" aria-hidden="true">
-  <img
-    src="/healie_final_official_logo_trans_crop.png"
-    alt=""
-  />
-</span>
-          <span className="healie-wordmark">
-            Healie
-            <small>Social and digital factors affecting health</small>
-          </span>
+      <aside className="assessment-sidebar">
+        <div className="sidebar-brand" aria-label="HEALIE">
+          <img
+            className="sidebar-logo"
+            src="/healie_final_official_logo_full.png"
+            alt="Healie"
+          />
+          <p className="sidebar-subtitle">
+            Social and digital factors affecting health
+          </p>
         </div>
 
-        <div
-          className="journey-ribbon"
-          aria-label="Assessment progress"
-        >
-          <ol className="journey-labels">
+        <div className="sidebar-progress">
+          <div>
+            <strong>
+              Section {currentSectionIndex + 1} of {sections.length}
+            </strong>
+            <span>{progressValue}% complete</span>
+          </div>
+          <div
+            className="sidebar-progress-track"
+            role="progressbar"
+            aria-label="Assessment progress"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progressValue}
+          >
+            <span style={{ width: `${progressValue}%` }} />
+          </div>
+        </div>
+
+        <nav className="sidebar-journey" aria-label="Assessment journey">
+          <ol>
             {journeySteps.map((step, index) => {
               const isComplete = index < currentJourneyStepIndex
               const isActive = index === currentJourneyStepIndex
@@ -515,7 +558,7 @@ function App() {
               return (
                 <li
                   className={[
-                    'journey-label',
+                    'sidebar-step',
                     isComplete ? 'is-complete' : '',
                     isActive ? 'is-active' : '',
                   ]
@@ -524,91 +567,78 @@ function App() {
                   key={step.label}
                   aria-current={isActive ? 'step' : undefined}
                 >
-                  <span className="journey-label-icon">
-                    {isComplete ? (
-                      <UiIcon name="check" />
-                    ) : (
-                      <UiIcon name={step.icon} />
-                    )}
-                  </span>
-                  <span>{step.label}</span>
+                  <div className="sidebar-step-heading">
+                    <span className="sidebar-step-icon" aria-hidden="true">
+                      {isComplete ? (
+                        <UiIcon name="check" />
+                      ) : (
+                        <UiIcon name={step.icon} />
+                      )}
+                    </span>
+                    <span>{step.label}</span>
+                  </div>
+
+                  {isActive && (
+                    <ol className="sidebar-topics">
+                      {step.topics.map((topic) => (
+                        <li
+                          className={[
+                            topic.section < currentSection
+                              ? 'is-complete'
+                              : '',
+                            topic.section === currentSection
+                              ? 'is-active'
+                              : '',
+                          ]
+                            .filter(Boolean)
+                            .join(' ')}
+                          key={topic.section}
+                        >
+                          {topic.label}
+                        </li>
+                      ))}
+                    </ol>
+                  )}
                 </li>
               )
             })}
           </ol>
+        </nav>
 
-          <div className="journey-segments" aria-hidden="true">
-            {journeySteps.map((step, index) => (
-              <span
-                className={[
-                  'journey-segment',
-                  index < currentJourneyStepIndex ? 'is-complete' : '',
-                  index === currentJourneyStepIndex ? 'is-active' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-                key={step.label}
-              />
-            ))}
-          </div>
-        </div>
+        <p className="sidebar-privacy">
+          <UiIcon name="lock" />
+          Your answers remain in this browser during this research
+          prototype.
+        </p>
 
-        <div className="journey-meta">
-          <strong>
-            Section {currentSectionIndex + 1} of {sections.length}
-          </strong>
-          <span>{progressValue}% complete</span>
+        <div className="sidebar-project-footer">
+          <strong>HEALIE research prototype</strong>
+          <span>
+            Christina Kakalou ·{' '}
+            <a
+              href="https://ckakalou.github.io"
+              target="_blank"
+              rel="noreferrer"
+            >
+              ckakalou.github.io
+            </a>
+          </span>
         </div>
-      </header>
+      </aside>
 
       <section className="screener-main">
-        <section
-          className="group-banner"
-          aria-labelledby="group-heading"
-        >
-          <div className="group-banner-copy">
-            <p className="group-overline">
+        <header className="section-context">
+          <div>
+            <p>
               Part {currentJourneyStepIndex + 1} of {journeySteps.length}
             </p>
-            <h1 id="group-heading">{currentJourneyStep.label}</h1>
-            <p className="group-description">
-              {currentJourneyStep.description}
-            </p>
-            <div className="topic-chips" aria-label="Topics in this part">
-              {currentJourneyStep.topics.map((topic) => (
-                <span
-                  className={[
-                    'topic-chip',
-                    topic.section < currentSection ? 'is-complete' : '',
-                    topic.section === currentSection ? 'is-active' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  key={topic.section}
-                >
-                  {topic.section < currentSection && (
-                    <UiIcon name="check" />
-                  )}
-                  {topic.label}
-                </span>
-              ))}
-            </div>
+            <strong>{currentJourneyStep.label}</strong>
+            <span>{currentJourneyStep.description}</span>
           </div>
-
-          <div className="group-art" aria-hidden="true">
-            <span className="group-art-main">
-              <UiIcon name={currentJourneyStep.icon} />
-            </span>
-            {currentJourneyStep.accentIcons.map((icon, index) => (
-              <span
-                className={`group-art-accent accent-${index + 1}`}
-                key={icon}
-              >
-                <UiIcon name={icon} />
-              </span>
-            ))}
-          </div>
-        </section>
+          <span className="section-context-icon" aria-hidden="true">
+            <UiIcon name={currentJourneyStep.icon} />
+          </span>
+        </header>
 
         <div className="screener-content">
           <section
@@ -639,6 +669,7 @@ function App() {
                     value={answers[question.id]}
                     onChange={handleAnswerChange}
                     hideQuestionText={hasSingleQuestion}
+                    icon={getQuestionIcon(question)}
                   />
                 ))
               ) : (
