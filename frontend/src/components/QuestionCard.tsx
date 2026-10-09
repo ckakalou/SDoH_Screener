@@ -3,7 +3,7 @@ import type {
   ScreenerQuestion,
   StructuredAnswer,
 } from '../types/screener'
-import { UiIcon } from './UiIcon'
+import { UiIcon, type UiIconName } from './UiIcon'
 
 function isStructuredAnswer(
   value: AnswerValue | undefined,
@@ -20,6 +20,7 @@ interface QuestionCardProps {
   value: AnswerValue | undefined
   onChange: (questionId: string, value: AnswerValue) => void
   hideQuestionText?: boolean
+  icon?: UiIconName
 }
 
 export function QuestionCard({
@@ -27,6 +28,7 @@ export function QuestionCard({
   value,
   onChange,
   hideQuestionText = false,
+  icon,
 }: QuestionCardProps) {
   const selectedValues = Array.isArray(value)
     ? value.map(String)
@@ -148,6 +150,7 @@ export function QuestionCard({
             className="text-field"
             id={question.id}
             type="text"
+            aria-label={question.text}
             value={typeof value === 'string' ? value : ''}
             placeholder={question.placeholder}
             onChange={(event) =>
@@ -362,8 +365,20 @@ export function QuestionCard({
   return (
     <article className="question-card">
       <fieldset className="question-fieldset">
-        <legend className={hideQuestionText ? 'visually-hidden' : ''}>
-          {question.text}
+        <legend
+          className={[
+            'question-legend',
+            hideQuestionText ? 'visually-hidden' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {icon && !hideQuestionText && (
+            <span className="question-item-icon" aria-hidden="true">
+              <UiIcon name={icon} />
+            </span>
+          )}
+          <span>{question.text}</span>
         </legend>
         {renderInput()}
       </fieldset>

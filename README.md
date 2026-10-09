@@ -28,6 +28,7 @@ The React/FastAPI implementation currently supports:
 - Server-side validation using JSON Schema
 - Derived PHQ-2, HITS, GAD-2, physical-activity, and legal-access indicators
 - Participant-facing success and validation-error messages
+- Frontend behavioural regression tests with Vitest and React Testing Library
 
 Supported question types:
 
@@ -262,6 +263,7 @@ On Windows, run the frontend checks with:
 ```powershell
 npm.cmd --prefix frontend run lint
 npm.cmd --prefix frontend run build
+npm.cmd --prefix frontend test
 ```
 
 On macOS or Linux:
@@ -269,6 +271,7 @@ On macOS or Linux:
 ```bash
 npm --prefix frontend run lint
 npm --prefix frontend run build
+npm --prefix frontend test
 ```
 
 Check staged or unstaged changes for whitespace errors:
@@ -304,10 +307,14 @@ SDoH_Screener/
 │   │   │   └── screener.ts
 │   │   ├── utils/
 │   │   │   └── visibility.ts
+│   │   ├── test/
+│   │   │   └── setupTests.ts
+│   │   ├── App.test.tsx
 │   │   ├── App.tsx
 │   │   └── App.css
 │   ├── package.json
-│   └── vite.config.ts
+│   ├── vite.config.ts
+│   └── vitest.config.ts
 ├── sdoh_screener_eu_gr_v2.json
 ├── sdoh_screener_response_schema_eu_gr_v2.json
 ├── sdoh_ontology_mapping_eu_gr_v2.json
