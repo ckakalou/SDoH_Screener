@@ -71,7 +71,9 @@ export interface ScreenerQuestion {
   options?: QuestionOption[]
   items?: ChecklistItem[]
   exclusive_item_id?: string
+  exclusive_item_ids?: string[]
   exclusive_option_value?: string
+  exclusive_option_values?: string[]
   rows?: MatrixRow[]
   scale?: ScaleOption[]
 

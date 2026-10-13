@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://w3id.org/healie/schema/sdoh-ddoh-indicators-1.0.json",
+  "title": "HEALIE SD-DOH indicator export",
+  "description": "Data-minimised integration contract derived from the HEALIE Social and Digital Determinants of Health assessment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "context",
+    "needs",
+    "screening_results",
+    "restricted_safety_indicators"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "healie-sdoh-ddoh-indicators-1.0"
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "age",
+        "identity",
+        "economic",
+        "education",
+        "employment",
+        "housing",
+        "health_coverage",
+        "geographic_linkage",
+        "digital_connectivity",
+        "language_access",
+        "family",
+        "transportation",
+        "social_connection",
+        "neighbourhood_support",
+        "cognitive_function"
+      ],
+      "properties": {
+        "age": { "$ref": "#/$defs/statusObject" },
+        "identity": { "type": "object" },
+        "economic": { "$ref": "#/$defs/statusObject" },
+        "education": { "$ref": "#/$defs/statusObject" },
+        "employment": { "$ref": "#/$defs/statusObject" },
+        "housing": { "$ref": "#/$defs/statusObject" },
+        "health_coverage": { "$ref": "#/$defs/statusObject" },
+        "geographic_linkage": { "$ref": "#/$defs/statusObject" },
+        "digital_connectivity": { "$ref": "#/$defs/statusObject" },
+        "language_access": { "$ref": "#/$defs/statusObject" },
+        "family": { "$ref": "#/$defs/statusObject" },
+        "transportation": { "$ref": "#/$defs/statusObject" },
+        "social_connection": { "$ref": "#/$defs/statusObject" },
+        "neighbourhood_support": { "$ref": "#/$defs/statusObject" },
+        "cognitive_function": { "$ref": "#/$defs/statusObject" }
+      }
+    },
+    "needs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "housing",
+        "functional_access",
+        "language_support",
+        "transportation",
+        "material_needs",
+        "healthcare_affordability",
+        "financial_strain",
+        "physical_activity",
+        "legal_support",
+        "digital_access"
+      ],
+      "properties": {
+        "housing": { "$ref": "#/$defs/indicatorGroup" },
+        "functional_access": { "$ref": "#/$defs/statusObject" },
+        "language_support": { "$ref": "#/$defs/indicatorGroup" },
+        "transportation": { "$ref": "#/$defs/statusObject" },
+        "material_needs": { "$ref": "#/$defs/statusObject" },
+        "healthcare_affordability": { "$ref": "#/$defs/indicatorGroup" },
+        "financial_strain": { "$ref": "#/$defs/indicatorGroup" },
+        "physical_activity": { "$ref": "#/$defs/statusObject" },
+        "legal_support": { "$ref": "#/$defs/statusObject" },
+        "digital_access": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "device_access_barrier",
+            "connectivity_barrier",
+            "affordability_barrier",
+            "accessibility_barrier",
+            "support_barrier",
+            "privacy_trust_barrier"
+          ],
+          "properties": {
+            "device_access_barrier": { "$ref": "#/$defs/nullableBoolean" },
+            "connectivity_barrier": { "$ref": "#/$defs/nullableBoolean" },
+            "affordability_barrier": { "$ref": "#/$defs/nullableBoolean" },
+            "accessibility_barrier": { "$ref": "#/$defs/nullableBoolean" },
+            "support_barrier": { "$ref": "#/$defs/nullableBoolean" },
+            "privacy_trust_barrier": { "$ref": "#/$defs/nullableBoolean" }
+          }
+        }
+      }
+    },
+    "screening_results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["depression", "anxiety"],
+      "properties": {
+        "depression": { "$ref": "#/$defs/screeningResult" },
+        "anxiety": { "$ref": "#/$defs/screeningResult" }
+      }
+    },
+    "restricted_safety_indicators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ipv"],
+      "properties": {
+        "ipv": { "$ref": "#/$defs/screeningResult" }
+      }
+    }
+  },
+  "$defs": {
+    "assessmentStatus": {
+      "enum": ["assessed", "declined", "uncertain", "not_assessed", "not_applicable"]
+    },
+    "nullableBoolean": {
+      "type": ["boolean", "null"]
+    },
+    "statusObject": {
+      "type": "object",
+      "required": ["assessment_status"],
+      "properties": {
+        "assessment_status": { "$ref": "#/$defs/assessmentStatus" }
+      }
+    },
+    "indicatorGroup": {
+      "type": "object"
+    },
+    "screeningResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessment_status", "instrument", "score", "screen_positive"],
+      "properties": {
+        "assessment_status": { "$ref": "#/$defs/assessmentStatus" },
+        "instrument": { "type": "string" },
+        "score": { "type": ["integer", "null"] },
+        "screen_positive": { "$ref": "#/$defs/nullableBoolean" }
+      }
+    }
+  }
+}

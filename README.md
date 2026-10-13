@@ -29,6 +29,7 @@ The React/FastAPI implementation currently supports:
 - Derived PHQ-2, HITS, GAD-2, physical-activity, and legal-access indicators
 - Participant-facing success and validation-error messages
 - Frontend behavioural regression tests with Vitest and React Testing Library
+- Keyboard focus management and automated accessibility checks with axe-core
 
 Supported question types:
 
@@ -78,8 +79,8 @@ Important adaptations include:
 - Public and private healthcare-coverage categories
 - EU-relevant transportation options
 - PHQ-2 and GAD-2 screening matrices
-- HITS intimate-partner-violence screening when a current partner is reported
-- Optional MMSE total field
+- HITS intimate-partner-violence screening offered independently of the current-partner answer
+- Self-reported cognition context without an MMSE field
 - An I-HELP-informed legal-needs module
 - A six-item Digital Access and Inclusion module
 
@@ -242,11 +243,31 @@ Successful response:
   "valid": true,
   "message": "The screener responses are valid.",
   "derived": {
-    "weekly_minutes_activity": 180,
-    "physical_activity_need": false
+    "schema_version": "healie-sdoh-ddoh-indicators-1.0",
+    "context": {
+      "age": {
+        "assessment_status": "assessed",
+        "age_band": "22_30",
+        "life_stage": "young_adult"
+      }
+    },
+    "needs": {
+      "physical_activity": {
+        "assessment_status": "assessed",
+        "weekly_minutes": 180,
+        "need_identified": false
+      }
+    },
+    "screening_results": {},
+    "restricted_safety_indicators": {}
   }
 }
 ```
+
+The real response includes every field defined in
+`healie_indicator_export_schema_v1.json`; the example above is abbreviated for
+readability. The four tiers separate descriptive context, derived needs,
+ordinary screening results, and restricted safety indicators.
 
 Invalid values produce an HTTP `422` response containing the first validation error.
 
@@ -343,7 +364,7 @@ The current redesign:
 - Does not persist responses in a database
 - Does not include authentication or participant consent
 - Requires every visible question except those explicitly marked optional
-- Returns selected derived screening indicators but does not provide diagnosis or clinical decision support
+- Returns the versioned four-tier indicator contract but does not provide diagnosis or clinical decision support
 - Still includes a development-only answer-state inspector
 - Requires cognitive interviewing, translation/back-translation, accessibility review, and psychometric validation
 - Uses project-authored legal and digital modules that must not be described as validated scales

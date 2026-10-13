@@ -282,7 +282,18 @@
       "type": "string"
     },
     "q15b_transport_barrier": {
-      "type": "boolean"
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "healthcare",
+          "daily_living",
+          "none",
+          "prefer_not_answer"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
     },
     "q16_unmet_needs": {
       "type": "object",
@@ -478,11 +489,6 @@
         "yes_often",
         "prefer_not_to_say"
       ]
-    },
-    "q19e_mmse_total": {
-      "type": "integer",
-      "minimum": 0,
-      "maximum": 30
     },
     "q20a_pa_days": {
       "type": "string",

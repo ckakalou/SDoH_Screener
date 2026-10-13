@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from backend.app.main import app
+from backend.app.main import app, calculate_derived_results
 
 
 client = TestClient(app)
@@ -36,6 +36,9 @@ def test_get_screener_returns_refactored_assessment() -> None:
     assert "Social and Digital Determinants of Health" in screener["title"]
     assert {"dem_age_group", "legal_need", "ddoh_privacy_trust"} <= ids
     assert "q21_religion_spiritual_belief" not in ids
+    assert "q19e_mmse_total" not in ids
+    hits = next(q for q in screener["questions"] if q["id"] == "q19b_ipv_hits")
+    assert "visible_if" not in hits
 
 
 def test_all_questions_have_explicit_required_metadata() -> None:
@@ -43,7 +46,7 @@ def test_all_questions_have_explicit_required_metadata() -> None:
     assert all("required" in question for question in questions)
     assert {q["id"] for q in questions if q["required"] is False} == {
         "dem_gender", "q1_ethnic_group", "q2_ancestry",
-        "q9b_longest_zip", "q19e_mmse_total",
+        "q9b_longest_zip",
     }
 
 
@@ -125,11 +128,15 @@ def test_scale_participation_controls_visibility_and_scoring() -> None:
     declined = validate({
         "q19a_phq2_participation": "decline",
         "q19b_partner_status": "no",
+        "q19b_ipv_hits": {"hits_hurt": 1, "hits_insult": 1,
+                          "hits_threaten": 1, "hits_scream": 1},
         "q19c_gad2_participation": "decline",
         "q19d_cognition_selfreport": "no",
     }, section=19)
     assert declined.status_code == 200
-    assert "phq2_score" not in declined.json()["derived"]
+    derived = declined.json()["derived"]
+    assert derived["screening_results"]["depression"]["assessment_status"] == "declined"
+    assert derived["restricted_safety_indicators"]["ipv"]["score"] == 4
 
     scored = validate({
         "q19a_phq2_participation": "answer",
@@ -142,10 +149,20 @@ def test_scale_participation_controls_visibility_and_scoring() -> None:
         "q19d_cognition_selfreport": "no",
     }, section=19)
     assert scored.status_code == 200
-    assert scored.json()["derived"] == {
-        "phq2_score": 3, "depression_screen_positive": True,
-        "hits_score": 11, "ipv_screen_positive": True,
-        "gad2_score": 3, "anxiety_screen_positive": True,
+    derived = scored.json()["derived"]
+    assert derived["screening_results"] == {
+        "depression": {
+            "assessment_status": "assessed", "instrument": "phq_2",
+            "score": 3, "screen_positive": True,
+        },
+        "anxiety": {
+            "assessment_status": "assessed", "instrument": "gad_2",
+            "score": 3, "screen_positive": True,
+        },
+    }
+    assert derived["restricted_safety_indicators"]["ipv"] == {
+        "assessment_status": "assessed", "instrument": "hits",
+        "score": 11, "screen_positive": True,
     }
 
 
@@ -154,8 +171,9 @@ def test_zero_activity_days_does_not_require_minutes() -> None:
         {"dem_age_group": "16_17", "q20a_pa_days": "0"}, section=20
     )
     assert response.status_code == 200
-    assert response.json()["derived"]["weekly_minutes_activity"] == 0
-    assert response.json()["derived"]["physical_activity_need"] is True
+    activity = response.json()["derived"]["needs"]["physical_activity"]
+    assert activity["weekly_minutes"] == 0
+    assert activity["need_identified"] is True
 
 
 def test_activity_is_not_assessed_when_age_is_declined() -> None:
@@ -164,8 +182,36 @@ def test_activity_is_not_assessed_when_age_is_declined() -> None:
         "q20b_pa_minutes": 60,
     }, section=20)
     assert response.status_code == 200
-    assert response.json()["derived"]["weekly_minutes_activity"] == 180
-    assert response.json()["derived"]["physical_activity_need"] == "not_assessed"
+    activity = response.json()["derived"]["needs"]["physical_activity"]
+    assert activity == {
+        "assessment_status": "not_assessed",
+        "weekly_minutes": 180,
+        "need_identified": None,
+    }
+
+
+def test_transportation_domains_are_distinct_and_exclusive() -> None:
+    assessed = validate({
+        "q15a_commute_mode": "bus_coach_minibus",
+        "q15b_transport_barrier": ["healthcare"],
+    }, section=15)
+    assert assessed.status_code == 200
+    derived = assessed.json()["derived"]
+    assert derived["context"]["transportation"]["usual_travel_mode"] == (
+        "bus_coach_minibus"
+    )
+    assert derived["needs"]["transportation"] == {
+        "assessment_status": "assessed",
+        "barrier_reported": True,
+        "healthcare_access_affected": True,
+        "daily_living_access_affected": False,
+    }
+
+    invalid = validate({
+        "q15a_commute_mode": "walked",
+        "q15b_transport_barrier": ["none", "daily_living"],
+    }, section=15)
+    assert invalid.status_code == 422
 
 
 def test_legal_other_domain_is_conditional_and_exclusive() -> None:
@@ -188,10 +234,91 @@ def test_legal_support_result_identifies_access_barrier() -> None:
         "legal_support_access": "cost_or_access_barrier",
     }, section=21)
     assert response.status_code == 200
-    assert response.json()["derived"]["potential_unmet_legal_need"] is True
+    legal = response.json()["derived"]["needs"]["legal_support"]
+    assert legal == {
+        "assessment_status": "assessed",
+        "domains": ["housing_utilities"],
+        "unmet_need_identified": True,
+    }
+
+
+def test_uncertain_legal_need_is_not_converted_to_false() -> None:
+    response = validate({
+        "legal_need": "not_sure",
+        "legal_need_domains": ["housing_utilities"],
+    }, section=21)
+    assert response.status_code == 200
+    legal = response.json()["derived"]["needs"]["legal_support"]
+    assert legal["assessment_status"] == "uncertain"
+    assert legal["unmet_need_identified"] is None
 
 
 def test_digital_access_section_requires_all_six_items() -> None:
     response = validate({"ddoh_device_access": "always"}, section=22)
     assert response.status_code == 422
     assert "ddoh_connectivity" in response.json()["detail"]
+
+
+def test_digital_barriers_and_combined_internet_access_are_derived() -> None:
+    response = validate({
+        "q11_internet": True,
+        "ddoh_device_access": "sometimes",
+        "ddoh_connectivity": "sometimes",
+        "ddoh_affordability": "no",
+        "ddoh_accessibility": "never",
+        "ddoh_support": "no_assistance_needed",
+        "ddoh_privacy_trust": "yes",
+    }, section=22)
+    assert response.status_code == 200
+    derived = response.json()["derived"]
+    assert derived["context"]["digital_connectivity"] == {
+        "assessment_status": "assessed",
+        "household_home_internet": True,
+        "household_home_internet_status": "assessed",
+        "personal_connectivity": "sometimes",
+        "internet_access_level": "intermittent_despite_home_access",
+    }
+    assert derived["needs"]["digital_access"] == {
+        "device_access_barrier": True,
+        "connectivity_barrier": True,
+        "affordability_barrier": False,
+        "accessibility_barrier": True,
+        "support_barrier": False,
+        "privacy_trust_barrier": True,
+    }
+
+
+def test_four_tier_contract_retains_approved_context_without_free_text_other() -> None:
+    derived = calculate_derived_results({
+        "dem_age_group": "71_80",
+        "dem_gender": "another_gender",
+        "dem_gender_other_text": "not exported",
+        "q1_ethnic_group": ["white", "other"],
+        "q1_ethnic_group_other_text": "not exported",
+        "q2_europe_region": "southern_europe",
+        "q2_ancestry": "Greek",
+        "q3_household_income": "20000_29999",
+        "q4_education": "masters",
+        "q5_work_status": "unemployed",
+        "q5b_last_worked": "one_to_five_years",
+        "q9b_longest_zip": "54622",
+        "q14a_marital_status": "divorced",
+        "q14b_single_parent": True,
+        "q15a_commute_mode": "bus_coach_minibus",
+    })
+    assert set(derived) == {
+        "schema_version", "context", "needs", "screening_results",
+        "restricted_safety_indicators",
+    }
+    assert derived["context"]["economic"]["household_income_band"] == (
+        "20000_29999"
+    )
+    assert derived["context"]["identity"]["ancestry"]["reported_value"] == "Greek"
+    assert derived["context"]["geographic_linkage"]["postal_code"] == "54622"
+    assert derived["context"]["family"]["marital_status"] == "divorced"
+    assert derived["context"]["transportation"]["usual_travel_mode"] == (
+        "bus_coach_minibus"
+    )
+    serialized = str(derived)
+    assert "not exported" not in serialized
+    assert "threshold" not in serialized

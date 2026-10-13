@@ -4,9 +4,12 @@
 
 This document records the design decisions applied to version `3.0.0-eu-gr` of the HEALIE Social and Digital Determinants of Health (SD-DOH) Assessment. It is an implementation and research audit trail, not evidence that the adapted instrument is psychometrically validated. Wording, translations, thresholds, skip logic and referral pathways require expert review and validation in the intended Greek and European populations before clinical or policy use.
 
-- Participant-facing name: **Social and Digital Factors Affecting Health**
-- Scientific name: **Social and Digital Determinants of Health (SD-DOH)**
-- HEALIE component name: **HEALIE SD-DOH Assessment**
+Participant-facing name: **Social and Digital Factors Affecting Health**
+
+Scientific name: **Social and Digital Determinants of Health (SD-DOH)**
+
+HEALIE component name: **HEALIE SD-DOH Assessment**
+
 ## Design principles
 
 - Preserve the original 20-section SDoH core where it remains meaningful.
@@ -36,14 +39,14 @@ This document records the design decisions applied to version `3.0.0-eu-gr` of t
 | 12 | Disability | Retained the six-item checklist, restored explicit completeness, and added age qualifiers to relevant ACS-style functional-difficulty wording. |
 | 13 | Language | Retained local-language proficiency item. |
 | 14 | Family | Modernized marital-status wording to include registered civil partnership and added Prefer not to say. Clarified single-parent wording in household terms. |
-| 15 | Transport | Expanded EU-relevant modes; clarified that the mode covering most distance should be selected. Other opens free text. |
+| 15 | Transport | Expanded EU-relevant modes; clarified that the mode covering most distance should be selected. Other opens free text. The access item distinguishes healthcare/medicine access from work, appointments and daily-living access; No difficulties and Prefer not to answer are exclusive. |
 | 16 | Unmet needs | Restored the original five-row checklist: food, healthy food, healthcare/medicines, phone, and decline. Decline is exclusive. Any reported need reveals and requires all four original follow-ups (medical bills, delayed care, housing-cost worry, bill worry). |
 | 17 | Social connection | Retained frequency item and added inclusive examples covering phone/online contact and community or club meetings. |
 | 18 | Neighbourhood support | Retained as a distinct support statement and used British spelling. |
 | 19 | PHQ-2 | Added an answer/decline gate. When answered, both rows are required. Sum 0–6; a score of at least 3 is flagged as a positive screen, not a diagnosis. |
-| 19 | HITS | Added current-partner status and only displays HITS when Yes. Four 1–5 rows produce a 4–20 total; the implementation uses the English-language threshold of 11 and explicitly requires translated-version validation. |
+| 19 | HITS | Retained current-partner status as context, but HITS is available to everyone and is not hidden when the participant reports no current partner. Four 1–5 rows produce a 4–20 total; the implementation uses the English-language threshold of 11 and explicitly requires translated-version validation. |
 | 19 | GAD-2 | Added an answer/decline gate. When answered, both rows are required. Sum 0–6; a score of at least 3 is flagged as a positive screen. |
-| 19 | Cognition/MMSE | Retained self-reported cognition. MMSE total remains optional because it requires separate administration and governance. |
+| 19 | Self-reported cognition | Retained the self-reported cognition item as contextual information only. Removed the optional clinician-entered MMSE total because it is not part of the original questionnaire and would introduce separate administration, interpretation, and licensing requirements. |
 | 20 | Physical activity | If days are zero, minutes are hidden and weekly minutes equal zero. “150” is labelled “150 or more.” Ages 16–17 use 420 minutes/week (60 minutes/day); ages 18+ use 150 minutes/week. Missing/declined age yields `not_assessed`. This remains a simplified indicator because the item does not fully capture all WHO intensity guidance. |
 | 21 | Religion | Removed. It was not part of the intended core questionnaire and had entered the earlier adaptation without a documented source or approved rationale. |
 | 21 | Legal needs | Added as a separately documented, I-HELP-informed module: overall need, domains, optional Other specification, and access to support. It records potential unmet access without claiming a legal diagnosis. |
@@ -56,19 +59,28 @@ This document records the design decisions applied to version `3.0.0-eu-gr` of t
 - Hidden answers are deleted in the frontend whenever a parent answer changes.
 - A visible required question must be complete before section navigation and again on the server.
 - Q16 decline is valid by itself and cannot be combined with checklist answers.
+- Q15 No transportation-related difficulties and Prefer not to answer are each exclusive and cannot be combined with a substantive transport domain.
 - Legal-domain “Prefer not to answer” is exclusive and cannot be combined with a substantive domain.
+- HITS visibility does not depend on current-partner status.
 - Conditional free-text fields are required only while visible.
 
-## Derived outputs
+## Integration export
 
-| Output | Rule |
-|---|---|
-| `phq2_score` / `depression_screen_positive` | Sum two PHQ-2 rows; flag at ≥3. |
-| `hits_score` / `ipv_screen_positive` | Sum four HITS rows; flag at ≥11 for this English-language implementation. |
-| `gad2_score` / `anxiety_screen_positive` | Sum two GAD-2 rows; flag at ≥3. |
-| `weekly_minutes_activity` | Days × minutes; zero days produces zero. |
-| `physical_activity_need` | Below 420 minutes for age 16–17 or below 150 for age 18+; `not_assessed` if age is unavailable. |
-| `potential_unmet_legal_need` | True for partial/failed support or a stated knowledge, cost, or access barrier. |
+The API now emits the versioned, data-minimised contract defined by
+`healie_indicator_export_schema_v1.json`. It deliberately separates four
+information tiers so downstream HEALIE components can apply different access
+and use policies.
+
+| Tier | Included information | Exclusions and safeguards |
+|---|---|---|
+| `context` | Approved descriptive fields: age band, identity, income band, education, employment, housing, health coverage, postal code, combined home/personal connectivity, language, marital/single-parent context, usual travel mode, social contact, neighbourhood support and self-reported cognition. | Context is not itself a deficit or score. Postal code is for controlled linkage, not direct prompt injection. Free-text Other responses are excluded; ancestry is the approved exception. |
+| `needs` | Nullable need/barrier indicators for housing, function, language, transport, material needs, healthcare affordability, financial strain, physical activity, legal support and six DDoH domains. | `null` preserves declined, uncertain or insufficiently assessed states rather than converting them to false. No thresholds are repeated in the payload. |
+| `screening_results` | PHQ-2 and GAD-2 assessment status, score and positive-screen result. | Raw item responses are not exported. Screens are not diagnoses. |
+| `restricted_safety_indicators` | HITS assessment status, score and positive-screen result. | Raw HITS answers are not exported. This tier requires separate access control and must not be treated as ordinary personalisation context. |
+
+The contract contains no combined SDoH, DDoH or health-literacy score and no
+personalisation weights. Those decisions remain deferred until the wider
+HEALIE system and validation evidence are ready.
 
 ## Source and rationale register
 

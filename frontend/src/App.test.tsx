@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import axe from 'axe-core'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import {
@@ -103,11 +104,11 @@ describe('App questionnaire behaviour', () => {
 
     await user.click(screen.getByRole('button', { name: /continue/i }))
 
-    expect(
-      screen.getByRole('alert'),
-    ).toHaveTextContent(
+    const alert = screen.getByRole('alert')
+    expect(alert).toHaveTextContent(
       'Please answer “Do you need support?” before continuing.',
     )
+    expect(alert).toHaveFocus()
     expect(mockValidateScreener).not.toHaveBeenCalled()
     expect(screen.getAllByText('Section 1 of 2')).not.toHaveLength(0)
   })
@@ -144,7 +145,10 @@ describe('App questionnaire behaviour', () => {
     await user.click(screen.getByRole('radio', { name: 'No' }))
     await user.click(screen.getByRole('button', { name: /continue/i }))
 
-    await screen.findByRole('heading', { name: 'Choose a colour' })
+    const nextSectionHeading = await screen.findByRole('heading', {
+      name: 'Choose a colour',
+    })
+    expect(nextSectionHeading).toHaveFocus()
     expect(mockValidateScreener).toHaveBeenCalledWith(
       { needs_support: 'no' },
       1,
@@ -166,9 +170,10 @@ describe('App questionnaire behaviour', () => {
       screen.getByRole('button', { name: /submit answers/i }),
     )
 
-    expect(
-      await screen.findByRole('heading', { name: 'Thank you' }),
-    ).toBeInTheDocument()
+    const completionHeading = await screen.findByRole('heading', {
+      name: 'Thank you',
+    })
+    expect(completionHeading).toHaveFocus()
     expect(mockValidateScreener).toHaveBeenLastCalledWith({
       needs_support: 'no',
       preferred_colour: 'blue',
@@ -201,5 +206,20 @@ describe('App questionnaire behaviour', () => {
     expect(
       screen.queryByRole('heading', { name: 'Thank you' }),
     ).not.toBeInTheDocument()
+  })
+
+  it('has no automatically detectable accessibility violations', async () => {
+    const { container } = render(<App />)
+
+    await screen.findByRole('heading', {
+      name: 'Do you need support?',
+    })
+
+    const results = await axe.run(container, {
+      rules: {
+        'color-contrast': { enabled: false },
+      },
+    })
+    expect(results.violations).toEqual([])
   })
 })

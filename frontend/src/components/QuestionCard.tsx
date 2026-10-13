@@ -39,13 +39,18 @@ export function QuestionCard({
     optionValue: string,
     checked: boolean,
   ) {
-    const exclusiveOption = question.exclusive_option_value
+    const exclusiveOptions = new Set([
+      ...(question.exclusive_option_values ?? []),
+      ...(question.exclusive_option_value
+        ? [question.exclusive_option_value]
+        : []),
+    ])
     const updatedValues = checked
-      ? optionValue === exclusiveOption
+      ? exclusiveOptions.has(optionValue)
         ? [optionValue]
         : [
             ...selectedValues.filter(
-              (selectedValue) => selectedValue !== exclusiveOption,
+              (selectedValue) => !exclusiveOptions.has(selectedValue),
             ),
             optionValue,
           ]

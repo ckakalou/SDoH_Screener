@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   fetchScreener,
   validateScreener,
@@ -280,6 +280,29 @@ function App() {
     useState<string | null>(null)
   const [submissionSucceeded, setSubmissionSucceeded] =
     useState(false)
+  const sectionHeadingRef = useRef<HTMLHeadingElement>(null)
+  const messageRef = useRef<HTMLParagraphElement>(null)
+  const completionHeadingRef = useRef<HTMLHeadingElement>(null)
+  const previousSectionIndexRef = useRef(currentSectionIndex)
+
+  useEffect(() => {
+    if (previousSectionIndexRef.current !== currentSectionIndex) {
+      sectionHeadingRef.current?.focus()
+      previousSectionIndexRef.current = currentSectionIndex
+    }
+  }, [currentSectionIndex])
+
+  useEffect(() => {
+    if (submissionMessage && !submissionSucceeded) {
+      messageRef.current?.focus()
+    }
+  }, [submissionMessage, submissionSucceeded])
+
+  useEffect(() => {
+    if (submissionSucceeded) {
+      completionHeadingRef.current?.focus()
+    }
+  }, [submissionSucceeded])
 
   useEffect(() => {
     let cancelled = false
@@ -498,7 +521,13 @@ function App() {
             <UiIcon name="check" />
           </span>
           <p className="eyebrow">Assessment complete</p>
-          <h1 id="completion-heading">Thank you</h1>
+          <h1
+            id="completion-heading"
+            ref={completionHeadingRef}
+            tabIndex={-1}
+          >
+            Thank you
+          </h1>
           <p>Your responses were checked successfully.</p>
           <p className="completion-note">
             This research prototype does not save your responses yet.
@@ -616,7 +645,7 @@ function App() {
           <span>
             Christina Kakalou ·{' '}
             <a
-              href="https://ckakalou.github.io"
+              href="https://github.com/ckakalou/ckakalou.github.io"
               target="_blank"
               rel="noreferrer"
             >
@@ -652,7 +681,13 @@ function App() {
               <span className="question-heading-icon" aria-hidden="true">
                 <UiIcon name={currentSectionPresentation.icon} />
               </span>
-              <h2 id="section-heading">{pageTitle}</h2>
+              <h2
+                id="section-heading"
+                ref={sectionHeadingRef}
+                tabIndex={-1}
+              >
+                {pageTitle}
+              </h2>
             </div>
             <p className="section-help">
               {hasSingleQuestion
@@ -725,7 +760,12 @@ function App() {
         </footer>
 
         {submissionMessage && (
-          <p className="submission-message" role="alert">
+          <p
+            className="submission-message"
+            ref={messageRef}
+            role="alert"
+            tabIndex={-1}
+          >
             {submissionMessage}
           </p>
         )}

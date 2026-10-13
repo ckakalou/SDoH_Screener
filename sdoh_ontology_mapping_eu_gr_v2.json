@@ -17,7 +17,11 @@
     "Person": "healie:Person",
     "Question": "healie:Question",
     "Answer": "healie:Answer",
-    "Flag": "healie:Flag"
+    "Flag": "healie:Flag",
+    "Context": "healie:Context",
+    "Need": "healie:Need",
+    "ScreeningResult": "healie:ScreeningResult",
+    "RestrictedSafetyIndicator": "healie:RestrictedSafetyIndicator"
   },
   "predicates": {
     "ofQuestion": "healie:ofQuestion",
@@ -25,7 +29,26 @@
     "answeredAt": "healie:answeredAt",
     "value": "healie:value",
     "valueJson": "healie:valueJson",
-    "hasCode": "healie:hasCode"
+    "hasCode": "healie:hasCode",
+    "assessmentStatus": "healie:assessmentStatus",
+    "derivedFrom": "healie:derivedFrom",
+    "restrictedAccess": "healie:restrictedAccess"
+  },
+  "indicator_export": {
+    "schema": "healie_indicator_export_schema_v1.json",
+    "version": "healie-sdoh-ddoh-indicators-1.0",
+    "tiers": {
+      "context": "healie:Context",
+      "needs": "healie:Need",
+      "screening_results": "healie:ScreeningResult",
+      "restricted_safety_indicators": "healie:RestrictedSafetyIndicator"
+    },
+    "notes": [
+      "The export contains derived indicators and approved contextual fields, not a verbatim response record.",
+      "Postal code is retained for controlled geographic linkage and should not be passed directly into general-purpose personalisation prompts.",
+      "Restricted safety indicators require separate access control and must not be treated as ordinary personalisation context.",
+      "Threshold metadata is maintained in the instrument and decision log, not repeated in participant exports."
+    ]
   },
   "questions": [
     {
@@ -744,11 +767,28 @@
     },
     {
       "id": "q15b_transport_barrier",
-      "label": "In the past 12 months, has lack of reliable transportation kept you from medical appointments, meetings, work, or getting things needed for daily living?",
-      "type": "boolean",
+      "label": "In the past 12 months, has lack of reliable transportation kept you from any of the following? Select all that apply.",
+      "type": "multi-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/q15b-transport-barrier",
       "concept_iri": "healie:q15b-transport-barrier",
-      "value_set": null
+      "value_set": {
+        "healthcare": {
+          "label": "Medical appointments or obtaining medicines",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q15b-transport-barrier#healthcare"
+        },
+        "daily_living": {
+          "label": "Work, meetings, appointments, or things needed for daily living",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q15b-transport-barrier#daily-living"
+        },
+        "none": {
+          "label": "No transportation-related difficulties",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q15b-transport-barrier#none"
+        },
+        "prefer_not_answer": {
+          "label": "Prefer not to answer",
+          "code_iri": "https://w3id.org/healie/sdoh/opt/q15b-transport-barrier#prefer-not-answer"
+        }
+      }
     },
     {
       "id": "q16_unmet_needs",
@@ -1037,14 +1077,6 @@
           "code_iri": "https://w3id.org/healie/sdoh/opt/q19d-cognition-selfreport#prefer-not-to-say"
         }
       }
-    },
-    {
-      "id": "q19e_mmse_total",
-      "label": "If available, enter a clinician-administered MMSE total score (0–30). (Optional)",
-      "type": "integer",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q19e-mmse-total",
-      "concept_iri": "healie:q19e-mmse-total",
-      "value_set": null
     },
     {
       "id": "q20a_pa_days",

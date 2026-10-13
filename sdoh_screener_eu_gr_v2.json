@@ -907,9 +907,31 @@
       {
         "id": "q15b_transport_barrier",
         "section": 15,
-        "text": "In the past 12 months, has lack of reliable transportation kept you from medical appointments, meetings, work, or getting things needed for daily living?",
-        "type": "boolean",
-        "required": true
+        "text": "In the past 12 months, has lack of reliable transportation kept you from any of the following? Select all that apply.",
+        "type": "multi-select",
+        "required": true,
+        "exclusive_option_values": [
+          "none",
+          "prefer_not_answer"
+        ],
+        "options": [
+          {
+            "value": "healthcare",
+            "label": "Medical appointments or obtaining medicines"
+          },
+          {
+            "value": "daily_living",
+            "label": "Work, meetings, appointments, or things needed for daily living"
+          },
+          {
+            "value": "none",
+            "label": "No transportation-related difficulties"
+          },
+          {
+            "value": "prefer_not_answer",
+            "label": "Prefer not to answer"
+          }
+        ]
       },
       {
         "id": "q16_unmet_needs",
@@ -1309,16 +1331,7 @@
           "flag_key": "ipv_screen_positive",
           "note": "English HITS threshold; translated versions require validation."
         },
-        "required": true,
-        "visible_if": {
-          "all": [
-            {
-              "question": "q19b_partner_status",
-              "operator": "=",
-              "value": "yes"
-            }
-          ]
-        }
+        "required": true
       },
       {
         "id": "q19c_gad2_participation",
@@ -1417,15 +1430,6 @@
           }
         ],
         "required": true
-      },
-      {
-        "id": "q19e_mmse_total",
-        "section": 19,
-        "text": "If available, enter a clinician-administered MMSE total score (0–30). (Optional)",
-        "type": "integer",
-        "min": 0,
-        "max": 30,
-        "required": false
       },
       {
         "id": "q20a_pa_days",
