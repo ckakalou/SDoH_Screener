@@ -81,7 +81,18 @@ const screenerResponse: ScreenerApiResponse = {
 const validResult: ScreenerValidationResult = {
   valid: true,
   message: 'Responses are valid.',
-  derived: {},
+  derived: {
+    schema_version: 'healie-sdoh-ddoh-indicators-1.0',
+    context: {
+      age: {
+        assessment_status: 'assessed',
+        age_band: '22_30',
+      },
+    },
+    needs: {},
+    screening_results: {},
+    restricted_safety_indicators: {},
+  },
 }
 
 async function renderLoadedApp() {
@@ -174,10 +185,29 @@ describe('App questionnaire behaviour', () => {
       name: 'Thank you',
     })
     expect(completionHeading).toHaveFocus()
+    expect(screen.getByRole('img', { name: 'Healie' })).toHaveAttribute(
+      'src',
+      '/healie_final_official_logo_full.png',
+    )
+    expect(
+      screen.getByText('Social and digital factors affecting health'),
+    ).toBeInTheDocument()
     expect(mockValidateScreener).toHaveBeenLastCalledWith({
       needs_support: 'no',
       preferred_colour: 'blue',
     })
+
+    const preview = screen.getByText(
+      'Development: indicator export preview',
+    )
+    expect(preview).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Download indicator JSON' }),
+    ).toHaveAttribute(
+      'download',
+      'healie-sdoh-ddoh-indicators.json',
+    )
+    expect(screen.getByText(/healie-sdoh-ddoh-indicators-1\.0/)).toBeInTheDocument()
   })
 
   it('shows a server validation message without completing', async () => {

@@ -66,3 +66,38 @@ describe('QuestionCard exclusive checklist behaviour', () => {
     })
   })
 })
+
+describe('QuestionCard compact scale behaviour', () => {
+  it('renders a numeric scale as compact radio choices', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    const question: ScreenerQuestion = {
+      id: 'activity_days',
+      section: 20,
+      text: 'How many days?',
+      help_text: 'Choose one value.',
+      type: 'single-select',
+      display_variant: 'compact-scale',
+      options: [
+        { value: '0', label: '0' },
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+      ],
+    }
+
+    const { container } = render(
+      <QuestionCard
+        question={question}
+        value="1"
+        onChange={onChange}
+      />,
+    )
+
+    expect(screen.getByText('Choose one value.')).toBeInTheDocument()
+    expect(container.querySelector('.compact-scale-options')).not.toBeNull()
+    expect(screen.getByRole('radio', { name: '1' })).toBeChecked()
+
+    await user.click(screen.getByRole('radio', { name: '2' }))
+    expect(onChange).toHaveBeenCalledWith('activity_days', '2')
+  })
+})

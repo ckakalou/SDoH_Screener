@@ -506,7 +506,6 @@
     "q20b_pa_minutes": {
       "type": "number",
       "enum": [
-        0,
         10,
         20,
         30,

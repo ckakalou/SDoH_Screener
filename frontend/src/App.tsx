@@ -280,6 +280,8 @@ function App() {
     useState<string | null>(null)
   const [submissionSucceeded, setSubmissionSucceeded] =
     useState(false)
+  const [derivedIndicators, setDerivedIndicators] =
+    useState<Record<string, unknown> | null>(null)
   const sectionHeadingRef = useRef<HTMLHeadingElement>(null)
   const messageRef = useRef<HTMLParagraphElement>(null)
   const completionHeadingRef = useRef<HTMLHeadingElement>(null)
@@ -386,6 +388,10 @@ function App() {
   const pageTitle = hasSingleQuestion
     ? visibleQuestions[0].text
     : currentSectionPresentation.label
+  const sectionHelp = hasSingleQuestion
+    ? visibleQuestions[0].help_text ??
+      'Choose the answer that best describes your situation. You can change it before submitting.'
+    : 'Complete the questions below. You can change your answers before submitting.'
 
   function handleAnswerChange(
     questionId: string,
@@ -430,11 +436,13 @@ function App() {
     setIsSubmitting(true)
     setSubmissionMessage(null)
     setSubmissionSucceeded(false)
+    setDerivedIndicators(null)
 
     try {
       const result = await validateScreener(answers)
       setSubmissionMessage(result.message)
       setSubmissionSucceeded(result.valid)
+      setDerivedIndicators(result.valid ? result.derived : null)
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
@@ -497,6 +505,7 @@ function App() {
     setCurrentSectionIndex(0)
     setSubmissionMessage(null)
     setSubmissionSucceeded(false)
+    setDerivedIndicators(null)
 
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -508,13 +517,15 @@ function App() {
           className="completion-panel"
           aria-labelledby="completion-heading"
         >
-          <div className="completion-brand" aria-label="HEALIE"><span className="official-logo-mark" aria-hidden="true">
-  <img
-    src="/healie_final_official_logo_trans_crop.png"
-    alt=""
-  />
-</span>
-            <span className="healie-wordmark">Healie</span>
+          <div className="completion-brand">
+            <img
+              className="completion-logo"
+              src="/healie_final_official_logo_full.png"
+              alt="Healie"
+            />
+            <p className="completion-brand-subtitle">
+              Social and digital factors affecting health
+            </p>
           </div>
 
           <span className="completion-check" aria-hidden="true">
@@ -540,6 +551,26 @@ function App() {
             Start again
             <UiIcon name="arrow-right" />
           </button>
+
+          {import.meta.env.DEV && derivedIndicators && (
+            <details className="development-indicator-preview">
+              <summary>Development: indicator export preview</summary>
+              <p>
+                This is the data-minimised payload that HEALIE would
+                receive. It is visible only in development builds.
+              </p>
+              <a
+                className="development-download"
+                download="healie-sdoh-ddoh-indicators.json"
+                href={`data:application/json;charset=utf-8,${encodeURIComponent(
+                  JSON.stringify(derivedIndicators, null, 2),
+                )}`}
+              >
+                Download indicator JSON
+              </a>
+              <pre>{JSON.stringify(derivedIndicators, null, 2)}</pre>
+            </details>
+          )}
         </section>
       </main>
     )
@@ -690,9 +721,7 @@ function App() {
               </h2>
             </div>
             <p className="section-help">
-              {hasSingleQuestion
-                ? 'Choose the answer that best describes your situation. You can change it before submitting.'
-                : 'Complete the questions below. You can change your answers before submitting.'}
+              {sectionHelp}
             </p>
 
             <div className="question-list">

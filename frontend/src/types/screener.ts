@@ -63,6 +63,8 @@ export interface ScreenerQuestion {
   required?: boolean
   placeholder?: string
   pattern?: string
+  help_text?: string
+  display_variant?: 'compact-scale'
 
   min?: number
   max?: number

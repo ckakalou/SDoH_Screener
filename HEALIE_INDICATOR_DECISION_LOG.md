@@ -2134,14 +2134,16 @@ Q19a must not independently produce:
 
 Calculate the HITS total and source-based positive-screen result, but expose it
 only within a restricted safety-indicator object rather than the ordinary
-HEALIE personalisation profile. Preserve the original questionnaire wording.
+HEALIE personalisation profile. Preserve the original item meaning while
+keeping the instrument acronym in metadata rather than participant-facing text.
 The HITS questions remain available regardless of the answer to the current-
 partner item.
 
 ### Approved questionnaire behaviour
 
 - Keep `Do you currently have a partner?` unchanged.
-- Keep `How often does your partner do the following? (HITS)` unchanged.
+- Display `How often does your partner do the following?` without the HITS
+  acronym; retain `hits` internally as the instrument identifier.
 - Do not rephrase the item to mention a current or former partner.
 - Remove the HITS matrix's dependency on a `yes` answer to current-partner
   status.
@@ -2675,3 +2677,24 @@ Research-mode storage of verbatim answers, indicator weights, links to the four
 Sørensen health-literacy dimensions, and outcome-based validation remain in the
 research/validation backlog. They are not part of the current operational
 HEALIE export.
+
+## Participant-facing language convention
+
+### Decision
+
+Participant-facing questions consistently address the person completing the
+assessment in the second person (`you`/`your`). Functional-difficulty rows that
+previously switched to census-style third-person wording (`this person`) were
+normalized without changing their measured domains. Age qualifiers attached to
+those source rows were removed because this assessment begins at age 16.
+
+Questions intentionally assessing shared circumstances retain their household
+scope, using the consistent phrase `you or anyone in your household`. The
+neighbourhood-support statement was changed from first person to second person
+for interface consistency. These wording adaptations must be included in later
+cognitive interviewing and translation/back-translation review.
+
+PHQ-2, GAD-2, and HITS names remain in question identifiers, scoring metadata,
+indicator exports, documentation, and the research audit trail, but their
+acronyms are not shown within the participant-facing prompts. Removing the
+labels does not change the item text, response scales, scoring, or thresholds.

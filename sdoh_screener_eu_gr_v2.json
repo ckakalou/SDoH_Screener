@@ -203,7 +203,8 @@
       {
         "id": "q3_household_income",
         "section": 3,
-        "text": "What was your total household income during the past 12 months? (Approximate; in euros)",
+        "text": "What was your total household income during the past 12 months?",
+        "help_text": "Please select the approximate total in euros.",
         "type": "single-select",
         "options": [
           {
@@ -730,7 +731,8 @@
       {
         "id": "q12_disability",
         "section": 12,
-        "text": "Disability (mark Yes or No for each)",
+        "text": "Disability",
+        "help_text": "Mark Yes or No for each statement.",
         "type": "checklist",
         "items": [
           {
@@ -745,22 +747,22 @@
           },
           {
             "id": "q12c_cognitive",
-            "label": "Because of a physical, mental, or emotional condition, does this person have serious difficulty concentrating, remembering, or making decisions? (For people 5 years or older)",
+            "label": "Because of a physical, mental, or emotional condition, do you have serious difficulty concentrating, remembering, or making decisions?",
             "type": "boolean"
           },
           {
             "id": "q12d_mobility",
-            "label": "Does this person have serious difficulty walking or climbing stairs? (For people 5 years or older)",
+            "label": "Do you have serious difficulty walking or climbing stairs?",
             "type": "boolean"
           },
           {
             "id": "q12e_adl",
-            "label": "Does this person have difficulty dressing or bathing? (For people 5 years or older)",
+            "label": "Do you have difficulty dressing or bathing?",
             "type": "boolean"
           },
           {
             "id": "q12f_iadl",
-            "label": "Because of a physical, mental, or emotional condition, does this person have difficulty doing errands alone, such as visiting a doctor’s office or shopping? (For people 15 years or older)",
+            "label": "Because of a physical, mental, or emotional condition, do you have difficulty doing errands alone, such as visiting a doctor’s office or shopping?",
             "type": "boolean"
           }
         ],
@@ -936,7 +938,7 @@
       {
         "id": "q16_unmet_needs",
         "section": 16,
-        "text": "In the past year, have you or any family members you live with been unable to get any of the following when it was really needed?",
+        "text": "In the past year, have you or anyone in your household been unable to get any of the following when it was really needed?",
         "type": "checklist",
         "items": [
           {
@@ -971,7 +973,7 @@
       {
         "id": "q16a_medical_bills",
         "section": 16,
-        "text": "DURING THE PAST 12 MONTHS, did you or anyone in the family have problems paying or were unable to pay any medical bills?",
+        "text": "During the past 12 months, did you or anyone in your household have problems paying, or were you unable to pay, any medical bills?",
         "type": "boolean",
         "visible_if": {
           "any": [
@@ -1131,7 +1133,8 @@
       {
         "id": "q17_social_connections",
         "section": 17,
-        "text": "How often do you see or talk to people that you care about and feel close to? For example, talking to friends by phone or online, visiting friends or family, or attending religious, community, or club meetings.",
+        "text": "How often do you see or talk to people that you care about and feel close to?",
+        "help_text": "For example, talking to friends by phone or online, visiting friends or family, or attending religious, community, or club meetings.",
         "type": "single-select",
         "options": [
           {
@@ -1160,7 +1163,7 @@
       {
         "id": "q18_neighborhood_support",
         "section": 18,
-        "text": "There are people I can count on in this neighbourhood.",
+        "text": "There are people you can count on in this neighbourhood.",
         "type": "single-select",
         "options": [
           {
@@ -1202,7 +1205,7 @@
       {
         "id": "q19a_phq2",
         "section": 19,
-        "text": "Over the last 2 weeks, how often have you been bothered by the following problems? (PHQ-2)",
+        "text": "Over the last 2 weeks, how often have you been bothered by the following problems?",
         "type": "matrix",
         "scale": [
           {
@@ -1276,7 +1279,7 @@
       {
         "id": "q19b_ipv_hits",
         "section": 19,
-        "text": "How often does your partner do the following? (HITS)",
+        "text": "How often does your partner do the following?",
         "type": "matrix",
         "scale": [
           {
@@ -1353,7 +1356,7 @@
       {
         "id": "q19c_gad2",
         "section": 19,
-        "text": "GAD-2 (Anxiety) – Over the last 2 weeks, how often have you been bothered by the following problems?",
+        "text": "Over the last 2 weeks, how often have you been bothered by the following problems?",
         "type": "matrix",
         "scale": [
           {
@@ -1434,8 +1437,10 @@
       {
         "id": "q20a_pa_days",
         "section": 20,
-        "text": "In the last 30 days (outside of work), on average, how many days per week did you engage in moderate exercise (walking fast, running, jogging, dancing, swimming, biking, similar activities)?",
+        "text": "In the last 30 days, on average, how many days per week did you engage in moderate exercise outside work?",
+        "help_text": "Examples include brisk walking, running, jogging, dancing, swimming, cycling, and similar activities.",
         "type": "single-select",
+        "display_variant": "compact-scale",
         "options": [
           {
             "value": "0",
@@ -1476,12 +1481,10 @@
         "id": "q20b_pa_minutes",
         "section": 20,
         "text": "On average, how many minutes did you usually spend exercising at this level on one of those days?",
+        "help_text": "Select the closest number of minutes.",
         "type": "single-select",
+        "display_variant": "compact-scale",
         "options": [
-          {
-            "value": 0,
-            "label": "0"
-          },
           {
             "value": 10,
             "label": "10"

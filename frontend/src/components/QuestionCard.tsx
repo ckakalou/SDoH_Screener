@@ -123,6 +123,31 @@ export function QuestionCard({
         )
 
       case 'single-select':
+        if (question.display_variant === 'compact-scale') {
+          return (
+            <div className="compact-scale-options">
+              {question.options?.map((option) => (
+                <label
+                  className="compact-scale-option"
+                  key={String(option.value)}
+                >
+                  <input
+                    className="answer-input"
+                    type="radio"
+                    name={question.id}
+                    value={String(option.value)}
+                    checked={value === option.value}
+                    onChange={() =>
+                      onChange(question.id, option.value)
+                    }
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+          )
+        }
+
         return (
           <div className="answer-options">
             {question.options?.map((option) => (
@@ -385,6 +410,9 @@ export function QuestionCard({
           )}
           <span>{question.text}</span>
         </legend>
+        {!hideQuestionText && question.help_text && (
+          <p className="question-help">{question.help_text}</p>
+        )}
         {renderInput()}
       </fieldset>
     </article>

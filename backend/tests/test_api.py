@@ -176,6 +176,14 @@ def test_zero_activity_days_does_not_require_minutes() -> None:
     assert activity["need_identified"] is True
 
 
+def test_positive_activity_days_do_not_accept_zero_minutes() -> None:
+    response = validate({
+        "dem_age_group": "22_30", "q20a_pa_days": "1",
+        "q20b_pa_minutes": 0,
+    }, section=20)
+    assert response.status_code == 422
+
+
 def test_activity_is_not_assessed_when_age_is_declined() -> None:
     response = validate({
         "dem_age_group": "prefer_not_answer", "q20a_pa_days": "3",
