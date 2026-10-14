@@ -69,9 +69,9 @@ if ($deploymentStatus) {
     throw "The Hugging Face deployment repository has uncommitted changes."
 }
 
-$hfRemote = & git -C $DeploymentRepository remote get-url hf 2>$null
+$remoteNames = @(& git -C $DeploymentRepository remote)
 
-if ($LASTEXITCODE -ne 0) {
+if ($remoteNames -notcontains "hf") {
     Invoke-Git $DeploymentRepository @(
         "remote",
         "add",
@@ -79,13 +79,15 @@ if ($LASTEXITCODE -ne 0) {
         $huggingFaceUrl
     )
 }
-elseif ($hfRemote.Trim() -ne $huggingFaceUrl) {
-    throw "The deployment repository's hf remote points to an unexpected URL."
+else {
+    $hfRemote = (& git -C $DeploymentRepository remote get-url hf).Trim()
+
+    if ($hfRemote -ne $huggingFaceUrl) {
+        throw "The deployment repository's hf remote points to an unexpected URL."
+    }
 }
 
-$sourceRemote = & git -C $DeploymentRepository remote get-url source 2>$null
-
-if ($LASTEXITCODE -ne 0) {
+if ($remoteNames -notcontains "source") {
     Invoke-Git $DeploymentRepository @(
         "remote",
         "add",
@@ -93,8 +95,12 @@ if ($LASTEXITCODE -ne 0) {
         $githubUrl
     )
 }
-elseif ($sourceRemote.Trim() -ne $githubUrl) {
-    throw "The deployment repository's source remote points to an unexpected URL."
+else {
+    $sourceRemote = (& git -C $DeploymentRepository remote get-url source).Trim()
+
+    if ($sourceRemote -ne $githubUrl) {
+        throw "The deployment repository's source remote points to an unexpected URL."
+    }
 }
 
 Write-Host "Fetching the latest GitHub version..."
