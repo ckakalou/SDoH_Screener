@@ -2671,6 +2671,21 @@ produce `null` indicators. They are not silently encoded as absence of need.
 The machine contract is defined in `healie_indicator_export_schema_v1.json` and
 is validated by the API before a response is returned.
 
+### Assessment-export identity and provenance
+
+Each successful final full-assessment validation produces a new
+backend-generated UUIDv4 `assessment_id` and a UTC `generated_at` timestamp.
+Section-level navigation validation does not create or return an indicator
+export. The identifier belongs to the completed export event only. It is random,
+is not calculated from questionnaire answers, and must not be interpreted as a
+participant, patient, account or longitudinal subject identifier.
+
+HEALIE may use `assessment_id` for request tracing, deduplication and linking
+downstream processing results to the exact indicator export. If longitudinal
+linkage is later required, the wider HEALIE system must provide a distinct,
+governed pseudonymous `subject_id`. The SD-DOH component must not derive that
+identifier from postal code, demographics, device data or any other answer.
+
 ### Deferred work
 
 Research-mode storage of verbatim answers, indicator weights, links to the four

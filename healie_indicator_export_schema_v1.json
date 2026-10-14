@@ -6,15 +6,27 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "assessment_id",
     "schema_version",
+    "generated_at",
     "context",
     "needs",
     "screening_results",
     "restricted_safety_indicators"
   ],
   "properties": {
+    "assessment_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Random identifier for this assessment export; it is not a participant identifier."
+    },
     "schema_version": {
       "const": "healie-sdoh-ddoh-indicators-1.0"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp at which the backend generated this export."
     },
     "context": {
       "type": "object",

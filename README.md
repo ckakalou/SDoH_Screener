@@ -243,7 +243,9 @@ Successful response:
   "valid": true,
   "message": "The screener responses are valid.",
   "derived": {
+    "assessment_id": "550e8400-e29b-41d4-a716-446655440000",
     "schema_version": "healie-sdoh-ddoh-indicators-1.0",
+    "generated_at": "2026-10-14T07:30:00Z",
     "context": {
       "age": {
         "assessment_status": "assessed",
@@ -268,6 +270,18 @@ The real response includes every field defined in
 `healie_indicator_export_schema_v1.json`; the example above is abbreviated for
 readability. The four tiers separate descriptive context, derived needs,
 ordinary screening results, and restricted safety indicators.
+
+`assessment_id` is a backend-generated UUIDv4 for one completed assessment
+export. It is not a participant identifier, is not derived from answers, and is
+new for every successful final full-assessment submission. Section checks do
+not issue identifiers or indicator exports. `generated_at` records in UTC when
+the backend created the export. A future HEALIE-wide pseudonymous `subject_id`,
+if required for longitudinal use, must be managed separately and must not be
+inferred from `assessment_id`.
+
+A complete representative payload and field-level integration guidance are in
+`healie_indicator_export_example_v1.json` and
+`HEALIE_INTEGRATION_CONTRACT.md`.
 
 Invalid values produce an HTTP `422` response containing the first validation error.
 

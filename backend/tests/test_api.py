@@ -1,6 +1,15 @@
+import json
+from datetime import datetime
+from uuid import UUID
+
 from fastapi.testclient import TestClient
 
-from backend.app.main import app, calculate_derived_results
+from backend.app.main import (
+    PROJECT_ROOT,
+    app,
+    calculate_derived_results,
+    indicator_validator,
+)
 
 
 client = TestClient(app)
@@ -11,6 +20,13 @@ def validate(responses: dict, section: int | None = None):
     if section is not None:
         payload["section"] = section
     return client.post("/api/v1/screener/validate", json=payload)
+
+
+def validate_section_and_derive(responses: dict, section: int) -> dict:
+    response = validate(responses, section=section)
+    assert response.status_code == 200
+    assert response.json()["derived"] == {}
+    return calculate_derived_results(responses)
 
 
 def section_16_checklist(**changes: bool) -> dict[str, bool]:
@@ -134,7 +150,14 @@ def test_scale_participation_controls_visibility_and_scoring() -> None:
         "q19d_cognition_selfreport": "no",
     }, section=19)
     assert declined.status_code == 200
-    derived = declined.json()["derived"]
+    derived = calculate_derived_results({
+        "q19a_phq2_participation": "decline",
+        "q19b_partner_status": "no",
+        "q19b_ipv_hits": {"hits_hurt": 1, "hits_insult": 1,
+                          "hits_threaten": 1, "hits_scream": 1},
+        "q19c_gad2_participation": "decline",
+        "q19d_cognition_selfreport": "no",
+    })
     assert derived["screening_results"]["depression"]["assessment_status"] == "declined"
     assert derived["restricted_safety_indicators"]["ipv"]["score"] == 4
 
@@ -149,7 +172,16 @@ def test_scale_participation_controls_visibility_and_scoring() -> None:
         "q19d_cognition_selfreport": "no",
     }, section=19)
     assert scored.status_code == 200
-    derived = scored.json()["derived"]
+    derived = calculate_derived_results({
+        "q19a_phq2_participation": "answer",
+        "q19a_phq2": {"phq2_item1": 2, "phq2_item2": 1},
+        "q19b_partner_status": "yes",
+        "q19b_ipv_hits": {"hits_hurt": 1, "hits_insult": 3,
+                          "hits_threaten": 2, "hits_scream": 5},
+        "q19c_gad2_participation": "answer",
+        "q19c_gad2": {"gad2_item1": 1, "gad2_item2": 2},
+        "q19d_cognition_selfreport": "no",
+    })
     assert derived["screening_results"] == {
         "depression": {
             "assessment_status": "assessed", "instrument": "phq_2",
@@ -167,11 +199,10 @@ def test_scale_participation_controls_visibility_and_scoring() -> None:
 
 
 def test_zero_activity_days_does_not_require_minutes() -> None:
-    response = validate(
-        {"dem_age_group": "16_17", "q20a_pa_days": "0"}, section=20
+    derived = validate_section_and_derive(
+        {"dem_age_group": "16_17", "q20a_pa_days": "0"}, 20
     )
-    assert response.status_code == 200
-    activity = response.json()["derived"]["needs"]["physical_activity"]
+    activity = derived["needs"]["physical_activity"]
     assert activity["weekly_minutes"] == 0
     assert activity["need_identified"] is True
 
@@ -185,12 +216,12 @@ def test_positive_activity_days_do_not_accept_zero_minutes() -> None:
 
 
 def test_activity_is_not_assessed_when_age_is_declined() -> None:
-    response = validate({
+    responses = {
         "dem_age_group": "prefer_not_answer", "q20a_pa_days": "3",
         "q20b_pa_minutes": 60,
-    }, section=20)
-    assert response.status_code == 200
-    activity = response.json()["derived"]["needs"]["physical_activity"]
+    }
+    derived = validate_section_and_derive(responses, 20)
+    activity = derived["needs"]["physical_activity"]
     assert activity == {
         "assessment_status": "not_assessed",
         "weekly_minutes": 180,
@@ -199,12 +230,11 @@ def test_activity_is_not_assessed_when_age_is_declined() -> None:
 
 
 def test_transportation_domains_are_distinct_and_exclusive() -> None:
-    assessed = validate({
+    assessed_responses = {
         "q15a_commute_mode": "bus_coach_minibus",
         "q15b_transport_barrier": ["healthcare"],
-    }, section=15)
-    assert assessed.status_code == 200
-    derived = assessed.json()["derived"]
+    }
+    derived = validate_section_and_derive(assessed_responses, 15)
     assert derived["context"]["transportation"]["usual_travel_mode"] == (
         "bus_coach_minibus"
     )
@@ -237,12 +267,12 @@ def test_legal_other_domain_is_conditional_and_exclusive() -> None:
 
 
 def test_legal_support_result_identifies_access_barrier() -> None:
-    response = validate({
+    responses = {
         "legal_need": "yes", "legal_need_domains": ["housing_utilities"],
         "legal_support_access": "cost_or_access_barrier",
-    }, section=21)
-    assert response.status_code == 200
-    legal = response.json()["derived"]["needs"]["legal_support"]
+    }
+    derived = validate_section_and_derive(responses, 21)
+    legal = derived["needs"]["legal_support"]
     assert legal == {
         "assessment_status": "assessed",
         "domains": ["housing_utilities"],
@@ -251,12 +281,12 @@ def test_legal_support_result_identifies_access_barrier() -> None:
 
 
 def test_uncertain_legal_need_is_not_converted_to_false() -> None:
-    response = validate({
+    responses = {
         "legal_need": "not_sure",
         "legal_need_domains": ["housing_utilities"],
-    }, section=21)
-    assert response.status_code == 200
-    legal = response.json()["derived"]["needs"]["legal_support"]
+    }
+    derived = validate_section_and_derive(responses, 21)
+    legal = derived["needs"]["legal_support"]
     assert legal["assessment_status"] == "uncertain"
     assert legal["unmet_need_identified"] is None
 
@@ -268,7 +298,7 @@ def test_digital_access_section_requires_all_six_items() -> None:
 
 
 def test_digital_barriers_and_combined_internet_access_are_derived() -> None:
-    response = validate({
+    responses = {
         "q11_internet": True,
         "ddoh_device_access": "sometimes",
         "ddoh_connectivity": "sometimes",
@@ -276,9 +306,8 @@ def test_digital_barriers_and_combined_internet_access_are_derived() -> None:
         "ddoh_accessibility": "never",
         "ddoh_support": "no_assistance_needed",
         "ddoh_privacy_trust": "yes",
-    }, section=22)
-    assert response.status_code == 200
-    derived = response.json()["derived"]
+    }
+    derived = validate_section_and_derive(responses, 22)
     assert derived["context"]["digital_connectivity"] == {
         "assessment_status": "assessed",
         "household_home_internet": True,
@@ -315,7 +344,8 @@ def test_four_tier_contract_retains_approved_context_without_free_text_other() -
         "q15a_commute_mode": "bus_coach_minibus",
     })
     assert set(derived) == {
-        "schema_version", "context", "needs", "screening_results",
+        "assessment_id", "schema_version", "generated_at", "context", "needs",
+        "screening_results",
         "restricted_safety_indicators",
     }
     assert derived["context"]["economic"]["household_income_band"] == (
@@ -330,3 +360,36 @@ def test_four_tier_contract_retains_approved_context_without_free_text_other() -
     serialized = str(derived)
     assert "not exported" not in serialized
     assert "threshold" not in serialized
+
+
+def test_indicator_export_has_backend_generated_assessment_metadata() -> None:
+    first_export = calculate_derived_results({"dem_age_group": "22_30"})
+    second_export = calculate_derived_results({"dem_age_group": "22_30"})
+
+    assert UUID(first_export["assessment_id"]).version == 4
+    assert UUID(second_export["assessment_id"]).version == 4
+    assert first_export["assessment_id"] != second_export["assessment_id"]
+
+    generated_at = first_export["generated_at"]
+    assert generated_at.endswith("Z")
+    assert datetime.fromisoformat(generated_at.replace("Z", "+00:00")).tzinfo
+
+
+def test_indicator_metadata_does_not_identify_or_echo_the_participant() -> None:
+    marker = "participant-secret-marker"
+    derived = calculate_derived_results({
+        "dem_age_group": "22_30",
+        "dem_gender": "another_gender",
+        "dem_gender_other_text": marker,
+    })
+
+    assert marker not in str(derived)
+    assert set(derived).isdisjoint({"participant_id", "subject_id", "responses"})
+
+
+def test_representative_indicator_export_matches_machine_contract() -> None:
+    example_file = PROJECT_ROOT / "healie_indicator_export_example_v1.json"
+    with example_file.open(encoding="utf-8") as file:
+        example = json.load(file)
+
+    indicator_validator.validate(example)

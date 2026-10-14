@@ -1,9 +1,11 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 from backend.app.models import ScreenerSubmission, ValidationResult
 
@@ -28,7 +30,10 @@ INDICATOR_SCHEMA = load_json_file(INDICATOR_SCHEMA_FILE)
 Draft202012Validator.check_schema(RESPONSE_SCHEMA)
 Draft202012Validator.check_schema(INDICATOR_SCHEMA)
 response_validator = Draft202012Validator(RESPONSE_SCHEMA)
-indicator_validator = Draft202012Validator(INDICATOR_SCHEMA)
+indicator_validator = Draft202012Validator(
+    INDICATOR_SCHEMA,
+    format_checker=FormatChecker(),
+)
 SCREENER_QUESTIONS = SCREENER_DATA["screener"]["questions"]
 
 
@@ -717,7 +722,9 @@ def calculate_derived_results(responses: dict[str, Any]) -> dict[str, Any]:
     }
 
     return {
+        "assessment_id": str(uuid4()),
         "schema_version": "healie-sdoh-ddoh-indicators-1.0",
+        "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "context": context,
         "needs": needs,
         "screening_results": screening_results,
@@ -813,6 +820,12 @@ def validate_screener(
         )
 
     validate_completion(submission.responses, submission.section)
+
+    if submission.section is not None:
+        return ValidationResult(
+            valid=True,
+            message="The section responses are valid.",
+        )
 
     derived = calculate_derived_results(submission.responses)
     indicator_validator.validate(derived)

@@ -1,0 +1,154 @@
+{
+  "assessment_id": "550e8400-e29b-41d4-a716-446655440000",
+  "schema_version": "healie-sdoh-ddoh-indicators-1.0",
+  "generated_at": "2026-10-14T07:30:00Z",
+  "context": {
+    "age": {
+      "assessment_status": "assessed",
+      "age_band": "22_30",
+      "life_stage": "young_adult"
+    },
+    "identity": {
+      "gender": { "assessment_status": "not_assessed", "category": null },
+      "ethnic_group": {
+        "assessment_status": "not_assessed",
+        "categories": null
+      },
+      "regional_origin": {
+        "assessment_status": "not_assessed",
+        "european_region": null
+      },
+      "ancestry": {
+        "assessment_status": "not_assessed",
+        "reported_value": null
+      }
+    },
+    "economic": {
+      "assessment_status": "assessed",
+      "household_income_band": "20000_29999"
+    },
+    "education": {
+      "assessment_status": "not_assessed",
+      "attainment_group": null,
+      "attainment_detail": null
+    },
+    "employment": {
+      "assessment_status": "not_assessed",
+      "current_status": null,
+      "paid_work_group": null,
+      "last_worked": null,
+      "unemployment_duration": null
+    },
+    "housing": {
+      "assessment_status": "not_assessed",
+      "stability": null,
+      "tenure": null
+    },
+    "health_coverage": {
+      "assessment_status": "not_assessed",
+      "reported_coverage": null
+    },
+    "geographic_linkage": {
+      "assessment_status": "not_assessed",
+      "postal_code": null
+    },
+    "digital_connectivity": {
+      "assessment_status": "assessed",
+      "household_home_internet": true,
+      "household_home_internet_status": "assessed",
+      "personal_connectivity": "often",
+      "internet_access_level": "reliable_home_supported"
+    },
+    "language_access": {
+      "assessment_status": "not_assessed",
+      "speaking_proficiency": null
+    },
+    "family": {
+      "assessment_status": "not_assessed",
+      "marital_status": null,
+      "single_parent": null
+    },
+    "transportation": {
+      "assessment_status": "not_assessed",
+      "usual_travel_mode": null
+    },
+    "social_connection": {
+      "assessment_status": "not_assessed",
+      "contact_frequency": null
+    },
+    "neighbourhood_support": {
+      "assessment_status": "not_assessed",
+      "perceived_support": null
+    },
+    "cognitive_function": {
+      "assessment_status": "not_assessed",
+      "self_reported_daily_life_impact": null
+    }
+  },
+  "needs": {
+    "housing": { "stability_need": null, "affordability_need": null },
+    "functional_access": {
+      "assessment_status": "not_assessed",
+      "reported_difficulty_domains": null
+    },
+    "language_support": { "indicated": null },
+    "transportation": {
+      "assessment_status": "not_assessed",
+      "barrier_reported": null,
+      "healthcare_access_affected": null,
+      "daily_living_access_affected": null
+    },
+    "material_needs": {
+      "assessment_status": "not_assessed",
+      "unmet_domains": null
+    },
+    "healthcare_affordability": {
+      "medical_bill_payment_problem": null,
+      "care_delayed_due_to_cost": null
+    },
+    "financial_strain": {
+      "housing_cost_concern_identified": null,
+      "monthly_bill_concern_identified": null
+    },
+    "physical_activity": {
+      "assessment_status": "assessed",
+      "weekly_minutes": 180,
+      "need_identified": false
+    },
+    "legal_support": {
+      "assessment_status": "not_assessed",
+      "domains": null,
+      "unmet_need_identified": null
+    },
+    "digital_access": {
+      "device_access_barrier": false,
+      "connectivity_barrier": false,
+      "affordability_barrier": false,
+      "accessibility_barrier": false,
+      "support_barrier": false,
+      "privacy_trust_barrier": false
+    }
+  },
+  "screening_results": {
+    "depression": {
+      "assessment_status": "not_assessed",
+      "instrument": "phq_2",
+      "score": null,
+      "screen_positive": null
+    },
+    "anxiety": {
+      "assessment_status": "not_assessed",
+      "instrument": "gad_2",
+      "score": null,
+      "screen_positive": null
+    }
+  },
+  "restricted_safety_indicators": {
+    "ipv": {
+      "assessment_status": "not_assessed",
+      "instrument": "hits",
+      "score": null,
+      "screen_positive": null
+    }
+  }
+}
