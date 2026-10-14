@@ -2,9 +2,11 @@ import json
 from datetime import datetime
 from uuid import UUID
 
+import pytest
 from fastapi.testclient import TestClient
 
 from backend.app.main import (
+    FRONTEND_INDEX,
     PROJECT_ROOT,
     app,
     calculate_derived_results,
@@ -41,6 +43,23 @@ def section_16_checklist(**changes: bool) -> dict[str, bool]:
 
 def test_health_check() -> None:
     assert client.get("/health").json() == {"status": "ok"}
+
+
+@pytest.mark.skipif(
+    not FRONTEND_INDEX.is_file(),
+    reason="The Vite production build has not been generated.",
+)
+def test_production_frontend_is_served_by_fastapi() -> None:
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert '<div id="root"></div>' in response.text
+
+
+def test_unknown_api_route_is_not_replaced_with_frontend_html() -> None:
+    response = client.get("/api/v1/unknown")
+    assert response.status_code == 404
+    assert response.headers["content-type"].startswith("application/json")
 
 
 def test_get_screener_returns_refactored_assessment() -> None:

@@ -5,6 +5,7 @@ from typing import Any
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from jsonschema import Draft202012Validator, FormatChecker
 
 from backend.app.models import ScreenerSubmission, ValidationResult
@@ -16,6 +17,8 @@ RESPONSE_SCHEMA_FILE = (
     PROJECT_ROOT / "sdoh_screener_response_schema_eu_gr_v2.json"
 )
 INDICATOR_SCHEMA_FILE = PROJECT_ROOT / "healie_indicator_export_schema_v1.json"
+FRONTEND_DIST = PROJECT_ROOT / "frontend" / "dist"
+FRONTEND_INDEX = FRONTEND_DIST / "index.html"
 
 
 def load_json_file(file_path: Path) -> dict[str, Any]:
@@ -835,3 +838,26 @@ def validate_screener(
         message="The screener responses are valid.",
         derived=derived,
     )
+
+
+if FRONTEND_INDEX.is_file():
+
+    @app.get("/{requested_path:path}", include_in_schema=False)
+    def serve_frontend(requested_path: str) -> FileResponse:
+        """Serve the Vite production build while preserving API routes."""
+        if requested_path == "api" or requested_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="API route not found.")
+
+        frontend_root = FRONTEND_DIST.resolve()
+        requested_file = (FRONTEND_DIST / requested_path).resolve()
+
+        if requested_path:
+            try:
+                requested_file.relative_to(frontend_root)
+            except ValueError:
+                requested_file = FRONTEND_INDEX
+
+        if requested_path and requested_file.is_file():
+            return FileResponse(requested_file)
+
+        return FileResponse(FRONTEND_INDEX)

@@ -1,3 +1,12 @@
+---
+title: HEALIE SD-DOH Assessment
+emoji: 🪼
+colorFrom: indigo
+colorTo: blue
+sdk: docker
+app_port: 7860
+---
+
 # HEALIE SD-DOH Assessment
 
 A schema-driven **Social and Digital Determinants of Health (SD-DOH)** assessment developed as part of the HEALIE research project. The participant-facing title is **Social and Digital Factors Affecting Health**.
@@ -54,6 +63,11 @@ flowchart LR
 ```
 
 The backend serves the questionnaire definition and validates submitted responses. The frontend controls rendering, navigation, conditional visibility, and temporary in-memory answer state.
+
+In production, the Docker build compiles the React application and FastAPI
+serves the generated static files alongside the `/api/v1` routes from the same
+origin. Local development continues to use Vite's proxy and FastAPI on port
+`8001`.
 
 ## EU/Greek SD-DOH adaptation
 
@@ -199,6 +213,45 @@ Open:
 
 During development, Vite proxies requests beginning with `/api` to the FastAPI backend on port `8001`.
 
+## Production and Hugging Face Spaces
+
+The repository is configured as a Hugging Face Docker Space. The multi-stage
+`Dockerfile`:
+
+1. installs the locked frontend dependencies with `npm ci`;
+2. creates the Vite production build;
+3. installs only the backend runtime dependencies;
+4. copies the compiled frontend and active JSON contracts into a non-root
+   Python runtime image; and
+5. starts FastAPI on port `7860`.
+
+FastAPI serves the compiled React interface at `/`, keeps `/api/v1/*` for the
+application API, and continues to expose `/health`, `/docs`, and `/redoc`.
+Unknown API paths return JSON `404` responses rather than the React page.
+
+If Docker is available locally, test the production container from the
+repository root:
+
+```bash
+docker build -t healie-sdoh-screener .
+docker run --rm -p 7860:7860 healie-sdoh-screener
+```
+
+Then open <http://127.0.0.1:7860> and verify:
+
+- <http://127.0.0.1:7860/health>
+- <http://127.0.0.1:7860/api/v1/screener>
+- <http://127.0.0.1:7860/docs>
+
+The production container remains stateless: answers are held in browser memory
+and only the derived indicator response is returned after final validation. No
+database or persistent participant storage is introduced by this deployment.
+
+To deploy, push the committed files to the Hugging Face Space repository. The
+Space reads the YAML configuration at the top of this README, builds the
+`Dockerfile`, and exposes port `7860`. Every pushed Space commit triggers a new
+build and restart.
+
 ## API endpoints
 
 ### `GET /health`
@@ -321,6 +374,8 @@ A message stating that LF will be replaced by CRLF is an expected Git line-endin
 
 ```text
 SDoH_Screener/
+├── Dockerfile
+├── .dockerignore
 ├── backend/
 │   ├── app/
 │   │   ├── main.py
@@ -353,6 +408,9 @@ SDoH_Screener/
 ├── sdoh_screener_eu_gr_v2.json
 ├── sdoh_screener_response_schema_eu_gr_v2.json
 ├── sdoh_ontology_mapping_eu_gr_v2.json
+├── healie_indicator_export_schema_v1.json
+├── healie_indicator_export_example_v1.json
+├── HEALIE_INTEGRATION_CONTRACT.md
 ├── SD_DOH_QUESTION_AUDIT.md
 ├── emit_rdf_eu_gr_v2.py
 ├── app.py
