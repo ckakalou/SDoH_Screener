@@ -185,10 +185,10 @@ describe('App questionnaire behaviour', () => {
       name: 'Thank you',
     })
     expect(completionHeading).toHaveFocus()
-    expect(screen.getByRole('img', { name: 'Healie' })).toHaveAttribute(
-      'src',
-      '/healie_final_official_logo_full.png',
-    )
+expect(screen.getByRole('img', { name: 'Healie' })).toHaveAttribute(
+  'src',
+  'https://raw.githubusercontent.com/ckakalou/SDoH_Screener/redesign/react-fastapi/frontend/public/healie_final_official_logo_full.png',
+)
     expect(
       screen.getByText('Social and digital factors affecting health'),
     ).toBeInTheDocument()

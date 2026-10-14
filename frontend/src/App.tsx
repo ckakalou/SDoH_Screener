@@ -520,7 +520,7 @@ function App() {
           <div className="completion-brand">
             <img
               className="completion-logo"
-              src="/healie_final_official_logo_full.png"
+              src="https://raw.githubusercontent.com/ckakalou/SDoH_Screener/redesign/react-fastapi/frontend/public/healie_final_official_logo_full.png"
               alt="Healie"
             />
             <p className="completion-brand-subtitle">
@@ -582,7 +582,7 @@ function App() {
         <div className="sidebar-brand" aria-label="HEALIE">
           <img
             className="sidebar-logo"
-            src="/healie_final_official_logo_full.png"
+            src="https://raw.githubusercontent.com/ckakalou/SDoH_Screener/redesign/react-fastapi/frontend/public/healie_final_official_logo_full.png"
             alt="Healie"
           />
           <p className="sidebar-subtitle">
