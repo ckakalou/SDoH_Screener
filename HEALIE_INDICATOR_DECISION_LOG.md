@@ -2713,3 +2713,86 @@ PHQ-2, GAD-2, and HITS names remain in question identifiers, scoring metadata,
 indicator exports, documentation, and the research audit trail, but their
 acronyms are not shown within the participant-facing prompts. Removing the
 labels does not change the item text, response scales, scoring, or thresholds.
+
+## Psychology-team review: gender identity and retired screening modules
+
+### Decision date and status
+
+Decision recorded on 31 October 2026 following multidisciplinary review with
+the psychology team. This decision supersedes the operational PHQ-2, HITS and
+GAD-2 decisions above while retaining them in this log as an auditable history
+of the instrument's development.
+
+### Gender identity wording
+
+The optional participant-facing item is:
+
+> Today, how do you think of yourself?
+
+The response categories are `A woman`, `A man`, `Non-binary`, `In another
+way`, and `Prefer not to answer`. Selecting `In another way` reveals the
+optional prompt `If you would like, please describe how you identify.` The
+free-text response is not included in the standard HEALIE indicator export.
+
+The wording is informed by WHO examples for self-administered gender questions
+and the WHO/HRP SHAPE cognitive-testing work. Intersex is not represented as a
+gender-identity category: WHO distinguishes gender identity from variations in
+sex characteristics, and recent SHAPE work recommends asking about intersex
+variations separately when that construct is required. HEALIE currently has no
+defined personalisation, equity-monitoring, or clinical purpose for collecting
+intersex status, so a separate sensitive item is not added under the project's
+data-minimisation principle.
+
+References:
+
+1. World Health Organization. *Gender and health: questions and answers.*
+   https://www.who.int/news-room/questions-and-answers/item/gender-and-health
+2. WHO/HRP. *Sexual Health Assessment of Practices and Experiences (SHAPE):
+   questionnaire and implementation considerations.*
+   https://www.who.int/teams/sexual-and-reproductive-health-and-research-(srh)/areas-of-work/sexual-health/asking-about-sexual-practices-and-experiences
+3. WHO. *Behavioural and social drivers of vaccination: tools and practical
+   guidance for achieving high uptake.* 2022.
+
+### Depression and anxiety instruments
+
+PHQ-2 and GAD-2 are removed from the SD-DOH questionnaire, response schema,
+ontology mapping, backend scoring, tests and indicator export. Depression and
+anxiety remain relevant to HEALIE, but the wider system will assess them using
+separate instruments in a distinct component. This keeps instrument ownership,
+consent, interpretation and future validation explicit and avoids duplicate
+measurement within the SD-DOH assessment.
+
+The removal must not be interpreted as evidence that depression or anxiety are
+irrelevant to health literacy or personalisation. Relationships with the
+Sørensen dimensions, adaptation rules and weights remain deferred until the
+separate instruments are selected and governed.
+
+### Intimate-partner-violence screening
+
+The HITS matrix and its current-partner context item are removed from the
+operational assessment. Although HITS was present in the source questionnaire,
+the current HEALIE PhD prototype is not embedded in a healthcare setting and
+does not provide the surrounding conditions required for responsible IPV
+screening: trained oversight, safe and private administration, safeguarding and
+escalation protocols, appropriate access controls, and linkage to care or
+specialist support.
+
+The removal is a scope and safety decision, not a judgement that IPV is
+unimportant. Any future reintroduction requires a separately approved workflow,
+governance review, referral pathway and context-appropriate validation.
+
+### Indicator contract 2.0
+
+Removing PHQ-2, GAD-2 and HITS eliminates the only contents of the former
+`screening_results` and `restricted_safety_indicators` tiers. Returning empty
+objects would imply operational constructs that the component no longer owns.
+The active export therefore contains only:
+
+1. assessment identity and provenance metadata;
+2. approved `context`; and
+3. derived `needs` and barriers.
+
+Because removing top-level fields is a breaking machine-contract change, the
+active contract is versioned as `healie-sdoh-ddoh-indicators-2.0` and defined in
+`healie_indicator_export_schema_v2.json`. Version 1.0 remains in the repository
+only as a historical compatibility record.

@@ -2,7 +2,7 @@
 
 ## Status and intended use
 
-This document records the design decisions applied to version `3.0.0-eu-gr` of the HEALIE Social and Digital Determinants of Health (SD-DOH) Assessment. It is an implementation and research audit trail, not evidence that the adapted instrument is psychometrically validated. Wording, translations, thresholds, skip logic and referral pathways require expert review and validation in the intended Greek and European populations before clinical or policy use.
+This document records the design decisions applied to version `3.1.0-eu-gr` of the HEALIE Social and Digital Determinants of Health (SD-DOH) Assessment. It is an implementation and research audit trail, not evidence that the adapted instrument is psychometrically validated. Wording, translations, thresholds, skip logic and referral pathways require expert review and validation in the intended Greek and European populations before clinical or policy use.
 
 Participant-facing name: **Social and Digital Factors Affecting Health**
 
@@ -16,7 +16,7 @@ HEALIE component name: **HEALIE SD-DOH Assessment**
 - Make optionality and decline choices explicit rather than interpreting missing data as a negative answer.
 - Ask follow-up questions only when their parent response makes them relevant, and remove stale hidden answers.
 - Keep adapted or newly authored modules identifiable as additions.
-- Treat screening outputs as indicators, not diagnoses.
+- Collect sensitive information only where HEALIE has a defined purpose and an appropriate governance and support pathway.
 - Keep digital health literacy outside this component; it belongs in a separate HEALIE instrument.
 
 ## Question-by-question decisions
@@ -24,7 +24,7 @@ HEALIE component name: **HEALIE SD-DOH Assessment**
 | Section | Topic | Decision and rationale |
 |---:|---|---|
 | 1 | Age | Added required age bands: 16–17, 18–21, 22–30, then decades through 71–80, 81+, and prefer not to answer. Age is required for age-specific physical-activity interpretation; decline produces `not_assessed`. |
-| 1 | Gender | Added as optional: Woman, Man, Non-binary, Another gender, Prefer not to answer. “Another gender” opens required free text. |
+| 1 | Gender identity | Optional WHO-informed item: “Today, how do you think of yourself?” with A woman, A man, Non-binary, In another way, and Prefer not to answer. “In another way” opens an optional free-text field. Intersex status is not included as a gender category because WHO distinguishes variations in sex characteristics from gender identity, and HEALIE has no current purpose for collecting that additional sensitive attribute. |
 | 1 | Ethnic group | Optional multi-select: White, Black or African, Asian, Hispanic/Latino, Arab, Other. “Other” opens required free text. Categories are project-defined and require local review. |
 | 2 | Region and ancestry | Retained broad European region. Ancestry or ethnic origin is optional free text to preserve detail without forcing a category. |
 | 3 | Household income | Retained existing EU/Greek adaptation and euro-denominated bands. |
@@ -43,9 +43,8 @@ HEALIE component name: **HEALIE SD-DOH Assessment**
 | 16 | Unmet needs | Restored the original five-row checklist: food, healthy food, healthcare/medicines, phone, and decline. Decline is exclusive. Any reported need reveals and requires all four original follow-ups (medical bills, delayed care, housing-cost worry, bill worry). |
 | 17 | Social connection | Retained frequency item and added inclusive examples covering phone/online contact and community or club meetings. |
 | 18 | Neighbourhood support | Retained as a distinct support statement and used British spelling. |
-| 19 | PHQ-2 | Added an answer/decline gate. The instrument acronym is retained in metadata but omitted from participant-facing wording. When answered, both rows are required. Sum 0–6; a score of at least 3 is flagged as a positive screen, not a diagnosis. |
-| 19 | HITS | Retained current-partner status as context, but HITS is available to everyone and is not hidden when the participant reports no current partner. The instrument acronym is retained in metadata but omitted from participant-facing wording. Four 1–5 rows produce a 4–20 total; the implementation uses the English-language threshold of 11 and explicitly requires translated-version validation. |
-| 19 | GAD-2 | Added an answer/decline gate. The instrument acronym is retained in metadata but omitted from participant-facing wording. When answered, both rows are required. Sum 0–6; a score of at least 3 is flagged as a positive screen. |
+| 19 | Depression and anxiety | PHQ-2 and GAD-2 were retired after psychology-team review. Anxiety and depression remain relevant to HEALIE but will be assessed through separate instruments in another component, avoiding duplication and preserving clear assessment boundaries. |
+| 19 | Intimate-partner violence | HITS and the current-partner item were retired after psychology-team review. Although HITS appeared in the source questionnaire, the current PhD prototype is not embedded in a healthcare setting and does not provide the safeguarding, escalation, trained oversight, privacy controls, or linkage-to-care pathway required for responsible IPV screening. |
 | 19 | Self-reported cognition | Retained the self-reported cognition item as contextual information only. Removed the optional clinician-entered MMSE total because it is not part of the original questionnaire and would introduce separate administration, interpretation, and licensing requirements. |
 | 20 | Physical activity | Days and minutes use compact numeric selectors. If days are zero, minutes are hidden and weekly minutes equal zero; therefore zero was removed from the visible minutes scale. “150” is labelled “150 or more.” Ages 16–17 use 420 minutes/week (60 minutes/day); ages 18+ use 150 minutes/week. Missing/declined age yields `not_assessed`. This remains a simplified indicator because the item does not fully capture all WHO intensity guidance. |
 | 21 | Religion | Removed. It was not part of the intended core questionnaire and had entered the earlier adaptation without a documented source or approved rationale. |
@@ -61,22 +60,18 @@ HEALIE component name: **HEALIE SD-DOH Assessment**
 - Q16 decline is valid by itself and cannot be combined with checklist answers.
 - Q15 No transportation-related difficulties and Prefer not to answer are each exclusive and cannot be combined with a substantive transport domain.
 - Legal-domain “Prefer not to answer” is exclusive and cannot be combined with a substantive domain.
-- HITS visibility does not depend on current-partner status.
-- Conditional free-text fields are required only while visible.
+- Conditional free-text fields are validated only while visible; each field retains its own required or optional status.
 
 ## Integration export
 
 The API now emits the versioned, data-minimised contract defined by
-`healie_indicator_export_schema_v1.json`. It deliberately separates four
-information tiers so downstream HEALIE components can apply different access
-and use policies.
+`healie_indicator_export_schema_v2.json`. Version 2.0 contains assessment
+metadata plus two data-minimised information tiers.
 
 | Tier | Included information | Exclusions and safeguards |
 |---|---|---|
 | `context` | Approved descriptive fields: age band, identity, income band, education, employment, housing, health coverage, postal code, combined home/personal connectivity, language, marital/single-parent context, usual travel mode, social contact, neighbourhood support and self-reported cognition. | Context is not itself a deficit or score. Postal code is for controlled linkage, not direct prompt injection. Free-text Other responses are excluded; ancestry is the approved exception. |
 | `needs` | Nullable need/barrier indicators for housing, function, language, transport, material needs, healthcare affordability, financial strain, physical activity, legal support and six DDoH domains. | `null` preserves declined, uncertain or insufficiently assessed states rather than converting them to false. No thresholds are repeated in the payload. |
-| `screening_results` | PHQ-2 and GAD-2 assessment status, score and positive-screen result. | Raw item responses are not exported. Screens are not diagnoses. |
-| `restricted_safety_indicators` | HITS assessment status, score and positive-screen result. | Raw HITS answers are not exported. This tier requires separate access control and must not be treated as ordinary personalisation context. |
 
 The contract contains no combined SDoH, DDoH or health-literacy score and no
 personalisation weights. Those decisions remain deferred until the wider
@@ -88,12 +83,11 @@ HEALIE system and validation evidence are ready.
 2. WHO/Europe. *New WHO and London School of Economics study identifies key digital factors affecting health* (2 December 2024). https://www.who.int/europe/news/item/02-12-2024-new-who-and-london-school-of-economics-study-identifies-key-digital-factors-affecting-health
 3. Kickbusch I, et al. *The digital determinants of health: a new era for global public health*. The Lancet (2026). https://doi.org/10.1016/S0140-6736(26)01292-4
 4. National Center for Medical-Legal Partnership. *Screening Tool for MLP Legal Needs in Health Care Settings* (I-HELP-informed framework). https://www.medical-legalpartnership.org/mlp-resources/i-help-screening-tool
-5. Kroenke K, Spitzer RL, Williams JBW. *The Patient Health Questionnaire-2: validity of a two-item depression screener* (2003). https://pubmed.ncbi.nlm.nih.gov/14583691/
-6. Kroenke K, Spitzer RL, Williams JBW, Monahan PO, Löwe B. *Anxiety disorders in primary care: prevalence, impairment, comorbidity, and detection* (2007). https://pubmed.ncbi.nlm.nih.gov/17339617/
-7. Sherin KM, Sinacore JM, Li XQ, Zitter RE, Shakil A. *HITS: a short domestic violence screening tool for use in a family practice setting* (1998). https://pubmed.ncbi.nlm.nih.gov/9669164/
-8. WHO. *Physical activity* recommendations. https://www.who.int/europe/news-room/fact-sheets/item/physical-activity
-9. Norman CD, Skinner HA. *eHEALS: The eHealth Literacy Scale* (2006). Retained as a reference for the deferred HEALIE digital-literacy component. https://pubmed.ncbi.nlm.nih.gov/17213046/
+5. WHO. *Gender and health: questions and answers*. https://www.who.int/news-room/questions-and-answers/item/gender-and-health
+6. WHO/HRP. *Sexual Health Assessment of Practices and Experiences (SHAPE): questionnaire and implementation considerations*. https://www.who.int/teams/sexual-and-reproductive-health-and-research-(srh)/areas-of-work/sexual-health/asking-about-sexual-practices-and-experiences
+7. WHO. *Physical activity* recommendations. https://www.who.int/europe/news-room/fact-sheets/item/physical-activity
+8. Norman CD, Skinner HA. *eHEALS: The eHealth Literacy Scale* (2006). Retained as a reference for the deferred HEALIE digital-literacy component. https://pubmed.ncbi.nlm.nih.gov/17213046/
 
 ## Reporting language for a paper
 
-The instrument was revised through an item-level audit that compared the existing EU/Greek implementation with the source questionnaire logic and contemporary literature. The original SDoH core was retained where possible, while branching, explicit optionality, decline responses and data-quality constraints were normalized across the schema, frontend and API. Religion items without a documented source were removed. Two clearly identified additions were introduced: an I-HELP-informed health-harming legal-needs module and a project-authored Digital Access and Inclusion module informed by WHO/Europe’s digital-determinants framework. Digital health literacy was intentionally deferred to a separate HEALIE component. These adaptations require cognitive interviewing, translation/back-translation, accessibility review and psychometric evaluation before substantive interpretation.
+The instrument was revised through an item-level audit that compared the existing EU/Greek implementation with the source questionnaire logic and contemporary literature. The original SDoH core was retained where possible, while branching, explicit optionality, decline responses and data-quality constraints were normalized across the schema, frontend and API. Following multidisciplinary psychology-team review, PHQ-2 and GAD-2 were moved to separate HEALIE assessment components, while HITS was removed because the prototype lacks the clinical safeguarding and referral infrastructure required for responsible IPV screening. Gender-identity wording was aligned with WHO-informed terminology and intersex status was not collected as a gender category. Religion items without a documented source were removed. Two clearly identified additions were introduced: an I-HELP-informed health-harming legal-needs module and a project-authored Digital Access and Inclusion module informed by WHO/Europe’s digital-determinants framework. Digital health literacy was intentionally deferred to a separate HEALIE component. These adaptations require cognitive interviewing, translation/back-translation, accessibility review and psychometric evaluation before substantive interpretation.

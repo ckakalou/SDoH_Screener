@@ -35,7 +35,7 @@ The React/FastAPI implementation currently supports:
 - Explicit optional-question metadata and exclusive decline choices
 - Submission of answers to FastAPI
 - Server-side validation using JSON Schema
-- Derived PHQ-2, HITS, GAD-2, physical-activity, and legal-access indicators
+- Derived physical-activity, legal-access, material-needs, and digital-access indicators
 - Participant-facing success and validation-error messages
 - Frontend behavioural regression tests with Vitest and React Testing Library
 - Keyboard focus management and automated accessibility checks with axe-core
@@ -92,8 +92,8 @@ Important adaptations include:
 - Education and employment options adapted for European contexts
 - Public and private healthcare-coverage categories
 - EU-relevant transportation options
-- PHQ-2 and GAD-2 screening matrices
-- HITS intimate-partner-violence screening offered independently of the current-partner answer
+- Depression and anxiety screening deferred to separate HEALIE instruments
+- Intimate-partner-violence screening excluded because this prototype does not provide the required safeguarding and linkage-to-care pathway
 - Self-reported cognition context without an MMSE field
 - An I-HELP-informed legal-needs module
 - A six-item Digital Access and Inclusion module
@@ -297,7 +297,7 @@ Successful response:
   "message": "The screener responses are valid.",
   "derived": {
     "assessment_id": "550e8400-e29b-41d4-a716-446655440000",
-    "schema_version": "healie-sdoh-ddoh-indicators-1.0",
+    "schema_version": "healie-sdoh-ddoh-indicators-2.0",
     "generated_at": "2026-10-14T07:30:00Z",
     "context": {
       "age": {
@@ -312,17 +312,16 @@ Successful response:
         "weekly_minutes": 180,
         "need_identified": false
       }
-    },
-    "screening_results": {},
-    "restricted_safety_indicators": {}
+    }
   }
 }
 ```
 
 The real response includes every field defined in
-`healie_indicator_export_schema_v1.json`; the example above is abbreviated for
-readability. The four tiers separate descriptive context, derived needs,
-ordinary screening results, and restricted safety indicators.
+`healie_indicator_export_schema_v2.json`; the example above is abbreviated for
+readability. Version 2.0 exports assessment metadata, approved descriptive
+context, and derived needs or barriers. The retired v1 schema is retained only
+as a historical compatibility record.
 
 `assessment_id` is a backend-generated UUIDv4 for one completed assessment
 export. It is not a participant identifier, is not derived from answers, and is
@@ -333,7 +332,7 @@ if required for longitudinal use, must be managed separately and must not be
 inferred from `assessment_id`.
 
 A complete representative payload and field-level integration guidance are in
-`healie_indicator_export_example_v1.json` and
+`healie_indicator_export_example_v2.json` and
 `HEALIE_INTEGRATION_CONTRACT.md`.
 
 Invalid values produce an HTTP `422` response containing the first validation error.
@@ -409,7 +408,9 @@ SDoH_Screener/
 ├── sdoh_screener_response_schema_eu_gr_v2.json
 ├── sdoh_ontology_mapping_eu_gr_v2.json
 ├── healie_indicator_export_schema_v1.json
+├── healie_indicator_export_schema_v2.json
 ├── healie_indicator_export_example_v1.json
+├── healie_indicator_export_example_v2.json
 ├── HEALIE_INTEGRATION_CONTRACT.md
 ├── SD_DOH_QUESTION_AUDIT.md
 ├── emit_rdf_eu_gr_v2.py
@@ -436,7 +437,7 @@ The current redesign:
 - Does not persist responses in a database
 - Does not include authentication or participant consent
 - Requires every visible question except those explicitly marked optional
-- Returns the versioned four-tier indicator contract but does not provide diagnosis or clinical decision support
+- Returns the versioned, data-minimised context-and-needs indicator contract but does not provide diagnosis or clinical decision support
 - Still includes a development-only answer-state inspector
 - Requires cognitive interviewing, translation/back-translation, accessibility review, and psychometric validation
 - Uses project-authored legal and digital modules that must not be described as validated scales

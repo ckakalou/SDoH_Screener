@@ -93,7 +93,6 @@ st.sidebar.write(
 # Sidebar context
 st.sidebar.header("Context")
 age_years = st.sidebar.number_input("Age (years)", min_value=0, max_value=120, value=30, step=1)
-spanish_version = st.sidebar.checkbox("Spanish IPV cutoff (5.5)", value=False)
 
 st.sidebar.markdown("### Health Literacy Context (Sørensen et al.)")
 preferred_lang = st.sidebar.selectbox(
@@ -109,17 +108,6 @@ digital_comfort = st.sidebar.radio(
     ["Low", "Medium", "High"]
 )
 support = st.sidebar.checkbox("I have someone who helps me understand health information")
-
-st.sidebar.markdown("### IPV Cutoff Selection")
-st.sidebar.write(
-    "The HITS screening tool uses different validated cutoffs depending on language: "
-    "- **English:** ≥10.5\n"
-    "- **Spanish:** ≥5.5\n\n"
-    "Select Spanish cutoff if administering to Spanish-speaking participants, based on "
-    "validation studies showing different sensitivity/specificity thresholds."
-)
-spanish_version = st.sidebar.checkbox("Apply Spanish cutoff (5.5 instead of 10.5)", value=False)
-
 
 # Helper for visible_if
 def check_visible_if(visible_if, answers):
@@ -269,20 +257,7 @@ if submitted:
     # --- Compute scores & flags ---
     st.subheader("Computed Scores & Flags")
 
-    phq2 = responses.get("q19a_phq2") or {}
-    phq2_score = sum(int(phq2.get(k,0)) for k in ["phq2_item1","phq2_item2"])
-    phq2_positive = phq2_score >= 3
-    gad2 = responses.get("q19c_gad2") or {}
-    gad2_score = sum(int(gad2.get(k,0)) for k in ["gad2_item1","gad2_item2"])
-    gad2_positive = gad2_score >= 3
-
-
-    hits = responses.get("q19b_ipv_hits") or {}
-    hits_score = sum(float(hits.get(k,0)) for k in ["hits_hurt","hits_insult","hits_threaten","hits_scream"])
-    hits_cutoff = 5.5 if spanish_version else 10.5
-    hits_positive = hits_score >= hits_cutoff
     cognition_self = responses.get("q19d_cognition_selfreport")
-    mmse_total = responses.get("q19e_mmse_total")
 
 
     # Physical Activity
@@ -316,14 +291,6 @@ if submitted:
     digital_device_access_need = (q23 in ["no", "sometimes"])
 
     results = {
-        "phq2_score": phq2_score,
-        "depression_screen_positive": phq2_positive,
-        "gad2_score": gad2_score,
-        "anxiety_screen_positive": gad2_positive,
-
-        "hits_score": hits_score,
-        "ipv_screen_positive": hits_positive,
-        "hits_cutoff": hits_cutoff,
         "weekly_minutes_activity": weekly_minutes,
         "physical_activity_need": pa_need,
         "housing_instability": housing_instability,
@@ -331,41 +298,17 @@ if submitted:
         "food_insecurity": food_insecurity,
         "medical_cost_barrier": medical_cost_barrier,
         "cognition_selfreport": cognition_self,
-        "mmse_total": mmse_total,
         "age_years": age_years,
-        "spanish_version": spanish_version,
         "digital_device_access_need": digital_device_access_need
 
     }
 
     st.write(pd.DataFrame([results]).T.rename(columns={0:"value"}))
-    # --- IPV safety flow (shows only when screen is positive) ---
-    if results.get("ipv_screen_positive"):
-        st.error("Safety notice: Your answers suggest possible risk related to intimate partner violence.")
-        st.markdown(
-            """
-    If you feel unsafe **right now**, consider these options:
-
-    - **EU emergency number:** **112** (free, 24/7 across the EU).
-    - **Greece (local):**  
-      • **Police:** **100** (you can also SMS your address, name, and “I am in danger”).  
-      • **Women SOS hotline:** **15900** — psychosocial support, legal counselling, and access to shelters (`sos15900@isotita.gr`).
-
-    If you are outside Greece, contact your **local emergency number** or your country’s **domestic violence hotline**.
-
-    You are not alone. Support is available. Share only what you’re comfortable sharing, and use a safe device if possible.
-            """
-        )
     st.markdown("### Interpretation for Researchers")
     st.markdown(
         """
 **Computed indicators (post-validation):**
 
-- **`phq2_score`**: Sum of the two PHQ-2 items (0–6). **≥ 3** indicates a positive depression screen.
-- **`depression_screen_positive`**: Boolean flag set to `true` when `phq2_score ≥ 3`.
-- **`hits_score`**: Sum of HITS items (4–20 typical; Spanish form uses 1–5 per item). Risk threshold depends on language.
-- **`ipv_screen_positive`**: `true` if `hits_score ≥ hits_cutoff`.
-- **`hits_cutoff`**: Language-specific cutoff (default **10.5**; if Spanish version selected, **5.5**).
 - **`weekly_minutes_activity`**: `q20a_pa_days × q20b_pa_minutes`. Benchmarked vs guidelines.
 - **`physical_activity_need`**: `true` if below guideline (Adults **<150 min/week**; ages 6–17 **<420 min/week**).
 - **`housing_instability`**: `true` if current housing is unstable or paying for housing is difficult.
@@ -373,9 +316,7 @@ if submitted:
 - **`food_insecurity`**: `true` if food-related unmet needs are checked.
 - **`medical_cost_barrier`**: `true` if problems paying medical bills or delayed care due to cost.
 - **`age_years`**: Age used to select the appropriate physical activity benchmark.
-- **`spanish_version`**: Whether the Spanish IPV cutoff (**5.5**) is applied.
-
-**Health literacy note:** Presenting these results in plain language (e.g., what “positive screen” means and next steps) supports **health literacy**, enabling participants to understand findings and act on social and behavioral determinants alongside clinical care.
+**Health literacy note:** Presenting these results in plain language supports **health literacy**, enabling participants to understand and act on social and behavioural determinants alongside clinical care.
 """
     )
     st.subheader("Submitted Payload")

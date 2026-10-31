@@ -16,7 +16,7 @@ SCREENER_FILE = PROJECT_ROOT / "sdoh_screener_eu_gr_v2.json"
 RESPONSE_SCHEMA_FILE = (
     PROJECT_ROOT / "sdoh_screener_response_schema_eu_gr_v2.json"
 )
-INDICATOR_SCHEMA_FILE = PROJECT_ROOT / "healie_indicator_export_schema_v1.json"
+INDICATOR_SCHEMA_FILE = PROJECT_ROOT / "healie_indicator_export_schema_v2.json"
 FRONTEND_DIST = PROJECT_ROOT / "frontend" / "dist"
 FRONTEND_INDEX = FRONTEND_DIST / "index.html"
 
@@ -170,18 +170,6 @@ def validate_exclusive_answer(
                 "with another selected option."
             ),
         )
-
-
-def total_matrix_answer(
-    responses: dict[str, Any],
-    question_id: str,
-) -> int | None:
-    answer = responses.get(question_id)
-
-    if not isinstance(answer, dict) or not answer:
-        return None
-
-    return sum(answer.values())
 
 
 def assessment_status(
@@ -683,55 +671,12 @@ def calculate_derived_results(responses: dict[str, Any]) -> dict[str, Any]:
         },
     }
 
-    depression_score = total_matrix_answer(responses, "q19a_phq2")
-    anxiety_score = total_matrix_answer(responses, "q19c_gad2")
-    screening_results = {
-        "depression": {
-            "assessment_status": (
-                "declined"
-                if responses.get("q19a_phq2_participation") == "decline"
-                else "assessed" if depression_score is not None else "not_assessed"
-            ),
-            "instrument": "phq_2",
-            "score": depression_score,
-            "screen_positive": (
-                depression_score >= 3 if depression_score is not None else None
-            ),
-        },
-        "anxiety": {
-            "assessment_status": (
-                "declined"
-                if responses.get("q19c_gad2_participation") == "decline"
-                else "assessed" if anxiety_score is not None else "not_assessed"
-            ),
-            "instrument": "gad_2",
-            "score": anxiety_score,
-            "screen_positive": (
-                anxiety_score >= 3 if anxiety_score is not None else None
-            ),
-        },
-    }
-
-    hits_score = total_matrix_answer(responses, "q19b_ipv_hits")
-    restricted_safety_indicators = {
-        "ipv": {
-            "assessment_status": (
-                "assessed" if hits_score is not None else "not_assessed"
-            ),
-            "instrument": "hits",
-            "score": hits_score,
-            "screen_positive": hits_score >= 11 if hits_score is not None else None,
-        }
-    }
-
     return {
         "assessment_id": str(uuid4()),
-        "schema_version": "healie-sdoh-ddoh-indicators-1.0",
+        "schema_version": "healie-sdoh-ddoh-indicators-2.0",
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "context": context,
         "needs": needs,
-        "screening_results": screening_results,
-        "restricted_safety_indicators": restricted_safety_indicators,
     }
 
 

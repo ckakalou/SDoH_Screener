@@ -80,11 +80,11 @@ const journeySteps: JourneyStep[] = [
     endSection: 20,
     icon: 'heart-pulse',
     description:
-      'Your connections, emotional wellbeing, and everyday activity.',
+      'Your connections, memory and thinking, and everyday activity.',
     topics: [
       { section: 17, label: 'Connection' },
       { section: 18, label: 'Neighbourhood' },
-      { section: 19, label: 'Wellbeing check-in' },
+      { section: 19, label: 'Memory & thinking' },
       { section: 20, label: 'Activity' },
     ],
     accentIcons: ['messages-square', 'clipboard-heart', 'activity'],
@@ -126,7 +126,7 @@ const sectionPresentation: Record<
   16: { label: 'Unmet needs', icon: 'shopping-basket' },
   17: { label: 'Social connection', icon: 'messages-square' },
   18: { label: 'Neighbourhood support', icon: 'community-circle' },
-  19: { label: 'Wellbeing check-in', icon: 'clipboard-heart' },
+  19: { label: 'Memory & thinking', icon: 'clipboard-heart' },
   20: { label: 'Physical activity', icon: 'activity' },
   21: { label: 'Legal needs', icon: 'scale' },
   22: { label: 'Digital Access and Inclusion', icon: 'smartphone' },

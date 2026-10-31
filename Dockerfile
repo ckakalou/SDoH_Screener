@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 COPY --chown=user:user backend/ ./backend/
 COPY --chown=user:user sdoh_screener_eu_gr_v2.json ./
 COPY --chown=user:user sdoh_screener_response_schema_eu_gr_v2.json ./
-COPY --chown=user:user healie_indicator_export_schema_v1.json ./
+COPY --chown=user:user healie_indicator_export_schema_v2.json ./
 COPY --from=frontend-builder --chown=user:user /build/frontend/dist ./frontend/dist
 
 USER user

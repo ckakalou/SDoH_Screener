@@ -16,8 +16,9 @@ Key adaptations based on KS/AB/MG review:
 - Housing: removed **mobile home** option.
 - Health coverage: replaced US-specific insurance checklist with **public/private coverage** categories.
 - Mobility/transport: commute options adapted to common EU modes.
-- Mental health: retained **PHQ-2** and added **GAD-2** (anxiety) as an additional brief screener.
-- Cognition: added an optional **self-report cognition** item and an optional field for a clinician-entered **MMSE total score** (0–30) without embedding MMSE item text.
+- Depression and anxiety screening is deferred to separate HEALIE instruments.
+- HITS/IPV screening is outside the current prototype scope because it lacks the required safeguarding and linkage-to-care pathway.
+- Cognition is retained as self-reported context only; MMSE is excluded.
 
 ## Files
 - `sdoh_screener_eu_gr_v2.json` — screener definition (questions, types, options)
@@ -27,9 +28,6 @@ Key adaptations based on KS/AB/MG review:
 ## Derived indicators computed in the app
 From submitted responses, the app computes:
 
-- **PHQ-2 score** (0–6) and `depression_screen_positive` (PHQ-2 ≥ 3)
-- **GAD-2 score** (0–6) and `anxiety_screen_positive` (GAD-2 ≥ 3)
-- **HITS score** (4–20) and `ipv_screen_positive` (cutoff configurable; default 10.5, optional 5.5)
 - **Weekly physical activity minutes** and `physical_activity_need` (age-aware threshold)
 - Needs/flags:
   - `housing_instability`
@@ -38,7 +36,6 @@ From submitted responses, the app computes:
   - `medical_cost_barrier`
 - Context variables:
   - `cognition_selfreport`
-  - `mmse_total` (optional)
 
 ## Run locally (macOS)
 ```bash
@@ -53,9 +50,9 @@ After submission the app provides:
 - `responses.json` — verbatim answers
 - `results.json` — computed scores and flags (derived indicators)
 
-## Notes on safety & IPV screening
-If IPV screen is positive, the UI should avoid displaying sensitive advice in a way that could increase risk.
-For production use, implement a safety protocol appropriate to your local clinical context.
+## Scope note
+The active React/FastAPI implementation is authoritative. This Streamlit app is
+retained as a legacy prototype and must not be used as a clinical assessment.
 
 Generated on 2026-02-04.
 

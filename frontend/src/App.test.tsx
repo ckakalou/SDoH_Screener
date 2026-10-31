@@ -82,7 +82,7 @@ const validResult: ScreenerValidationResult = {
   valid: true,
   message: 'Responses are valid.',
   derived: {
-    schema_version: 'healie-sdoh-ddoh-indicators-1.0',
+    schema_version: 'healie-sdoh-ddoh-indicators-2.0',
     context: {
       age: {
         assessment_status: 'assessed',
@@ -90,8 +90,6 @@ const validResult: ScreenerValidationResult = {
       },
     },
     needs: {},
-    screening_results: {},
-    restricted_safety_indicators: {},
   },
 }
 
@@ -207,7 +205,7 @@ expect(screen.getByRole('img', { name: 'Healie' })).toHaveAttribute(
       'download',
       'healie-sdoh-ddoh-indicators.json',
     )
-    expect(screen.getByText(/healie-sdoh-ddoh-indicators-1\.0/)).toBeInTheDocument()
+    expect(screen.getByText(/healie-sdoh-ddoh-indicators-2\.0/)).toBeInTheDocument()
   })
 
   it('shows a server validation message without completing', async () => {

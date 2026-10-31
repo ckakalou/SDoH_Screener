@@ -1,8 +1,8 @@
 {
   "screener": {
     "title": "Social and Digital Determinants of Health (SD-DOH) Assessment – EU/GR Adaptation",
-    "version": "3.0.0-eu-gr",
-    "created": "2026-10-08",
+    "version": "3.1.0-eu-gr",
+    "created": "2026-10-31",
     "language": "en",
     "notes": [
       "The original 20-section SDoH questionnaire is preserved as an adapted core.",
@@ -63,17 +63,17 @@
       {
         "id": "dem_gender",
         "section": 1,
-        "text": "What is your gender?",
+        "text": "Today, how do you think of yourself?",
         "type": "single-select",
         "required": false,
         "options": [
           {
             "value": "woman",
-            "label": "Woman"
+            "label": "A woman"
           },
           {
             "value": "man",
-            "label": "Man"
+            "label": "A man"
           },
           {
             "value": "non_binary",
@@ -81,7 +81,7 @@
           },
           {
             "value": "another_gender",
-            "label": "Another gender"
+            "label": "In another way"
           },
           {
             "value": "prefer_not_answer",
@@ -92,9 +92,9 @@
       {
         "id": "dem_gender_other_text",
         "section": 1,
-        "text": "Please describe your gender:",
+        "text": "If you would like, please describe how you identify.",
         "type": "text",
-        "required": true,
+        "required": false,
         "visible_if": {
           "all": [
             {
@@ -1186,230 +1186,6 @@
         "required": true
       },
       {
-        "id": "q19a_phq2_participation",
-        "section": 19,
-        "text": "Would you like to answer the two depression screening questions?",
-        "type": "single-select",
-        "required": true,
-        "options": [
-          {
-            "value": "answer",
-            "label": "Answer these questions"
-          },
-          {
-            "value": "decline",
-            "label": "Prefer not to answer"
-          }
-        ]
-      },
-      {
-        "id": "q19a_phq2",
-        "section": 19,
-        "text": "Over the last 2 weeks, how often have you been bothered by the following problems?",
-        "type": "matrix",
-        "scale": [
-          {
-            "value": 0,
-            "label": "Not at all"
-          },
-          {
-            "value": 1,
-            "label": "Several days"
-          },
-          {
-            "value": 2,
-            "label": "More than half the days"
-          },
-          {
-            "value": 3,
-            "label": "Nearly every day"
-          }
-        ],
-        "rows": [
-          {
-            "id": "phq2_item1",
-            "label": "Little interest or pleasure in doing things."
-          },
-          {
-            "id": "phq2_item2",
-            "label": "Feeling down, depressed, or hopeless."
-          }
-        ],
-        "scoring": {
-          "method": "sum",
-          "positive_if": {
-            "operator": ">=",
-            "value": 3
-          },
-          "score_key": "phq2_score",
-          "flag_key": "depression_screen_positive"
-        },
-        "required": true,
-        "visible_if": {
-          "all": [
-            {
-              "question": "q19a_phq2_participation",
-              "operator": "=",
-              "value": "answer"
-            }
-          ]
-        }
-      },
-      {
-        "id": "q19b_partner_status",
-        "section": 19,
-        "text": "Do you currently have a partner?",
-        "type": "single-select",
-        "required": true,
-        "options": [
-          {
-            "value": "yes",
-            "label": "Yes"
-          },
-          {
-            "value": "no",
-            "label": "No"
-          },
-          {
-            "value": "prefer_not_answer",
-            "label": "Prefer not to answer"
-          }
-        ]
-      },
-      {
-        "id": "q19b_ipv_hits",
-        "section": 19,
-        "text": "How often does your partner do the following?",
-        "type": "matrix",
-        "scale": [
-          {
-            "value": 1,
-            "label": "Never"
-          },
-          {
-            "value": 2,
-            "label": "Rarely"
-          },
-          {
-            "value": 3,
-            "label": "Sometimes"
-          },
-          {
-            "value": 4,
-            "label": "Fairly often"
-          },
-          {
-            "value": 5,
-            "label": "Frequently"
-          }
-        ],
-        "rows": [
-          {
-            "id": "hits_hurt",
-            "label": "Physically hurt you?"
-          },
-          {
-            "id": "hits_insult",
-            "label": "Insult you or talk down to you?"
-          },
-          {
-            "id": "hits_threaten",
-            "label": "Threaten you with harm?"
-          },
-          {
-            "id": "hits_scream",
-            "label": "Scream or curse at you?"
-          }
-        ],
-        "scoring": {
-          "method": "sum",
-          "range": [
-            4,
-            20
-          ],
-          "positive_if": {
-            "gte": 11
-          },
-          "score_key": "hits_score",
-          "flag_key": "ipv_screen_positive",
-          "note": "English HITS threshold; translated versions require validation."
-        },
-        "required": true
-      },
-      {
-        "id": "q19c_gad2_participation",
-        "section": 19,
-        "text": "Would you like to answer the two anxiety screening questions?",
-        "type": "single-select",
-        "required": true,
-        "options": [
-          {
-            "value": "answer",
-            "label": "Answer these questions"
-          },
-          {
-            "value": "decline",
-            "label": "Prefer not to answer"
-          }
-        ]
-      },
-      {
-        "id": "q19c_gad2",
-        "section": 19,
-        "text": "Over the last 2 weeks, how often have you been bothered by the following problems?",
-        "type": "matrix",
-        "scale": [
-          {
-            "value": 0,
-            "label": "Not at all"
-          },
-          {
-            "value": 1,
-            "label": "Several days"
-          },
-          {
-            "value": 2,
-            "label": "More than half the days"
-          },
-          {
-            "value": 3,
-            "label": "Nearly every day"
-          }
-        ],
-        "rows": [
-          {
-            "id": "gad2_item1",
-            "label": "Feeling nervous, anxious, or on edge."
-          },
-          {
-            "id": "gad2_item2",
-            "label": "Not being able to stop or control worrying."
-          }
-        ],
-        "required": true,
-        "visible_if": {
-          "all": [
-            {
-              "question": "q19c_gad2_participation",
-              "operator": "=",
-              "value": "answer"
-            }
-          ]
-        },
-        "scoring": {
-          "method": "sum",
-          "range": [
-            0,
-            6
-          ],
-          "positive_if": {
-            "gte": 3
-          },
-          "score_key": "gad2_score",
-          "flag_key": "anxiety_screen_positive"
-        }
-      },
-      {
         "id": "q19d_cognition_selfreport",
         "section": 19,
         "text": "In the past 12 months, have you noticed problems with memory or thinking that affect daily life?",
@@ -1981,18 +1757,6 @@
             }
           ]
         }
-      },
-      {
-        "key": "depression_screen_positive",
-        "source": "q19a_phq2.scoring.flag_key"
-      },
-      {
-        "key": "anxiety_screen_positive",
-        "source": "q19c_gad2.scoring.flag_key"
-      },
-      {
-        "key": "ipv_screen_positive",
-        "source": "q19b_ipv_hits.scoring.flag_key"
       },
       {
         "key": "physical_activity_need",

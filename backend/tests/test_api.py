@@ -67,20 +67,24 @@ def test_get_screener_returns_refactored_assessment() -> None:
     assert response.status_code == 200
     screener = response.json()["screener"]
     ids = {question["id"] for question in screener["questions"]}
-    assert screener["version"] == "3.0.0-eu-gr"
+    assert screener["version"] == "3.1.0-eu-gr"
     assert "Social and Digital Determinants of Health" in screener["title"]
     assert {"dem_age_group", "legal_need", "ddoh_privacy_trust"} <= ids
     assert "q21_religion_spiritual_belief" not in ids
     assert "q19e_mmse_total" not in ids
-    hits = next(q for q in screener["questions"] if q["id"] == "q19b_ipv_hits")
-    assert "visible_if" not in hits
+    assert {
+        "q19a_phq2_participation", "q19a_phq2", "q19b_partner_status",
+        "q19b_ipv_hits", "q19c_gad2_participation", "q19c_gad2",
+    }.isdisjoint(ids)
+    gender = next(q for q in screener["questions"] if q["id"] == "dem_gender")
+    assert gender["text"] == "Today, how do you think of yourself?"
 
 
 def test_all_questions_have_explicit_required_metadata() -> None:
     questions = client.get("/api/v1/screener").json()["screener"]["questions"]
     assert all("required" in question for question in questions)
     assert {q["id"] for q in questions if q["required"] is False} == {
-        "dem_gender", "q1_ethnic_group", "q2_ancestry",
+        "dem_gender", "dem_gender_other_text", "q1_ethnic_group", "q2_ancestry",
         "q9b_longest_zip",
     }
 
@@ -90,6 +94,14 @@ def test_age_is_required_but_optional_identity_items_are_not() -> None:
     assert missing.status_code == 422
     assert "dem_age_group" in missing.json()["detail"]
     assert validate({"dem_age_group": "22_30"}, section=1).status_code == 200
+
+
+def test_gender_other_description_is_optional() -> None:
+    response = validate({
+        "dem_age_group": "22_30",
+        "dem_gender": "another_gender",
+    }, section=1)
+    assert response.status_code == 200
 
 
 def test_multi_select_other_uses_contains_visibility() -> None:
@@ -159,62 +171,12 @@ def test_decline_cannot_be_combined_with_checklist_answers() -> None:
     assert "q16_decline" in response.json()["detail"]
 
 
-def test_scale_participation_controls_visibility_and_scoring() -> None:
-    declined = validate({
-        "q19a_phq2_participation": "decline",
-        "q19b_partner_status": "no",
-        "q19b_ipv_hits": {"hits_hurt": 1, "hits_insult": 1,
-                          "hits_threaten": 1, "hits_scream": 1},
-        "q19c_gad2_participation": "decline",
-        "q19d_cognition_selfreport": "no",
-    }, section=19)
-    assert declined.status_code == 200
-    derived = calculate_derived_results({
-        "q19a_phq2_participation": "decline",
-        "q19b_partner_status": "no",
-        "q19b_ipv_hits": {"hits_hurt": 1, "hits_insult": 1,
-                          "hits_threaten": 1, "hits_scream": 1},
-        "q19c_gad2_participation": "decline",
-        "q19d_cognition_selfreport": "no",
-    })
-    assert derived["screening_results"]["depression"]["assessment_status"] == "declined"
-    assert derived["restricted_safety_indicators"]["ipv"]["score"] == 4
-
-    scored = validate({
-        "q19a_phq2_participation": "answer",
-        "q19a_phq2": {"phq2_item1": 2, "phq2_item2": 1},
-        "q19b_partner_status": "yes",
-        "q19b_ipv_hits": {"hits_hurt": 1, "hits_insult": 3,
-                          "hits_threaten": 2, "hits_scream": 5},
-        "q19c_gad2_participation": "answer",
-        "q19c_gad2": {"gad2_item1": 1, "gad2_item2": 2},
-        "q19d_cognition_selfreport": "no",
-    }, section=19)
-    assert scored.status_code == 200
-    derived = calculate_derived_results({
-        "q19a_phq2_participation": "answer",
-        "q19a_phq2": {"phq2_item1": 2, "phq2_item2": 1},
-        "q19b_partner_status": "yes",
-        "q19b_ipv_hits": {"hits_hurt": 1, "hits_insult": 3,
-                          "hits_threaten": 2, "hits_scream": 5},
-        "q19c_gad2_participation": "answer",
-        "q19c_gad2": {"gad2_item1": 1, "gad2_item2": 2},
-        "q19d_cognition_selfreport": "no",
-    })
-    assert derived["screening_results"] == {
-        "depression": {
-            "assessment_status": "assessed", "instrument": "phq_2",
-            "score": 3, "screen_positive": True,
-        },
-        "anxiety": {
-            "assessment_status": "assessed", "instrument": "gad_2",
-            "score": 3, "screen_positive": True,
-        },
-    }
-    assert derived["restricted_safety_indicators"]["ipv"] == {
-        "assessment_status": "assessed", "instrument": "hits",
-        "score": 11, "screen_positive": True,
-    }
+def test_section_19_contains_only_cognitive_context() -> None:
+    questions = client.get("/api/v1/screener").json()["screener"]["questions"]
+    section_ids = {q["id"] for q in questions if q["section"] == 19}
+    assert section_ids == {"q19d_cognition_selfreport"}
+    response = validate({"q19d_cognition_selfreport": "no"}, section=19)
+    assert response.status_code == 200
 
 
 def test_zero_activity_days_does_not_require_minutes() -> None:
@@ -344,7 +306,7 @@ def test_digital_barriers_and_combined_internet_access_are_derived() -> None:
     }
 
 
-def test_four_tier_contract_retains_approved_context_without_free_text_other() -> None:
+def test_minimised_contract_retains_approved_context_without_free_text_other() -> None:
     derived = calculate_derived_results({
         "dem_age_group": "71_80",
         "dem_gender": "another_gender",
@@ -364,8 +326,6 @@ def test_four_tier_contract_retains_approved_context_without_free_text_other() -
     })
     assert set(derived) == {
         "assessment_id", "schema_version", "generated_at", "context", "needs",
-        "screening_results",
-        "restricted_safety_indicators",
     }
     assert derived["context"]["economic"]["household_income_band"] == (
         "20000_29999"
@@ -407,7 +367,7 @@ def test_indicator_metadata_does_not_identify_or_echo_the_participant() -> None:
 
 
 def test_representative_indicator_export_matches_machine_contract() -> None:
-    example_file = PROJECT_ROOT / "healie_indicator_export_example_v1.json"
+    example_file = PROJECT_ROOT / "healie_indicator_export_example_v2.json"
     with example_file.open(encoding="utf-8") as file:
         example = json.load(file)
 

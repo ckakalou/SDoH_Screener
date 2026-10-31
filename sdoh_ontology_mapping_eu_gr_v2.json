@@ -9,7 +9,7 @@
     "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
   "info": {
-    "version": "3.0.0-eu-gr",
+    "version": "3.1.0-eu-gr",
     "created": "2026-02-04",
     "title": "HEALIE Social and Digital Determinants of Health mapping"
   },
@@ -35,13 +35,11 @@
     "restrictedAccess": "healie:restrictedAccess"
   },
   "indicator_export": {
-    "schema": "healie_indicator_export_schema_v1.json",
-    "version": "healie-sdoh-ddoh-indicators-1.0",
+    "schema": "healie_indicator_export_schema_v2.json",
+    "version": "healie-sdoh-ddoh-indicators-2.0",
     "tiers": {
       "context": "healie:Context",
-      "needs": "healie:Need",
-      "screening_results": "healie:ScreeningResult",
-      "restricted_safety_indicators": "healie:RestrictedSafetyIndicator"
+      "needs": "healie:Need"
     },
     "notes": [
       "The export contains derived indicators and approved contextual fields, not a verbatim response record.",
@@ -102,17 +100,17 @@
     },
     {
       "id": "dem_gender",
-      "label": "What is your gender?",
+      "label": "Today, how do you think of yourself?",
       "type": "single-select",
       "question_iri": "https://w3id.org/healie/sdoh/q/dem-gender",
       "concept_iri": "healie:dem-gender",
       "value_set": {
         "woman": {
-          "label": "Woman",
+          "label": "A woman",
           "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#woman"
         },
         "man": {
-          "label": "Man",
+          "label": "A man",
           "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#man"
         },
         "non_binary": {
@@ -120,7 +118,7 @@
           "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#non-binary"
         },
         "another_gender": {
-          "label": "Another gender",
+          "label": "In another way",
           "code_iri": "https://w3id.org/healie/sdoh/opt/dem-gender#another-gender"
         },
         "prefer_not_answer": {
@@ -131,7 +129,7 @@
     },
     {
       "id": "dem_gender_other_text",
-      "label": "Please describe your gender:",
+      "label": "If you would like, please describe how you identify.",
       "type": "text",
       "question_iri": "https://w3id.org/healie/sdoh/q/dem-gender-other-text",
       "concept_iri": "healie:dem-gender-other-text",
@@ -939,120 +937,6 @@
         "definitely_disagree": {
           "label": "Definitely disagree",
           "code_iri": "https://w3id.org/healie/sdoh/opt/q18-neighborhood-support#definitely-disagree"
-        }
-      }
-    },
-    {
-      "id": "q19a_phq2_participation",
-      "label": "Would you like to answer the two depression screening questions?",
-      "type": "single-select",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q19a-phq2-participation",
-      "concept_iri": "healie:q19a-phq2-participation",
-      "value_set": {
-        "answer": {
-          "label": "Answer these questions",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19a-phq2-participation#answer"
-        },
-        "decline": {
-          "label": "Prefer not to answer",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19a-phq2-participation#decline"
-        }
-      }
-    },
-    {
-      "id": "q19a_phq2",
-      "label": "Over the last 2 weeks, how often have you been bothered by the following problems?",
-      "type": "matrix",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q19a-phq2",
-      "concept_iri": "healie:q19a-phq2",
-      "value_set": {
-        "phq2_item1": {
-          "label": "Little interest or pleasure in doing things.",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19a-phq2#phq2-item1"
-        },
-        "phq2_item2": {
-          "label": "Feeling down, depressed, or hopeless.",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19a-phq2#phq2-item2"
-        }
-      }
-    },
-    {
-      "id": "q19b_partner_status",
-      "label": "Do you currently have a partner?",
-      "type": "single-select",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q19b-partner-status",
-      "concept_iri": "healie:q19b-partner-status",
-      "value_set": {
-        "yes": {
-          "label": "Yes",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-partner-status#yes"
-        },
-        "no": {
-          "label": "No",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-partner-status#no"
-        },
-        "prefer_not_answer": {
-          "label": "Prefer not to answer",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-partner-status#prefer-not-answer"
-        }
-      }
-    },
-    {
-      "id": "q19b_ipv_hits",
-      "label": "How often does your partner do the following?",
-      "type": "matrix",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q19b-ipv-hits",
-      "concept_iri": "healie:q19b-ipv-hits",
-      "value_set": {
-        "hits_hurt": {
-          "label": "Physically hurt you?",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-ipv-hits#hits-hurt"
-        },
-        "hits_insult": {
-          "label": "Insult you or talk down to you?",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-ipv-hits#hits-insult"
-        },
-        "hits_threaten": {
-          "label": "Threaten you with harm?",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-ipv-hits#hits-threaten"
-        },
-        "hits_scream": {
-          "label": "Scream or curse at you?",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19b-ipv-hits#hits-scream"
-        }
-      }
-    },
-    {
-      "id": "q19c_gad2_participation",
-      "label": "Would you like to answer the two anxiety screening questions?",
-      "type": "single-select",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q19c-gad2-participation",
-      "concept_iri": "healie:q19c-gad2-participation",
-      "value_set": {
-        "answer": {
-          "label": "Answer these questions",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19c-gad2-participation#answer"
-        },
-        "decline": {
-          "label": "Prefer not to answer",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19c-gad2-participation#decline"
-        }
-      }
-    },
-    {
-      "id": "q19c_gad2",
-      "label": "Over the last 2 weeks, how often have you been bothered by the following problems?",
-      "type": "matrix",
-      "question_iri": "https://w3id.org/healie/sdoh/q/q19c-gad2",
-      "concept_iri": "healie:q19c-gad2",
-      "value_set": {
-        "gad2_item1": {
-          "label": "Feeling nervous, anxious, or on edge.",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19c-gad2#gad2-item1"
-        },
-        "gad2_item2": {
-          "label": "Not being able to stop or control worrying.",
-          "code_iri": "https://w3id.org/healie/sdoh/opt/q19c-gad2#gad2-item2"
         }
       }
     },
