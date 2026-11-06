@@ -103,6 +103,27 @@ else {
     }
 }
 
+$deploymentBranch = (
+    & git -C $DeploymentRepository branch --show-current
+).Trim()
+
+if ($deploymentBranch -ne "main") {
+    throw "The deployment repository must be on main. Current branch: $deploymentBranch"
+}
+
+Write-Host "Synchronizing the Hugging Face deployment history..."
+Invoke-Git $DeploymentRepository @(
+    "fetch",
+    "hf",
+    "main"
+)
+
+Invoke-Git $DeploymentRepository @(
+    "merge",
+    "--ff-only",
+    "hf/main"
+)
+
 Write-Host "Fetching the latest GitHub version..."
 Invoke-Git $DeploymentRepository @(
     "fetch",

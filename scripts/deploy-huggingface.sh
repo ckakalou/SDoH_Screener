@@ -91,6 +91,18 @@ else
   run_git "$DEPLOYMENT_REPOSITORY" remote add source "$GITHUB_URL"
 fi
 
+DEPLOYMENT_BRANCH="$(
+  git -C "$DEPLOYMENT_REPOSITORY" branch --show-current
+)"
+
+if [[ "$DEPLOYMENT_BRANCH" != "main" ]]; then
+  fail "The deployment repository must be on main. Current branch: $DEPLOYMENT_BRANCH"
+fi
+
+printf 'Synchronizing the Hugging Face deployment history...\n'
+run_git "$DEPLOYMENT_REPOSITORY" fetch hf main
+run_git "$DEPLOYMENT_REPOSITORY" merge --ff-only hf/main
+
 printf 'Fetching the latest GitHub version...\n'
 run_git "$DEPLOYMENT_REPOSITORY" fetch source "$SOURCE_BRANCH"
 
