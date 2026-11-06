@@ -372,3 +372,25 @@ def test_representative_indicator_export_matches_machine_contract() -> None:
         example = json.load(file)
 
     indicator_validator.validate(example)
+
+def test_ontology_mapping_matches_active_indicator_contract() -> None:
+    mapping_path = PROJECT_ROOT / "sdoh_ontology_mapping_eu_gr_v2.json"
+    mapping = json.loads(mapping_path.read_text(encoding="utf-8"))
+
+    assert mapping["indicator_export"]["version"] == (
+        "healie-sdoh-ddoh-indicators-2.0"
+    )
+    assert set(mapping["indicator_export"]["tiers"]) == {
+        "context",
+        "needs",
+    }
+
+    assert {
+        "ScreeningResult",
+        "RestrictedSafetyIndicator",
+    }.isdisjoint(mapping["classes"])
+
+    assert "restrictedAccess" not in mapping["predicates"]
+
+    notes = " ".join(mapping["indicator_export"]["notes"]).lower()
+    assert "restricted safety" not in notes

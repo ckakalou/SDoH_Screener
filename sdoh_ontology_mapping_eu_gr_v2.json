@@ -19,9 +19,7 @@
     "Answer": "healie:Answer",
     "Flag": "healie:Flag",
     "Context": "healie:Context",
-    "Need": "healie:Need",
-    "ScreeningResult": "healie:ScreeningResult",
-    "RestrictedSafetyIndicator": "healie:RestrictedSafetyIndicator"
+    "Need": "healie:Need"
   },
   "predicates": {
     "ofQuestion": "healie:ofQuestion",
@@ -31,8 +29,7 @@
     "valueJson": "healie:valueJson",
     "hasCode": "healie:hasCode",
     "assessmentStatus": "healie:assessmentStatus",
-    "derivedFrom": "healie:derivedFrom",
-    "restrictedAccess": "healie:restrictedAccess"
+    "derivedFrom": "healie:derivedFrom"
   },
   "indicator_export": {
     "schema": "healie_indicator_export_schema_v2.json",
@@ -44,7 +41,6 @@
     "notes": [
       "The export contains derived indicators and approved contextual fields, not a verbatim response record.",
       "Postal code is retained for controlled geographic linkage and should not be passed directly into general-purpose personalisation prompts.",
-      "Restricted safety indicators require separate access control and must not be treated as ordinary personalisation context.",
       "Threshold metadata is maintained in the instrument and decision log, not repeated in participant exports."
     ]
   },
